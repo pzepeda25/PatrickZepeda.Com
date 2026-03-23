@@ -64,8 +64,32 @@ const RetroWindow = ({ title, children, className = '' }: { title: string, child
 export default function HomePage() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": ["Person", "ProfessionalService"],
+    "name": "Patrick Lee Zepeda",
+    "url": "https://patrickleezepeda.com",
+    "email": "mailto:me@patrickzepeda.com",
+    "jobTitle": "Creative Technologist & AI Innovator",
+    "description": "Building the bridge between creative vision and automated execution. I don't just build websites. I deploy personalized systems — wired for conversion, built to scale.",
+    "sameAs": [
+      "https://www.linkedin.com/in/patrickleezepeda"
+    ],
+    "knowsAbout": [
+      "AI-Driven Brand Sites",
+      "Omni-Channel Campaign Systems",
+      "Niche AI Tools & Mini-Apps",
+      "AEO & Generative Search",
+      "Web Designer & Developer",
+      "Marketing & Sales Ops Strategist"
+    ]
+  };
+
   return (
     <div className="min-h-screen crt relative selection:bg-synth-magenta selection:text-white">
+      <script type="application/ld+json">
+        {JSON.stringify(jsonLd)}
+      </script>
       <div className="scanline-sweep"></div>
       
       {/* Navigation */}
