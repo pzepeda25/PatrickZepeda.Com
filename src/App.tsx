@@ -40,7 +40,7 @@ const SectionHeading = ({ title, subtitle, align = 'left' }: { title: string, su
   </div>
 );
 
-const RetroWindow = ({ title, children, className = '' }: { title: string, children: React.ReactNode, className?: string }) => (
+const RetroWindow = ({ title, children, className = '' }: { title: string, children: React.ReactNode, className?: string, key?: React.Key }) => (
   <motion.div 
     initial={{ opacity: 0, scale: 0.95 }}
     whileInView={{ opacity: 1, scale: 1 }}
