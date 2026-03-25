@@ -1,5 +1,5 @@
-# Give the Lead Hunter engine priority (Source -> Destination -> Status)
-/.netlify/functions/* /.netlify/functions/:splat  200
+# 1. Map /api/ to your functions (The "Pretty Path")
+/api/* /.netlify/functions/:splat  200
 
-# Send everything else to the React App (Single Page App routing)
+# 2. React SPA Catch-all (The "Safety Net")
 /* /index.html  200
