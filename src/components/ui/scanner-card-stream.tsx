@@ -185,10 +185,17 @@ export const ScannerCardStream = ({
       const scannerLeft = scannerX - scannerWidth / 2;
       const scannerRight = scannerX + scannerWidth / 2;
       let anyCardIsScanning = false;
-      cardLine.querySelectorAll<HTMLElement>(".card-wrapper").forEach((wrapper, index) => {
-        const rect = wrapper.getBoundingClientRect();
-        const asciiCard = wrapper.querySelector<HTMLElement>(".card-ascii")!;
-        const asciiContent = asciiCard.querySelector<HTMLElement>('pre')!;
+
+      const cardWrappers = Array.from(cardLine.querySelectorAll(".card-wrapper")) as HTMLElement[];
+
+      // ⚡ Bolt: Batch DOM reads to prevent layout thrashing
+      const rects = cardWrappers.map(wrapper => wrapper.getBoundingClientRect());
+
+      // ⚡ Bolt: Batch DOM writes
+      cardWrappers.forEach((wrapper, index) => {
+        const rect = rects[index];
+        const asciiCard = wrapper.querySelector(".card-ascii") as HTMLElement;
+        const asciiContent = asciiCard.querySelector('pre') as HTMLElement;
         
         if (rect.left < scannerRight && rect.right > scannerLeft) {
           anyCardIsScanning = true;
@@ -207,6 +214,7 @@ export const ScannerCardStream = ({
           }
         }
       });
+
       setIsScanning(anyCardIsScanning);
       scannerState.current.isScanning = anyCardIsScanning;
     };
