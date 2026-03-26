@@ -3,3 +3,11 @@
 
 # 2. React SPA Catch-all (The "Safety Net")
 /* /index.html  200
+
+# Data Highway Routes (Netlify Functions)
+/api/save-lead              /.netlify/functions/save-lead              200
+/api/submit-form            /.netlify/functions/submit-form            200
+/api/list-form-submissions   /.netlify/functions/list-form-submissions   200
+
+# Old Form Redirect
+/form   /   301
