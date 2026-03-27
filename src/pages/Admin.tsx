@@ -9,7 +9,12 @@ type Lead = {
   mapUrl: string | null;
   isGold: boolean;
   website?: string | null;
+  email?: string | null;
+  linkedin?: string | null;
 };
+
+// Replace with your actual n8n webhook URL
+const N8N_WEBHOOK_URL = 'https://n8n.patrickzepeda.com/webhook/deploy-agents';
 
 type GetLeadsResponse = {
   totalFound: number;
@@ -90,8 +95,12 @@ function GoldOnlyToggle({
   );
 }
 
+// A simple "Vibe Delay" to keep the bouncer away
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
 export default function Admin() {
   const [secretKey, setSecretKey] = useState('');
+  const [rememberKey, setRememberKey] = useState(false);
   const [category, setCategory] = useState('');
   const [city, setCity] = useState('');
   const [goldOnly, setGoldOnly] = useState(false);
@@ -109,11 +118,103 @@ export default function Admin() {
   const [inboxError, setInboxError] = useState<string | null>(null);
   const [submissions, setSubmissions] = useState<FormSubmission[]>([]);
 
-  const leads = response?.leads ?? [];
+  const [leads, setLeads] = useState<Lead[]>([]);
+  const [deployingLeads, setDeployingLeads] = useState<Record<string, boolean>>({});
+  const [isBulkAuditing, setIsBulkAuditing] = useState(false);
+
+  // Load saved key on mount
+  useEffect(() => {
+    const savedKey = localStorage.getItem('vibe_admin_key');
+    if (savedKey) {
+      setSecretKey(savedKey);
+      setRememberKey(true);
+    }
+  }, []);
+
+  // Save/Clear key based on rememberKey preference
+  useEffect(() => {
+    if (rememberKey) {
+      if (secretKey.trim()) {
+        localStorage.setItem('vibe_admin_key', secretKey);
+      }
+    } else {
+      localStorage.removeItem('vibe_admin_key');
+    }
+  }, [secretKey, rememberKey]);
+
   const displayedLeads = useMemo(() => {
     if (!goldOnly) return leads;
     return leads.filter((l) => l.isGold);
   }, [goldOnly, leads]);
+
+  const toggleFlag = (leadToToggle: Lead) => {
+    setLeads((prevLeads) =>
+      prevLeads.map((lead) =>
+        lead.name === leadToToggle.name && lead.address === leadToToggle.address
+          ? { ...lead, isGold: !lead.isGold }
+          : lead
+      )
+    );
+  };
+
+  async function deployAgents(lead: Lead, silent = false) {
+    const leadKey = `${lead.name}-${lead.address}`;
+    setDeployingLeads((prev) => ({ ...prev, [leadKey]: true }));
+
+    try {
+      const res = await fetch(N8N_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: lead.name,
+          address: lead.address,
+          email: lead.email,
+          linkedin: lead.linkedin,
+          isGold: lead.isGold,
+          timestamp: new Date().toISOString(),
+        }),
+      });
+
+      if (!res.ok) throw new Error('Deployment failed');
+      if (!silent) alert(`Agents Deployed for ${lead.name}! 🚀`);
+      return true;
+    } catch (e) {
+      if (!silent) alert(`Agent Error: ${e instanceof Error ? e.message : 'Unknown failure'}`);
+      return false;
+    } finally {
+      setDeployingLeads((prev) => ({ ...prev, [leadKey]: false }));
+    }
+  }
+
+  async function runBulkAudit() {
+    const goldLeads = leads.filter((l) => l.isGold);
+    if (goldLeads.length === 0) {
+      alert('No Gold leads flagged for audit.');
+      return;
+    }
+
+    if (!confirm(`Initialize Bulk Audit for ${goldLeads.length} leads? This uses a randomized vibe delay.`)) {
+      return;
+    }
+
+    setIsBulkAuditing(true);
+    setError(null);
+
+    try {
+      for (const lead of goldLeads) {
+        // Vibe Delay: Wait 0.5 to 1.5 seconds
+        await delay(Math.floor(Math.random() * 1000) + 500);
+        
+        // Proceed with audit (Deploy Agents)
+        await deployAgents(lead, true);
+      }
+      alert('Bulk Audit Sequence Complete. 🤖');
+    } catch (e) {
+      setError(`Bulk Audit Interrupted: ${e instanceof Error ? e.message : 'Unknown error'}`);
+    } finally {
+      setIsBulkAuditing(false);
+    }
+  }
 
   async function saveLead(lead: Lead) {
     setVaultNotice(null);
@@ -253,6 +354,7 @@ export default function Admin() {
       }
 
       setResponse(payload as GetLeadsResponse);
+      setLeads((payload as GetLeadsResponse).leads);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to execute hunt.');
     } finally {
@@ -278,7 +380,32 @@ export default function Admin() {
           <div className="p-5 border-b border-green-400/15">
             <div className="flex flex-col lg:flex-row lg:items-end gap-4">
               <div className="flex-1">
-                <label className="block text-xs text-green-400/90 mb-1">Secret Key</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs text-green-400/90">Secret Key</label>
+                  <label className="flex items-center gap-2 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={rememberKey}
+                      onChange={(e) => setRememberKey(e.target.checked)}
+                      className="sr-only"
+                    />
+                    <div
+                      className={[
+                        'w-3 h-3 border transition-all duration-200 flex items-center justify-center',
+                        rememberKey
+                          ? 'bg-green-400 border-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)]'
+                          : 'bg-black border-white/20 group-hover:border-green-400/50',
+                      ].join(' ')}
+                    >
+                      {rememberKey && (
+                        <div className="w-1.5 h-1.5 bg-black" />
+                      )}
+                    </div>
+                    <span className="text-[10px] font-bold text-green-400/70 group-hover:text-green-400 transition-colors">
+                      REMEMBER KEY
+                    </span>
+                  </label>
+                </div>
                 <input
                   type="password"
                   value={secretKey}
@@ -379,13 +506,34 @@ export default function Admin() {
 
               {activeTab === 'hunter' ? (
                 <>
+                  <button
+                    type="button"
+                    onClick={runBulkAudit}
+                    disabled={isBulkAuditing || leads.filter(l => l.isGold).length === 0}
+                    className={[
+                      'px-3 py-1.5 rounded border text-[10px] font-bold transition-all mr-4',
+                      isBulkAuditing
+                        ? 'bg-blue-500/20 text-blue-200 border-blue-500/25 cursor-wait'
+                        : 'bg-blue-500 text-white border-blue-500 hover:brightness-110 shadow-[0_0_8px_rgba(59,130,246,0.3)] disabled:opacity-30 disabled:cursor-not-allowed',
+                    ].join(' ')}
+                  >
+                    {isBulkAuditing ? (
+                      <span className="flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-ping" />
+                        AUDITING...
+                      </span>
+                    ) : (
+                      '🤖 RUN BULK AUDIT'
+                    )}
+                  </button>
                   <GoldOnlyToggle checked={goldOnly} onChange={setGoldOnly} />
                   <div className="text-xs text-white/70">
-                    {response ? (
+                    {leads.length > 0 ? (
                       <>
-                        Total Found:{' '}
-                        <span className="text-green-400">{response.totalFound}</span> | Gold Leads:{' '}
-                        <span className="text-green-400">{response.goldCount}</span>
+                        Total Found: <span className="text-green-400">{leads.length}</span> | Gold Leads:{' '}
+                        <span className="text-green-400">
+                          {leads.filter((l) => l.isGold).length}
+                        </span>
                       </>
                     ) : (
                       'Awaiting execution...'
@@ -436,103 +584,169 @@ export default function Admin() {
 
                 {displayedLeads.length > 0 && (
                   <div className="overflow-x-auto">
-                    <table className="min-w-[1050px] w-full border-collapse">
+                    <table className="min-w-[1250px] w-full border-collapse">
                       <thead>
                         <tr className="text-left text-xs text-green-400/80">
-                          <th className="border border-white/10 bg-white/5 px-3 py-2 rounded-tl-lg">FLAGS</th>
+                          <th className="border border-white/10 bg-white/5 px-3 py-2 rounded-tl-lg w-[50px]">FLAG</th>
+                          <th className="border border-white/10 bg-white/5 px-3 py-2 w-[220px]">FLAGS</th>
                           <th className="border border-white/10 bg-white/5 px-3 py-2">NAME</th>
+                          <th className="border border-white/10 bg-white/5 px-3 py-2 w-[100px]">EMAIL</th>
+                          <th className="border border-white/10 bg-white/5 px-3 py-2 w-[100px]">LINKEDIN</th>
                           <th className="border border-white/10 bg-white/5 px-3 py-2">ADDRESS</th>
                           <th className="border border-white/10 bg-white/5 px-3 py-2">RATING</th>
                           <th className="border border-white/10 bg-white/5 px-3 py-2">REVIEWS / VIEW</th>
-                          <th className="border border-white/10 bg-white/5 px-3 py-2 rounded-tr-lg">VAULT</th>
+                          <th className="border border-white/10 bg-white/5 px-3 py-2 rounded-tr-lg w-[280px]">COMMANDS</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {displayedLeads.map((lead) => (
-                          <tr
-                            key={`${lead.name || 'unknown'}-${lead.address || 'unknown'}-${lead.mapUrl || 'no-map'}`}
-                            className={[
-                              'align-top',
-                              lead.isGold
-                                ? 'bg-green-400/5 shadow-[0_0_16px_rgba(74,222,128,0.20)]'
-                                : 'bg-black',
-                            ].join(' ')}
-                          >
-                            <td className="border border-white/10 px-3 py-2 w-[220px]">
-                              <div className="flex flex-wrap gap-2">
-                                {(lead.flags ?? []).length > 0 ? (
-                                  lead.flags.map((f) => (
-                                    <React.Fragment key={f}>
-                                      <FlagBadge flag={f} />
-                                    </React.Fragment>
-                                  ))
-                                ) : (
-                                  <span className="text-[11px] text-white/50">—</span>
-                                )}
-                              </div>
-                            </td>
-                            <td className="border border-white/10 px-3 py-2 w-[240px]">
-                              <div className="text-sm text-white font-bold">
-                                {lead.name || 'Unknown'}
-                              </div>
-                              <div className="mt-1 text-[11px] text-white/60">
-                                {lead.isGold ? 'GOLD LEAD' : 'STANDARD'}
-                              </div>
-                            </td>
-                            <td className="border border-white/10 px-3 py-2">
-                              <div className="text-sm text-white/90">
-                                {lead.address || 'Unknown address'}
-                              </div>
-                            </td>
-                            <td className="border border-white/10 px-3 py-2 w-[120px]">
-                              <div className="text-sm font-bold text-yellow-400">
-                                {Number.isFinite(lead.rating) ? lead.rating.toFixed(1) : '0.0'}
-                              </div>
-                            </td>
-                            <td className="border border-white/10 px-3 py-2 w-[240px]">
-                              <div className="flex items-center justify-between gap-3">
-                                <div className="text-sm font-bold text-yellow-400">
-                                  {lead.reviews} rev
+                        {displayedLeads.map((lead, idx) => {
+                          const leadKey = `${lead.name || 'unknown'}-${lead.address || 'unknown'}`;
+                          const isDeploying = deployingLeads[leadKey];
+
+                          return (
+                            <tr
+                              key={`${lead.name || 'unknown'}-${lead.address || 'unknown'}-${idx}`}
+                              className={[
+                                'align-top transition-all duration-300 border-l-2',
+                                lead.isGold
+                                  ? 'bg-green-400/5 shadow-[0_0_16px_rgba(74,222,128,0.20)] border-green-400/50'
+                                  : 'bg-black border-transparent',
+                              ].join(' ')}
+                            >
+                              <td className="border border-white/10 px-3 py-2 text-center">
+                                <button
+                                  onClick={() => toggleFlag(lead)}
+                                  className={[
+                                    'text-lg transition-transform active:scale-125 hover:scale-110',
+                                    lead.isGold ? 'grayscale-0' : 'grayscale opacity-30',
+                                  ].join(' ')}
+                                  title={lead.isGold ? 'Unflag Lead' : 'Flag as Gold Lead'}
+                                >
+                                  🚩
+                                </button>
+                              </td>
+                              <td className="border border-white/10 px-3 py-2">
+                                <div className="flex flex-wrap gap-2">
+                                  {(lead.flags ?? []).length > 0 ? (
+                                    lead.flags.map((f) => (
+                                      <React.Fragment key={f}>
+                                        <FlagBadge flag={f} />
+                                      </React.Fragment>
+                                    ))
+                                  ) : (
+                                    <span className="text-[11px] text-white/50">—</span>
+                                  )}
                                 </div>
-                                {lead.mapUrl ? (
+                              </td>
+                              <td className="border border-white/10 px-3 py-2">
+                                <div className="text-sm text-white font-bold">
+                                  {lead.name || 'Unknown'}
+                                </div>
+                                <div className="mt-1 text-[11px] text-white/60">
+                                  {lead.isGold ? 'GOLD LEAD' : 'STANDARD'}
+                                </div>
+                              </td>
+                              <td className="border border-white/10 px-3 py-2 text-center">
+                                {lead.email ? (
                                   <a
-                                    href={lead.mapUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center rounded border border-white/15 bg-white/5 px-3 py-1.5 text-xs text-green-400 hover:bg-white/10 transition-colors"
+                                    href={`mailto:${lead.email}`}
+                                    className="text-lg hover:brightness-125"
+                                    title={lead.email}
                                   >
-                                    VIEW
+                                    📧
                                   </a>
                                 ) : (
-                                  <span className="inline-flex items-center rounded border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/40">
-                                    NO MAP
-                                  </span>
+                                  <span className="text-xs text-white/20">...</span>
                                 )}
-                              </div>
-                            </td>
-                            <td className="border border-white/10 px-3 py-2 w-[170px]">
-                              {lead.isGold ? (
-                                <button
-                                  type="button"
-                                  onClick={() => saveLead(lead)}
-                                  disabled={isSavingLead || !secretKey.trim()}
-                                  className={[
-                                    'inline-flex items-center justify-center rounded border px-3 py-1.5 text-xs font-bold transition-colors',
-                                    isSavingLead || !secretKey.trim()
-                                      ? 'bg-green-400/20 text-green-200 border-green-400/25 cursor-not-allowed'
-                                      : 'bg-green-400 text-black border-green-400 hover:bg-green-300',
-                                  ].join(' ')}
-                                >
-                                  {isSavingLead ? 'SAVING...' : 'SAVE'}
-                                </button>
-                              ) : (
-                                <span className="inline-flex items-center rounded border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/40">
-                                  —
-                                </span>
-                              )}
-                            </td>
-                          </tr>
-                        ))}
+                              </td>
+                              <td className="border border-white/10 px-3 py-2 text-center">
+                                {lead.linkedin ? (
+                                  <a
+                                    href={lead.linkedin}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-lg hover:brightness-125"
+                                    title={lead.linkedin}
+                                  >
+                                    🔗
+                                  </a>
+                                ) : (
+                                  <span className="text-xs text-white/20">...</span>
+                                )}
+                              </td>
+                              <td className="border border-white/10 px-3 py-2">
+                                <div className="text-sm text-white/90">
+                                  {lead.address || 'Unknown address'}
+                                </div>
+                              </td>
+                              <td className="border border-white/10 px-3 py-2">
+                                <div className="text-sm font-bold text-yellow-400">
+                                  {Number.isFinite(lead.rating) ? lead.rating.toFixed(1) : '0.0'}
+                                </div>
+                              </td>
+                              <td className="border border-white/10 px-3 py-2">
+                                <div className="flex items-center justify-between gap-3">
+                                  <div className="text-sm font-bold text-yellow-400">
+                                    {lead.reviews} rev
+                                  </div>
+                                  {lead.mapUrl ? (
+                                    <a
+                                      href={lead.mapUrl}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="inline-flex items-center rounded border border-white/15 bg-white/5 px-3 py-1.5 text-xs text-green-400 hover:bg-white/10 transition-colors"
+                                    >
+                                      VIEW
+                                    </a>
+                                  ) : (
+                                    <span className="inline-flex items-center rounded border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/40">
+                                      NO MAP
+                                    </span>
+                                  )}
+                                </div>
+                              </td>
+                              <td className="border border-white/10 px-3 py-2">
+                                <div className="flex gap-2">
+                                  {lead.isGold && (
+                                    <button
+                                      type="button"
+                                      onClick={() => deployAgents(lead)}
+                                      disabled={isDeploying}
+                                      className={[
+                                        'flex-1 inline-flex items-center justify-center rounded border px-3 py-1.5 text-[10px] font-black transition-all',
+                                        isDeploying
+                                          ? 'bg-blue-500/20 text-blue-200 border-blue-500/25 cursor-not-allowed'
+                                          : 'bg-blue-500 text-white border-blue-500 hover:brightness-110 shadow-[0_0_10px_rgba(59,130,246,0.4)]',
+                                      ].join(' ')}
+                                    >
+                                      {isDeploying ? (
+                                        <span className="flex items-center gap-2">
+                                          <div className="w-2 h-2 rounded-full bg-blue-400 animate-ping" />
+                                          ANALYZING...
+                                        </span>
+                                      ) : (
+                                        '🚀 DEPLOY AGENTS'
+                                      )}
+                                    </button>
+                                  )}
+                                  <button
+                                    type="button"
+                                    onClick={() => saveLead(lead)}
+                                    disabled={isSavingLead || !secretKey.trim()}
+                                    className={[
+                                      'inline-flex items-center justify-center rounded border px-3 py-1.5 text-[10px] font-bold transition-colors',
+                                      isSavingLead || !secretKey.trim()
+                                        ? 'bg-green-400/20 text-green-200 border-green-400/25 cursor-not-allowed'
+                                        : 'bg-green-400 text-black border-green-400 hover:bg-green-300',
+                                    ].join(' ')}
+                                  >
+                                    {isSavingLead ? 'SAVING...' : 'VAULT'}
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>
