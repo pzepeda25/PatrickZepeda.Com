@@ -179,37 +179,60 @@ export const ScannerCardStream = ({
         }, 30);
     };
 
+    // Cache DOM nodes to avoid querying them inside the animation loop
+    const cachedCardElements: { wrapper: HTMLElement; asciiCard: HTMLElement; asciiContent: HTMLElement }[] = [];
+    cardLine.querySelectorAll(".card-wrapper").forEach((wrapper) => {
+      const wrapperEl = wrapper as HTMLElement;
+      cachedCardElements.push({
+        wrapper: wrapperEl,
+        asciiCard: wrapperEl.querySelector(".card-ascii") as HTMLElement,
+        asciiContent: wrapperEl.querySelector('pre') as HTMLElement,
+      });
+    });
+
     const updateCardEffects = () => {
       const scannerX = window.innerWidth / 2;
       const scannerWidth = 8;
       const scannerLeft = scannerX - scannerWidth / 2;
       const scannerRight = scannerX + scannerWidth / 2;
       let anyCardIsScanning = false;
-      cardLine.querySelectorAll(".card-wrapper").forEach((wrapper, index) => {
-        const wrapperEl = wrapper as HTMLElement;
-        const rect = wrapperEl.getBoundingClientRect();
-        const asciiCard = wrapperEl.querySelector(".card-ascii") as HTMLElement;
-        const asciiContent = asciiCard.querySelector('pre') as HTMLElement;
+
+      // Calculate cardLine offset mathematically instead of using getBoundingClientRect() on every card
+      // This prevents layout thrashing (forced synchronous layout) inside the rAF loop
+      const cardLineRect = cardLine.getBoundingClientRect();
+      const currentOffsetX = cardLineRect.left;
+
+      // ⚡ Bolt Optimization: Batch DOM reads (none needed here since we compute mathematically), then batch writes
+      // We calculate each card's coordinates relative to the track to avoid 2N forced layouts per frame
+      cachedCardElements.forEach(({ wrapper, asciiCard, asciiContent }, index) => {
+        // Compute left/right mathematically based on cardWidth and cardGap
+        const cardLocalLeft = index * (cardWidth + cardGap);
+        const rectLeft = currentOffsetX + cardLocalLeft;
+        const rectRight = rectLeft + cardWidth;
         
-        if (rect.left < scannerRight && rect.right > scannerLeft) {
+        if (rectLeft < scannerRight && rectRight > scannerLeft) {
           anyCardIsScanning = true;
           if (scanEffect === 'scramble' && wrapper.dataset.scanned !== 'true') {
               runScrambleEffect(asciiContent, index);
           }
           wrapper.dataset.scanned = 'true';
-          const clipRightPx = Math.max(rect.right - scannerX, 0);
-          asciiCard.style.setProperty("--clip-right", `${(clipRightPx / rect.width) * 100}%`);
+          const clipRightPx = Math.max(rectRight - scannerX, 0);
+          asciiCard.style.setProperty("--clip-right", `${(clipRightPx / cardWidth) * 100}%`);
         } else {
           delete wrapper.dataset.scanned;
-          if (rect.right < scannerLeft) {
+          if (rectRight < scannerLeft) {
             asciiCard.style.setProperty("--clip-right", "0%");
           } else {
             asciiCard.style.setProperty("--clip-right", "100%");
           }
         }
       });
-      setIsScanning(anyCardIsScanning);
-      scannerState.current.isScanning = anyCardIsScanning;
+
+      // Update state sparingly to avoid React overhead in rAF
+      if (scannerState.current.isScanning !== anyCardIsScanning) {
+        setIsScanning(anyCardIsScanning);
+        scannerState.current.isScanning = anyCardIsScanning;
+      }
     };
     
     const handleMouseDown = (e: MouseEvent | TouchEvent) => { 
