@@ -5,13 +5,13 @@ export const handler = async (event) => {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  const incomingSecret = event.headers['x-vibe-secret'] || (event.queryStringParameters && event.queryStringParameters.secret);
+  const incomingSecret = event.headers['vibe-secret'] || (event.queryStringParameters && event.queryStringParameters.secret);
   
   // Mask the secret for logging
   const maskedSecret = incomingSecret ? `${incomingSecret.substring(0, 3)}***` : 'undefined';
   console.log(`Secret received: ${maskedSecret}`);
 
-  const isMatch = incomingSecret?.trim().toLowerCase() === process.env.X_VIBE_SECRET?.trim().toLowerCase();
+  const isMatch = incomingSecret?.trim().toLowerCase() === process.env.VIBE_SECRET?.trim().toLowerCase();
 
   if (!isMatch) {
     return {

@@ -35,7 +35,7 @@ export default function InternalLeads() {
 
   // Check for secret in sessionStorage on mount
   useEffect(() => {
-    const storedSecret = sessionStorage.getItem('vibe_secret');
+    const storedSecret = sessionStorage.getItem('VIBE_SECRET');
 
     if (storedSecret) {
       setSecret(storedSecret);
@@ -49,10 +49,10 @@ export default function InternalLeads() {
     setLoading(true);
     setError(null);
     try {
-      console.log('Sending x-vibe-secret:', currentSecret);
+      console.log('Sending vibe-secret:', currentSecret);
       const response = await fetch('/api/list-leads', {
         headers: {
-          'x-vibe-secret': currentSecret
+          'vibe-secret': currentSecret
         }
       });
 
@@ -67,11 +67,11 @@ export default function InternalLeads() {
       setLeads(data.leads || []);
       setIsAuthenticated(true);
       // Save to session storage ONLY on successful fetch
-      sessionStorage.setItem('vibe_secret', currentSecret);
+      sessionStorage.setItem('VIBE_SECRET', currentSecret);
     } catch (err: any) {
       setError(err.message);
       setIsAuthenticated(false);
-      sessionStorage.removeItem('vibe_secret');
+      sessionStorage.removeItem('VIBE_SECRET');
     } finally {
       setLoading(false);
     }
@@ -83,7 +83,7 @@ export default function InternalLeads() {
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem('vibe_secret');
+    sessionStorage.removeItem('VIBE_SECRET');
     setSecret('');
     setIsAuthenticated(false);
     setLeads([]);
