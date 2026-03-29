@@ -19,71 +19,53 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
     const form = e.currentTarget;
     const formData = new FormData(form);
     
-    const googleFormData = new FormData();
-    googleFormData.append('entry.1286933682', formData.get('firstName') as string);
-    googleFormData.append('entry.370837008', formData.get('lastName') as string);
-    googleFormData.append('entry.604185615', formData.get('email') as string);
-    googleFormData.append('entry.531212216', formData.get('phone') as string);
-    
-    // Map selected services to the new Google Form field
+    // Build payload for Netlify Function
     const services = formData.getAll('services');
-    services.forEach(service => {
+    const selectedServices = services.map(service => {
       if (service === '__other_option__') {
-        const otherValue = formData.get('services_other');
-        if (otherValue) {
-          googleFormData.append('entry.636352534', '__other_option__');
-          googleFormData.append('entry.636352534.other_option_response', otherValue as string);
-        }
-      } else {
-        googleFormData.append('entry.636352534', service as string);
+        return `Other: ${formData.get('services_other')}`;
       }
+      return service;
     });
-    
-    // Map Urgency to the new Google Form field
-    googleFormData.append('entry.1287721858', urgency);
-    
-    // Combine description and social links into the description field
-    const facebook = formData.get('facebook') as string;
-    const instagram = formData.get('instagram') as string;
-    const linkedin = formData.get('linkedin') as string;
-    const desc = formData.get('description') as string;
-    
-    const fullDescription = `
-Facebook: ${facebook || 'N/A'}
-Instagram: ${instagram || 'N/A'}
-LinkedIn: ${linkedin || 'N/A'}
 
-Description:
-${desc}
-    `.trim();
-
-    googleFormData.append('entry.1287804119', fullDescription);
-    googleFormData.append('entry.2001844038', formData.get('contactMethod') as string);
-
-    const date = formData.get('date') as string;
-    if (date) {
-      const [year, month, day] = date.split('-');
-      googleFormData.append('entry.1497977169_year', year);
-      googleFormData.append('entry.1497977169_month', month);
-      googleFormData.append('entry.1497977169_day', day);
-      googleFormData.append('entry.1497977169', date);
-    }
+    const payload = {
+      firstName: formData.get('firstName'),
+      lastName: formData.get('lastName'),
+      email: formData.get('email'),
+      phone: formData.get('phone'),
+      linkedin: formData.get('linkedin'),
+      instagram: formData.get('instagram'),
+      facebook: formData.get('facebook'),
+      services: selectedServices,
+      urgency: urgency,
+      message: formData.get('description'),
+      contactMethod: formData.get('contactMethod'),
+      date: formData.get('date'),
+      category: selectedServices.length > 0 ? selectedServices[0] : 'general'
+    };
 
     try {
-      await fetch('https://docs.google.com/forms/d/e/1FAIpQLSfJ2UOUBezt8PGgQq-MgLtqQ_hQEQA3uTQHXUoCaWf3DYm_yw/formResponse', {
+      const response = await fetch('/.netlify/functions/submit-form', {
         method: 'POST',
-        mode: 'no-cors',
-        body: googleFormData
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
       });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || errorData.note || 'Network response was not ok');
+      }
       
       setIsSuccess(true);
       setTimeout(() => {
         setIsSuccess(false);
         onClose();
       }, 3000);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting form:', error);
-      alert('There was an error submitting the form. Please try again.');
+      alert(`There was an error submitting the form:\n\n${error.message}\n\n(Note: If testing in AI Studio, Netlify Blobs requires NETLIFY_SITE_ID and NETLIFY_AUTH_TOKEN environment variables)`);
     } finally {
       setIsSubmitting(false);
     }

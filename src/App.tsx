@@ -89,8 +89,8 @@ export default function App() {
           <div className="hidden md:flex items-center gap-6 font-mono text-sm">
             <a href="#services" className="hover:text-synth-cyan transition-colors">SERVICES</a>
             <a href="#stack" className="hover:text-synth-cyan transition-colors">STACK</a>
-            <a href="https://notebooklm.google.com/notebook/1ab7dcb4-d659-4da3-9d44-12bb22a62bee/preview" target="_blank" rel="noopener noreferrer" className="text-synth-cyan hover:text-white transition-colors flex items-center gap-1.5 bg-synth-cyan/10 px-3 py-1.5 rounded-full border border-synth-cyan/30">
-              <Bot className="w-4 h-4" /> NOTEBOOK LM / JULES
+            <a href="https://notebooklm.google.com/notebook/dea47e58-def2-444c-a0a9-a9a797a2cd57/preview" target="_blank" rel="noopener noreferrer" className="text-synth-cyan hover:text-white transition-colors flex items-center gap-1.5 bg-synth-cyan/10 px-3 py-1.5 rounded-full border border-synth-cyan/30">
+              <img src="https://www.gstatic.com/images/branding/product/1x/notebooklm_64dp.png" alt="NotebookLM" className="w-4 h-4 object-contain brightness-0 invert" onError={(e) => { e.currentTarget.src = 'https://notebooklm.google.com/favicon.ico'; }} /> NEW Notebook LM / How To GitHub
             </a>
             <a href="#contact" className="text-synth-magenta hover:text-white transition-colors">CONTACT</a>
           </div>
@@ -113,8 +113,8 @@ export default function App() {
           >
             <a href="#services" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">SERVICES</a>
             <a href="#stack" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">STACK</a>
-            <a href="https://notebooklm.google.com/notebook/1ab7dcb4-d659-4da3-9d44-12bb22a62bee/preview" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)} className="text-synth-cyan hover:text-white transition-colors flex items-center gap-2 py-2 border-b border-synth-cyan/10">
-              <Bot className="w-4 h-4" /> NOTEBOOK LM / JULES
+            <a href="https://notebooklm.google.com/notebook/dea47e58-def2-444c-a0a9-a9a797a2cd57/preview" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)} className="text-synth-cyan hover:text-white transition-colors flex items-center gap-2 py-2 border-b border-synth-cyan/10">
+              <img src="https://www.gstatic.com/images/branding/product/1x/notebooklm_64dp.png" alt="NotebookLM" className="w-4 h-4 object-contain brightness-0 invert" onError={(e) => { e.currentTarget.src = 'https://notebooklm.google.com/favicon.ico'; }} /> NEW Notebook LM / How To GitHub
             </a>
             <a href="#contact" onClick={() => setIsMobileMenuOpen(false)} className="text-synth-magenta hover:text-white transition-colors py-2">CONTACT</a>
           </motion.div>
@@ -416,9 +416,9 @@ export default function App() {
           <a href="https://patrickzepeda.medium.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-synth-cyan transition-colors" title="Medium">
             <BookOpen className="w-5 h-5" />
           </a>
-          <a href="https://notebooklm.google.com/notebook/1ab7dcb4-d659-4da3-9d44-12bb22a62bee/preview" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-synth-cyan transition-colors flex items-center gap-2" title="Chat with my Notebook LM research">
-            <Bot className="w-5 h-5" />
-            <span className="hidden sm:inline">NOTEBOOK LM / JULES</span>
+          <a href="https://notebooklm.google.com/notebook/dea47e58-def2-444c-a0a9-a9a797a2cd57/preview" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-synth-cyan transition-colors flex items-center gap-2" title="Chat with my Notebook LM research">
+            <img src="https://www.gstatic.com/images/branding/product/1x/notebooklm_64dp.png" alt="NotebookLM" className="w-5 h-5 object-contain brightness-0 invert opacity-70 hover:opacity-100 transition-all" onError={(e) => { e.currentTarget.src = 'https://notebooklm.google.com/favicon.ico'; }} />
+            <span className="hidden sm:inline">NEW Notebook LM / How To GitHub</span>
           </a>
         </div>
         <p className="hover-glitch inline-block cursor-default">SYSTEM.HALT // © {new Date().getFullYear()} PATRICK ZEPEDA. ALL RIGHTS RESERVED.</p>
