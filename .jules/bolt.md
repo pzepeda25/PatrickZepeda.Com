@@ -1,0 +1,3 @@
+## 2024-03-29 - Code Splitting Heavy Admin Routes
+**Learning:** The `/internal-leads` route depends on heavy libraries like `xlsx` and `jspdf` for exporting data. Because it was eagerly imported in `src/main.tsx`, these massive dependencies were shipped to the main public-facing landing page, bloating the initial JS bundle from ~900KB to ~1.6MB.
+**Action:** Always verify if admin, internal, or dashboard routes with heavy data-export dependencies are eagerly loaded in the main router. They should almost always be lazy-loaded using `React.lazy()` and `<Suspense>` so they don't penalize the load time of public pages.
