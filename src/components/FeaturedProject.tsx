@@ -2,10 +2,10 @@ import React from 'react';
 import { ExternalLink, Sparkles, Code } from 'lucide-react';
 import { motion } from 'motion/react';
 
-import imageForgeImg from '../assets/xml-image-forge/image_forge.png';
-import dachshundChefImg from '../assets/xml-image-forge/generated-image-3.png';
-import tvFishBowlImg from '../assets/xml-image-forge/generated-image-1.png';
-import lakeCabinImg from '../assets/xml-image-forge/generated-image-2.png';
+import imageForgeImg from '../assets/image_forge.png';
+import dachshundChefImg from '../assets/dachshund-chef.png';
+import tvFishBowlImg from '../assets/tv-fish-bowl.png';
+import lakeCabinImg from '../assets/lake-cabin.png';
 
 const FeaturedProject = () => {
   return (
