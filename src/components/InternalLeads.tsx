@@ -49,6 +49,7 @@ export default function InternalLeads() {
     setLoading(true);
     setError(null);
     try {
+      console.log('Sending x-vibe-secret:', currentSecret);
       const response = await fetch('/api/list-leads', {
         headers: {
           'x-vibe-secret': currentSecret
