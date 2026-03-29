@@ -2,9 +2,9 @@ import React from 'react';
 import { ExternalLink, Sparkles, Code } from 'lucide-react';
 import { motion } from 'motion/react';
 import imageForge from '../assets/xml-image-forge/image_forge.png';
-import genImage1 from '../assets/xml-image-forge/generated-image-1.png';
-import genImage2 from '../assets/xml-image-forge/generated-image-2.png';
-import genImage3 from '../assets/xml-image-forge/generated-image-3.png';
+import image1 from '../assets/xml-image-forge/generated-image-1.png';
+import image2 from '../assets/xml-image-forge/generated-image-2.png';
+import image3 from '../assets/xml-image-forge/generated-image-3.png';
 
 const FeaturedProject = () => {
   return (
@@ -103,14 +103,14 @@ const FeaturedProject = () => {
                 className="relative lg:absolute lg:top-[5%] lg:left-[0%] w-full lg:w-[45%] xl:w-[40%] z-30 hover:z-50 transition-all duration-500 lg:hover:scale-110 lg:hover:-translate-y-4 group cursor-pointer lg:-rotate-6 lg:hover:rotate-0"
               >
                 <div className="relative rounded-lg overflow-hidden border border-synth-purple/50 lg:border-2 shadow-lg lg:shadow-[0_20px_40px_rgba(0,0,0,0.8)] transition-all duration-500 group-hover:border-synth-purple">
-                  <img src={genImage3} alt="Generated Output: Dog Chef" className="w-full aspect-square object-cover lg:grayscale-[30%] group-hover:grayscale-0 transition-all duration-500" />
+                  <img src={image1} alt="Generated Output: Dog Chef" className="w-full aspect-square object-cover lg:grayscale-[30%] group-hover:grayscale-0 transition-all duration-500" />
                   <div className="absolute bottom-0 left-0 w-full bg-black/90 backdrop-blur-md p-1.5 lg:p-2 border-t border-synth-purple/30 lg:translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <p className="text-[8px] lg:text-[10px] xl:text-xs font-mono text-fuchsia-400 truncate">&lt;subject&gt;Dachshund Chef&lt;/subject&gt;</p>
+                    <p className="text-[8px] lg:text-[10px] xl:text-xs font-mono text-fuchsia-400 truncate">&lt;subject&gt;Dog Chef&lt;/subject&gt;</p>
                   </div>
                 </div>
               </motion.div>
 
-              {/* Floating Output 2 - TV Fish Bowl */}
+              {/* Floating Output 2 - Astronaut */}
               <motion.div 
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -119,9 +119,9 @@ const FeaturedProject = () => {
                 className="relative lg:absolute lg:bottom-[5%] lg:left-[5%] w-full lg:w-[45%] xl:w-[40%] z-10 hover:z-50 transition-all duration-500 lg:hover:scale-110 lg:hover:-translate-y-4 group cursor-pointer lg:rotate-4 lg:hover:rotate-0"
               >
                 <div className="relative rounded-lg overflow-hidden border border-synth-cyan/50 lg:border-2 shadow-lg lg:shadow-[0_20px_40px_rgba(0,0,0,0.8)] transition-all duration-500 group-hover:border-synth-cyan">
-                  <img src={genImage1} alt="Generated Output: TV Fish Bowl" className="w-full aspect-square object-cover lg:grayscale-[30%] group-hover:grayscale-0 transition-all duration-500" />
+                  <img src={image2} alt="Generated Output: Astronaut" className="w-full aspect-square object-cover lg:grayscale-[30%] group-hover:grayscale-0 transition-all duration-500" />
                   <div className="absolute bottom-0 left-0 w-full bg-black/90 backdrop-blur-md p-1.5 lg:p-2 border-t border-synth-cyan/30 lg:translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <p className="text-[8px] lg:text-[10px] xl:text-xs font-mono text-synth-cyan truncate">&lt;subject&gt;TV Fish Bowl&lt;/subject&gt;</p>
+                    <p className="text-[8px] lg:text-[10px] xl:text-xs font-mono text-synth-cyan truncate">&lt;subject&gt;Astronaut&lt;/subject&gt;</p>
                   </div>
                 </div>
               </motion.div>
@@ -135,7 +135,7 @@ const FeaturedProject = () => {
                 className="relative lg:absolute lg:top-[15%] lg:right-[0%] w-full lg:w-[45%] xl:w-[40%] z-10 hover:z-50 transition-all duration-500 lg:hover:scale-110 lg:hover:-translate-y-4 group cursor-pointer lg:rotate-8 lg:hover:rotate-0"
               >
                 <div className="relative rounded-lg overflow-hidden border border-pink-500/50 lg:border-2 shadow-lg lg:shadow-[0_20px_40px_rgba(0,0,0,0.8)] transition-all duration-500 group-hover:border-pink-500">
-                  <img src={genImage2} alt="Generated Output: Lake Cabin" className="w-full aspect-square object-cover lg:grayscale-[30%] group-hover:grayscale-0 transition-all duration-500" />
+                  <img src={image3} alt="Generated Output: Lake Cabin" className="w-full aspect-square object-cover lg:grayscale-[30%] group-hover:grayscale-0 transition-all duration-500" />
                   <div className="absolute bottom-0 left-0 w-full bg-black/90 backdrop-blur-md p-1.5 lg:p-2 border-t border-pink-500/30 lg:translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                     <p className="text-[8px] lg:text-[10px] xl:text-xs font-mono text-pink-400 truncate">&lt;environment&gt;Lake Sunset&lt;/environment&gt;</p>
                   </div>
