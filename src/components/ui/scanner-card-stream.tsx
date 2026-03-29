@@ -185,11 +185,10 @@ export const ScannerCardStream = ({
       const scannerLeft = scannerX - scannerWidth / 2;
       const scannerRight = scannerX + scannerWidth / 2;
       let anyCardIsScanning = false;
-      cardLine.querySelectorAll(".card-wrapper").forEach((wrapper, index) => {
-        const wrapperEl = wrapper as HTMLElement;
-        const rect = wrapperEl.getBoundingClientRect();
-        const asciiCard = wrapperEl.querySelector(".card-ascii") as HTMLElement;
-        const asciiContent = asciiCard.querySelector('pre') as HTMLElement;
+      cardLine.querySelectorAll<HTMLElement>(".card-wrapper").forEach((wrapper, index) => {
+        const rect = wrapper.getBoundingClientRect();
+        const asciiCard = wrapper.querySelector<HTMLElement>(".card-ascii")!;
+        const asciiContent = asciiCard.querySelector<HTMLElement>('pre')!;
         
         if (rect.left < scannerRight && rect.right > scannerLeft) {
           anyCardIsScanning = true;

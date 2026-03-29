@@ -15,7 +15,6 @@ import {
 const ContactModal = lazy(() => import('./components/ContactModal').then(module => ({ default: module.ContactModal })));
 import MediumFeed from './components/MediumFeed';
 import FeaturedProject from './components/FeaturedProject';
-import Admin from './pages/Admin';
 
 const SectionHeading = ({ title, subtitle, align = 'left' }: { title: string, subtitle?: string, align?: 'left' | 'center' }) => (
   <div className={`mb-12 ${align === 'center' ? 'text-center' : ''}`}>
@@ -41,14 +40,7 @@ const SectionHeading = ({ title, subtitle, align = 'left' }: { title: string, su
   </div>
 );
 
-type RetroWindowProps = {
-  title: string;
-  children: React.ReactNode;
-  className?: string;
-  key?: React.Key;
-};
-
-const RetroWindow = ({ title, children, className = '' }: RetroWindowProps) => (
+const RetroWindow = ({ title, children, className = '' }: { title: string, children: React.ReactNode, className?: string }) => (
   <motion.div 
     initial={{ opacity: 0, scale: 0.95 }}
     whileInView={{ opacity: 1, scale: 1 }}
@@ -72,31 +64,6 @@ const RetroWindow = ({ title, children, className = '' }: RetroWindowProps) => (
 export default function App() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const isAdminRoute =
-    typeof window !== 'undefined' &&
-    (window.location.pathname === '/admin' ||
-      window.location.pathname.startsWith('/admin/') ||
-      window.location.hash === '#/admin' ||
-      window.location.hash.startsWith('#/admin/'));
-
-  const isFormRoute =
-    typeof window !== 'undefined' &&
-    (window.location.pathname === '/form' ||
-      window.location.pathname.startsWith('/form/') ||
-      window.location.hash === '#/form' ||
-      window.location.hash.startsWith('#/form/'));
-
-  // Auto-open contact modal if on /form route
-  React.useEffect(() => {
-    if (isFormRoute) {
-      setIsContactModalOpen(true);
-    }
-  }, [isFormRoute]);
-
-  if (isAdminRoute) {
-    return <Admin />;
-  }
 
   return (
     <div className="min-h-screen crt relative selection:bg-synth-magenta selection:text-white">

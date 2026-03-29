@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patrick Zepeda | Consultation Request</title>
+    <link rel="shortcut icon" sizes="16x16" href="/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-synth-bg: #0b0c10;
+            --color-synth-purple: #2b0f4c;
+            --color-synth-magenta: #ff00ff;
+            --color-synth-cyan: #00ffff;
+            --color-synth-dark: #120b29;
+            --font-sans: 'Inter', system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+        }
+
+        body {
+            background-color: var(--color-synth-bg);
+            color: #e0e0e0;
+            font-family: var(--font-sans);
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: 
+                linear-gradient(to right, rgba(255, 0, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 0, 255, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .form-container {
+            background: rgba(18, 11, 41, 0.8);
+            border: 1px solid var(--color-synth-cyan);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2), inset 0 0 10px rgba(0, 255, 255, 0.1);
+            padding: 2.5rem;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 500px;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-family: var(--font-mono);
+            color: var(--color-synth-magenta);
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-family: var(--font-mono);
+            color: var(--color-synth-cyan);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--color-synth-purple);
+            color: #fff;
+            font-family: var(--font-sans);
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--color-synth-cyan);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: transparent;
+            color: var(--color-synth-cyan);
+            border: 1px solid var(--color-synth-cyan);
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            background: var(--color-synth-cyan);
+            color: var(--color-synth-bg);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+        }
+
+        .crt::after {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 50;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="crt">
+    <div class="form-container">
+        <h1>Consultation Request</h1>
+        <form name="contact" method="POST" data-netlify="true">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" required></textarea>
+            </div>
+            <button type="submit">Send Message</button>
+        </form>
+    </div>
+</body>
+</html>
