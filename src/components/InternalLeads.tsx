@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Download, FileSpreadsheet, FileText, ChevronDown, ChevronUp, ShieldAlert, Lock, Search, RefreshCw } from 'lucide-react';
+import { Download, FileSpreadsheet, FileText, ChevronDown, ChevronUp, ShieldAlert, Lock, Search, RefreshCw, LogOut } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -33,19 +33,11 @@ export default function InternalLeads() {
   const [sortConfig, setSortConfig] = useState<{ key: keyof Lead; direction: 'asc' | 'desc' }>({ key: 'strength', direction: 'desc' });
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Check for secret in URL or sessionStorage on mount
+  // Check for secret in sessionStorage on mount
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const urlSecret = urlParams.get('secret');
     const storedSecret = sessionStorage.getItem('vibe_secret');
 
-    if (urlSecret) {
-      setSecret(urlSecret);
-      sessionStorage.setItem('vibe_secret', urlSecret);
-      // Clean up URL
-      window.history.replaceState({}, document.title, window.location.pathname);
-      fetchLeads(urlSecret);
-    } else if (storedSecret) {
+    if (storedSecret) {
       setSecret(storedSecret);
       fetchLeads(storedSecret);
     } else {
@@ -65,7 +57,7 @@ export default function InternalLeads() {
 
       if (!response.ok) {
         if (response.status === 401) {
-          throw new Error('Unauthorized. Invalid secret key.');
+          throw new Error('Invalid Access Key');
         }
         throw new Error('Failed to fetch leads.');
       }
@@ -73,14 +65,12 @@ export default function InternalLeads() {
       const data = await response.json();
       setLeads(data.leads || []);
       setIsAuthenticated(true);
+      // Save to session storage ONLY on successful fetch
+      sessionStorage.setItem('vibe_secret', currentSecret);
     } catch (err: any) {
       setError(err.message);
       setIsAuthenticated(false);
-      // If unauthorized, clear the stored secret
-      if (err.message.includes('Unauthorized')) {
-        sessionStorage.removeItem('vibe_secret');
-        setSecret('');
-      }
+      sessionStorage.removeItem('vibe_secret');
     } finally {
       setLoading(false);
     }
@@ -88,8 +78,14 @@ export default function InternalLeads() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    sessionStorage.setItem('vibe_secret', secret);
     fetchLeads(secret);
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('vibe_secret');
+    setSecret('');
+    setIsAuthenticated(false);
+    setLeads([]);
   };
 
   const handleSort = (key: keyof Lead) => {
@@ -247,7 +243,7 @@ export default function InternalLeads() {
               disabled={loading}
               className="w-full bg-synth-cyan text-synth-bg font-bold py-3 px-4 rounded hover:bg-white transition-colors font-mono uppercase tracking-wider disabled:opacity-50"
             >
-              {loading ? 'Authenticating...' : 'Unlock Vault'}
+              {loading ? 'Authenticating...' : 'Decrypt Vault'}
             </button>
           </form>
         </motion.div>
@@ -284,6 +280,9 @@ export default function InternalLeads() {
             </button>
             <button onClick={exportPDF} className="px-4 py-2 bg-synth-magenta/20 border border-synth-magenta/50 text-synth-magenta hover:bg-synth-magenta/40 transition-colors font-mono text-sm flex items-center gap-2 rounded">
               <FileText className="w-4 h-4" /> PDF
+            </button>
+            <button onClick={handleLogout} className="px-4 py-2 border border-red-500/50 text-red-400 hover:bg-red-500/10 transition-colors font-mono text-sm flex items-center gap-2 rounded md:ml-4">
+              <LogOut className="w-4 h-4" /> Logout
             </button>
           </div>
         </div>
