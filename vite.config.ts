@@ -42,6 +42,35 @@ const netlifyFunctionsPlugin = () => ({
         next();
       }
     });
+
+    server.middlewares.use('/.netlify/functions/list-leads', (req, res, next) => {
+      if (req.method === 'GET') {
+        (async () => {
+          try {
+            const { handler } = await import('./netlify/functions/list-leads.js');
+            const event = {
+              httpMethod: req.method,
+              headers: req.headers
+            };
+            const result = await handler(event);
+            res.statusCode = result.statusCode || 200;
+            if (result.headers) {
+              for (const [key, value] of Object.entries(result.headers)) {
+                res.setHeader(key, value as string);
+              }
+            }
+            res.end(result.body);
+          } catch (e: any) {
+            console.error("Netlify Function Error:", e);
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ error: e.message }));
+          }
+        })();
+      } else {
+        next();
+      }
+    });
   }
 });
 
