@@ -123,6 +123,8 @@ export const ScannerCardStream = ({
     texCtx.arc(half, half, half, 0, Math.PI * 2);
     texCtx.fill();
     const texture = new THREE.CanvasTexture(texCanvas);
+    texture.flipY = false;
+    texture.premultiplyAlpha = false;
     for (let i = 0; i < particleCount; i++) {
         positions[i * 3] = (Math.random() - 0.5) * window.innerWidth * 2;
         positions[i * 3 + 1] = (Math.random() - 0.5) * 288;

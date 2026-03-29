@@ -44,15 +44,28 @@ export const handler = async (event) => {
   // Category
   const category = payload.category ? payload.category.toLowerCase().replace(/[^a-z0-9]/g, '') : 'general';
 
-  const store = getStore('leads');
-  const timestamp = new Date().toISOString();
-  const key = `strength-${strength}-${category}-${timestamp}`;
+  try {
+    const store = getStore({ 
+      name: 'leads', 
+      siteID: process.env.NETLIFY_SITE_ID, 
+      token: process.env.NETLIFY_AUTH_TOKEN 
+    });
+    const timestamp = new Date().toISOString();
+    const key = `strength-${strength}-${category}-${timestamp}`;
 
-  await store.setJSON(key, { ...payload, receivedAt: timestamp, strength, category });
+    await store.setJSON(key, { ...payload, receivedAt: timestamp, strength, category });
 
-  return {
-    statusCode: 200,
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ok: true, key }),
-  };
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ok: true, key }),
+    };
+  } catch (error) {
+    console.error('BLOB_ERROR:', error);
+    return {
+      statusCode: 502,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: 'Failed to save lead to database' }),
+    };
+  }
 };
