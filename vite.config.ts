@@ -43,7 +43,7 @@ const netlifyFunctionsPlugin = () => ({
       }
     });
 
-    server.middlewares.use('/.netlify/functions/list-leads', (req, res, next) => {
+    server.middlewares.use('/api/list-leads', (req, res, next) => {
       if (req.method === 'GET') {
         (async () => {
           try {
