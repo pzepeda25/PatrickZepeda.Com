@@ -1,6 +1,6 @@
-import React from 'react';
-import { ExternalLink, Sparkles, Code } from 'lucide-react';
-import { motion } from 'motion/react';
+import React, { useState } from 'react';
+import { ExternalLink, Sparkles, Code, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
 // Import project images to ensure they are processed by Vite
 import imageForgeImg from '../assets/image-forge.png';
@@ -9,6 +9,20 @@ import tvFishBowlImg from '../assets/tv-fish-bowl.png';
 import lakeCabinImg from '../assets/lake-cabin.png';
 
 const FeaturedProject = () => {
+  const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
+
+  const openLightbox = (src: string, alt: string) => {
+    setSelectedImage({ src, alt });
+    // Prevent scrolling when lightbox is open
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeLightbox = () => {
+    setSelectedImage(null);
+    // Restore scrolling
+    document.body.style.overflow = 'auto';
+  };
+
   return (
     <section className="py-24 lg:py-32 bg-synth-darker relative overflow-hidden border-y border-synth-cyan/20 lg:min-h-[800px]">
       {/* Background elements */}
@@ -77,7 +91,8 @@ const FeaturedProject = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="relative lg:absolute lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 w-full lg:w-[85%] xl:w-[75%] z-20 hover:z-50 transition-all duration-500 lg:hover:scale-105 group"
+              className="relative lg:absolute lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 w-full lg:w-[85%] xl:w-[75%] z-20 hover:z-50 transition-all duration-500 lg:hover:scale-105 group cursor-zoom-in"
+              onClick={() => openLightbox(imageForgeImg, "XML Image Forge Interface")}
             >
               <div className="absolute inset-0 bg-synth-cyan/20 blur-2xl group-hover:bg-synth-cyan/40 transition-colors duration-500 hidden lg:block"></div>
               <div className="relative rounded-xl overflow-hidden border-2 border-synth-cyan/50 shadow-[0_0_30px_rgba(0,0,0,0.4)] lg:shadow-[0_0_50px_rgba(0,0,0,0.6)] bg-synth-darker">
@@ -101,7 +116,8 @@ const FeaturedProject = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="relative lg:absolute lg:top-[5%] lg:left-[0%] w-full lg:w-[45%] xl:w-[40%] z-30 hover:z-50 transition-all duration-500 lg:hover:scale-110 lg:hover:-translate-y-4 group cursor-pointer lg:-rotate-6 lg:hover:rotate-0"
+                className="relative lg:absolute lg:top-[5%] lg:left-[0%] w-full lg:w-[45%] xl:w-[40%] z-30 hover:z-50 transition-all duration-500 lg:hover:scale-110 lg:hover:-translate-y-4 group cursor-zoom-in lg:-rotate-6 lg:hover:rotate-0"
+                onClick={() => openLightbox(dachshundChefImg, "Generated Output: Dog Chef")}
               >
                 <div className="relative rounded-lg overflow-hidden border border-synth-purple/50 lg:border-2 shadow-lg lg:shadow-[0_20px_40px_rgba(0,0,0,0.8)] transition-all duration-500 group-hover:border-synth-purple">
                   <img src={dachshundChefImg} alt="Generated Output: Dog Chef" referrerPolicy="no-referrer" className="w-full aspect-square object-cover lg:grayscale-[30%] group-hover:grayscale-0 transition-all duration-500" />
@@ -117,7 +133,8 @@ const FeaturedProject = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="relative lg:absolute lg:bottom-[5%] lg:left-[5%] w-full lg:w-[45%] xl:w-[40%] z-10 hover:z-50 transition-all duration-500 lg:hover:scale-110 lg:hover:-translate-y-4 group cursor-pointer lg:rotate-4 lg:hover:rotate-0"
+                className="relative lg:absolute lg:bottom-[5%] lg:left-[5%] w-full lg:w-[45%] xl:w-[40%] z-10 hover:z-50 transition-all duration-500 lg:hover:scale-110 lg:hover:-translate-y-4 group cursor-zoom-in lg:rotate-4 lg:hover:rotate-0"
+                onClick={() => openLightbox(tvFishBowlImg, "Generated Output: TV Fish Bowl")}
               >
                 <div className="relative rounded-lg overflow-hidden border border-synth-cyan/50 lg:border-2 shadow-lg lg:shadow-[0_20px_40px_rgba(0,0,0,0.8)] transition-all duration-500 group-hover:border-synth-cyan">
                   <img src={tvFishBowlImg} alt="Generated Output: TV Fish Bowl" referrerPolicy="no-referrer" className="w-full aspect-square object-cover lg:grayscale-[30%] group-hover:grayscale-0 transition-all duration-500" />
@@ -133,7 +150,8 @@ const FeaturedProject = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.4 }}
-                className="relative lg:absolute lg:top-[15%] lg:right-[0%] w-full lg:w-[45%] xl:w-[40%] z-10 hover:z-50 transition-all duration-500 lg:hover:scale-110 lg:hover:-translate-y-4 group cursor-pointer lg:rotate-8 lg:hover:rotate-0"
+                className="relative lg:absolute lg:top-[15%] lg:right-[0%] w-full lg:w-[45%] xl:w-[40%] z-10 hover:z-50 transition-all duration-500 lg:hover:scale-110 lg:hover:-translate-y-4 group cursor-zoom-in lg:rotate-8 lg:hover:rotate-0"
+                onClick={() => openLightbox(lakeCabinImg, "Generated Output: Lake Cabin")}
               >
                 <div className="relative rounded-lg overflow-hidden border border-pink-500/50 lg:border-2 shadow-lg lg:shadow-[0_20px_40px_rgba(0,0,0,0.8)] transition-all duration-500 group-hover:border-pink-500">
                   <img src={lakeCabinImg} alt="Generated Output: Lake Cabin" referrerPolicy="no-referrer" className="w-full aspect-square object-cover lg:grayscale-[30%] group-hover:grayscale-0 transition-all duration-500" />
@@ -172,8 +190,57 @@ const FeaturedProject = () => {
           </div>
         </div>
       </div>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {selectedImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl cursor-zoom-out"
+            onClick={closeLightbox}
+          >
+            <motion.button
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors z-[10000]"
+              onClick={(e) => {
+                e.stopPropagation();
+                closeLightbox();
+              }}
+            >
+              <X className="w-8 h-8" />
+            </motion.button>
+
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="relative max-w-7xl w-full max-h-[90vh] flex flex-col items-center gap-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={selectedImage.src}
+                alt={selectedImage.alt}
+                referrerPolicy="no-referrer"
+                className="w-auto h-auto max-w-full max-h-[80vh] object-contain rounded-lg shadow-[0_0_50px_rgba(0,255,255,0.3)] border border-white/10"
+              />
+              <motion.p 
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="text-white font-mono text-sm lg:text-base tracking-widest uppercase bg-black/50 px-4 py-2 rounded-full border border-white/10"
+              >
+                {selectedImage.alt}
+              </motion.p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
 
 export default FeaturedProject;
+
