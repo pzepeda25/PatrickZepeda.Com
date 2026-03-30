@@ -75,7 +75,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <img 
-              src="/logo.png" 
+              src="logo.png" 
               alt="Brand Logo" 
               referrerPolicy="no-referrer"
               className="h-12 w-auto drop-shadow-[0_0_10px_rgba(255,0,255,0.5)]"
