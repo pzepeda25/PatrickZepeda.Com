@@ -204,7 +204,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
                       <div className="space-y-1 pt-2">
                         <label className="text-xs font-mono text-synth-cyan uppercase">Description of Inquiry *</label>
-                        <textarea required name="description" rows={4} className="w-full bg-black/50 border border-synth-cyan/30 p-2.5 text-white focus:border-synth-cyan focus:outline-none focus:ring-1 focus:ring-synth-cyan transition-all resize-none"></textarea>
+                        <textarea required name="description" rows={4} className="w-full bg-black/50 border border-synth-cyan/30 p-2.5 text-white focus:border-synth-cyan focus:outline-none focus:ring-1 focus:ring-synth-cyan transition-all resize-none" />
                       </div>
                     </div>
 

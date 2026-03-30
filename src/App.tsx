@@ -9,12 +9,14 @@ import {
   Terminal, MonitorPlay, Layers, 
   Zap, ChevronRight, Mail,
   Radio, Aperture, Settings, Users, PlaySquare, Search,
-  Cpu, Code, Workflow, Camera, Briefcase, PenTool, Linkedin, BookOpen, Bot, Menu, X
+  Cpu, Code, Workflow, Camera, Briefcase, PenTool, Linkedin, BookOpen, Menu, X
 } from 'lucide-react';
 
-const ContactModal = lazy(() => import('./components/ContactModal').then(module => ({ default: module.ContactModal })));
+// Components
 import MediumFeed from './components/MediumFeed';
 import FeaturedProject from './components/FeaturedProject';
+
+const ContactModal = lazy(() => import('./components/ContactModal').then(module => ({ default: module.ContactModal })));
 
 const SectionHeading = ({ title, subtitle, align = 'left' }: { title: string, subtitle?: string, align?: 'left' | 'center' }) => (
   <div className={`mb-12 ${align === 'center' ? 'text-center' : ''}`}>

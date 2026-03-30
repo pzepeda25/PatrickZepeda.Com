@@ -13,14 +13,13 @@ const FeaturedProject = () => {
     <section className="py-24 lg:py-32 bg-synth-darker relative overflow-hidden border-y border-synth-cyan/20 lg:min-h-[800px]">
       {/* Background elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
-        <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] bg-synth-purple/10 blur-[120px] rounded-full"></div>
-        <div className="absolute bottom-[-20%] left-[-10%] w-[50%] h-[50%] bg-synth-cyan/10 blur-[120px] rounded-full"></div>
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+        <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] bg-synth-purple/10 blur-[120px] rounded-full" />
+        <div className="absolute bottom-[-20%] left-[-10%] w-[50%] h-[50%] bg-synth-cyan/10 blur-[120px] rounded-full" />
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5" />
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-          
           {/* Left Content */}
           <motion.div 
             initial={{ opacity: 0, x: -50 }}
@@ -58,7 +57,7 @@ const FeaturedProject = () => {
                 rel="noopener noreferrer"
                 className="group relative inline-flex items-center justify-center gap-2 px-10 py-4 bg-synth-cyan text-black font-black uppercase tracking-widest overflow-hidden rounded-sm transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(0,255,255,0.6)] w-full sm:w-auto"
               >
-                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
                 <span className="relative z-10">Open App</span>
                 <ExternalLink className="w-5 h-5 relative z-10" />
               </a>
