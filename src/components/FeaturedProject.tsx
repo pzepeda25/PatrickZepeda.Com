@@ -2,12 +2,6 @@ import React, { useState } from 'react';
 import { ExternalLink, Sparkles, Code, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
-// Import project images to ensure they are processed by Vite
-import imageForgeImg from '../assets/image-forge.png';
-import dachshundChefImg from '../assets/dachshund-chef.png';
-import tvFishBowlImg from '../assets/tv-fish-bowl.png';
-import lakeCabinImg from '../assets/lake-cabin.png';
-
 const FeaturedProject = () => {
   const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null);
 
@@ -92,7 +86,7 @@ const FeaturedProject = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
               className="relative lg:absolute lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 w-full lg:w-[85%] xl:w-[75%] z-20 hover:z-50 transition-all duration-500 lg:hover:scale-105 group cursor-zoom-in"
-              onClick={() => openLightbox(imageForgeImg, "XML Image Forge Interface")}
+              onClick={() => openLightbox("/xml-image-forge/image-forge.png", "XML Image Forge Interface")}
             >
               <div className="absolute inset-0 bg-synth-cyan/20 blur-2xl group-hover:bg-synth-cyan/40 transition-colors duration-500 hidden lg:block"></div>
               <div className="relative rounded-xl overflow-hidden border-2 border-synth-cyan/50 shadow-[0_0_30px_rgba(0,0,0,0.4)] lg:shadow-[0_0_50px_rgba(0,0,0,0.6)] bg-synth-darker">
@@ -103,7 +97,7 @@ const FeaturedProject = () => {
                   <div className="mx-auto text-[10px] lg:text-xs font-mono text-synth-cyan/70 tracking-widest">xmlimageforge.com</div>
                 </div>
                 <div className="relative aspect-[16/9] bg-synth-dark flex items-center justify-center overflow-hidden">
-                   <img src={imageForgeImg} alt="XML Image Forge Interface" referrerPolicy="no-referrer" className="w-full h-full object-cover opacity-90 lg:opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
+                   <img src="/xml-image-forge/image-forge.png" alt="XML Image Forge Interface" referrerPolicy="no-referrer" className="w-full h-full object-cover opacity-90 lg:opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
                    <div className="absolute inset-0 bg-gradient-to-t from-synth-darker via-transparent to-transparent opacity-30 lg:opacity-50"></div>
                 </div>
               </div>
@@ -117,10 +111,10 @@ const FeaturedProject = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="relative lg:absolute lg:top-[5%] lg:left-[0%] w-full lg:w-[45%] xl:w-[40%] z-30 hover:z-50 transition-all duration-500 lg:hover:scale-110 lg:hover:-translate-y-4 group cursor-zoom-in lg:-rotate-6 lg:hover:rotate-0"
-                onClick={() => openLightbox(dachshundChefImg, "Generated Output: Dog Chef")}
+                onClick={() => openLightbox("/xml-image-forge/dachshund-chef.png", "Generated Output: Dog Chef")}
               >
                 <div className="relative rounded-lg overflow-hidden border border-synth-purple/50 lg:border-2 shadow-lg lg:shadow-[0_20px_40px_rgba(0,0,0,0.8)] transition-all duration-500 group-hover:border-synth-purple">
-                  <img src={dachshundChefImg} alt="Generated Output: Dog Chef" referrerPolicy="no-referrer" className="w-full aspect-square object-cover lg:grayscale-[30%] group-hover:grayscale-0 transition-all duration-500" />
+                  <img src="/xml-image-forge/dachshund-chef.png" alt="Generated Output: Dog Chef" referrerPolicy="no-referrer" className="w-full aspect-square object-cover lg:grayscale-[30%] group-hover:grayscale-0 transition-all duration-500" />
                   <div className="absolute bottom-0 left-0 w-full bg-black/90 backdrop-blur-md p-1.5 lg:p-2 border-t border-synth-purple/30 lg:translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                     <p className="text-[8px] lg:text-[10px] xl:text-xs font-mono text-fuchsia-400 truncate">&lt;subject&gt;Dachshund Chef&lt;/subject&gt;</p>
                   </div>
@@ -134,10 +128,10 @@ const FeaturedProject = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="relative lg:absolute lg:bottom-[5%] lg:left-[5%] w-full lg:w-[45%] xl:w-[40%] z-10 hover:z-50 transition-all duration-500 lg:hover:scale-110 lg:hover:-translate-y-4 group cursor-zoom-in lg:rotate-4 lg:hover:rotate-0"
-                onClick={() => openLightbox(tvFishBowlImg, "Generated Output: TV Fish Bowl")}
+                onClick={() => openLightbox("/xml-image-forge/tv-fish-bowl.png", "Generated Output: TV Fish Bowl")}
               >
                 <div className="relative rounded-lg overflow-hidden border border-synth-cyan/50 lg:border-2 shadow-lg lg:shadow-[0_20px_40px_rgba(0,0,0,0.8)] transition-all duration-500 group-hover:border-synth-cyan">
-                  <img src={tvFishBowlImg} alt="Generated Output: TV Fish Bowl" referrerPolicy="no-referrer" className="w-full aspect-square object-cover lg:grayscale-[30%] group-hover:grayscale-0 transition-all duration-500" />
+                  <img src="/xml-image-forge/tv-fish-bowl.png" alt="Generated Output: TV Fish Bowl" referrerPolicy="no-referrer" className="w-full aspect-square object-cover lg:grayscale-[30%] group-hover:grayscale-0 transition-all duration-500" />
                   <div className="absolute bottom-0 left-0 w-full bg-black/90 backdrop-blur-md p-1.5 lg:p-2 border-t border-synth-cyan/30 lg:translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                     <p className="text-[8px] lg:text-[10px] xl:text-xs font-mono text-synth-cyan truncate">&lt;subject&gt;TV Fish Bowl&lt;/subject&gt;</p>
                   </div>
@@ -151,10 +145,10 @@ const FeaturedProject = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.4 }}
                 className="relative lg:absolute lg:top-[15%] lg:right-[0%] w-full lg:w-[45%] xl:w-[40%] z-10 hover:z-50 transition-all duration-500 lg:hover:scale-110 lg:hover:-translate-y-4 group cursor-zoom-in lg:rotate-8 lg:hover:rotate-0"
-                onClick={() => openLightbox(lakeCabinImg, "Generated Output: Lake Cabin")}
+                onClick={() => openLightbox("/xml-image-forge/lake-cabin.png", "Generated Output: Lake Cabin")}
               >
                 <div className="relative rounded-lg overflow-hidden border border-pink-500/50 lg:border-2 shadow-lg lg:shadow-[0_20px_40px_rgba(0,0,0,0.8)] transition-all duration-500 group-hover:border-pink-500">
-                  <img src={lakeCabinImg} alt="Generated Output: Lake Cabin" referrerPolicy="no-referrer" className="w-full aspect-square object-cover lg:grayscale-[30%] group-hover:grayscale-0 transition-all duration-500" />
+                  <img src="/xml-image-forge/lake-cabin.png" alt="Generated Output: Lake Cabin" referrerPolicy="no-referrer" className="w-full aspect-square object-cover lg:grayscale-[30%] group-hover:grayscale-0 transition-all duration-500" />
                   <div className="absolute bottom-0 left-0 w-full bg-black/90 backdrop-blur-md p-1.5 lg:p-2 border-t border-pink-500/30 lg:translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                     <p className="text-[8px] lg:text-[10px] xl:text-xs font-mono text-pink-400 truncate">&lt;environment&gt;Lake Sunset&lt;/environment&gt;</p>
                   </div>
