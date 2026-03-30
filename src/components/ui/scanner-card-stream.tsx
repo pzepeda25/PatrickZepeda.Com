@@ -187,10 +187,10 @@ export const ScannerCardStream = ({
       const scannerLeft = scannerX - scannerWidth / 2;
       const scannerRight = scannerX + scannerWidth / 2;
       let anyCardIsScanning = false;
-      cardLine.querySelectorAll<HTMLElement>(".card-wrapper").forEach((wrapper, index) => {
+      (cardLine.querySelectorAll(".card-wrapper") as NodeListOf<HTMLElement>).forEach((wrapper, index) => {
         const rect = wrapper.getBoundingClientRect();
-        const asciiCard = wrapper.querySelector<HTMLElement>(".card-ascii")!;
-        const asciiContent = asciiCard.querySelector<HTMLElement>('pre')!;
+        const asciiCard = wrapper.querySelector(".card-ascii") as HTMLElement;
+        const asciiContent = asciiCard.querySelector('pre') as HTMLElement;
         
         if (rect.left < scannerRight && rect.right > scannerLeft) {
           anyCardIsScanning = true;
@@ -368,7 +368,7 @@ export const ScannerCardStream = ({
               >
                 <div className="h-[200px] w-full overflow-hidden relative border-b border-synth-cyan/30">
                   <div className="absolute inset-0 bg-synth-purple/40 mix-blend-overlay z-10 group-hover:bg-transparent transition-colors duration-500"></div>
-                  <img src={card.image} alt={card.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
+                  <img src={card.image} alt={card.title} referrerPolicy="no-referrer" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
                 </div>
                 <div className="p-4 flex flex-col flex-1 justify-between bg-black/50 whitespace-normal">
                   <h3 className="text-white font-bold text-sm line-clamp-2 font-sans group-hover:text-synth-cyan transition-colors leading-snug">{card.title}</h3>

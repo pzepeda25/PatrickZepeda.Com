@@ -40,8 +40,9 @@ const SectionHeading = ({ title, subtitle, align = 'left' }: { title: string, su
   </div>
 );
 
-const RetroWindow = ({ title, children, className = '' }: { title: string, children: React.ReactNode, className?: string }) => (
+const RetroWindow = ({ title, children, className = '', ...props }: { title: string, children: React.ReactNode, className?: string, [key: string]: any }) => (
   <motion.div 
+    {...props}
     initial={{ opacity: 0, scale: 0.95 }}
     whileInView={{ opacity: 1, scale: 1 }}
     viewport={{ once: true }}
@@ -76,6 +77,7 @@ export default function App() {
             <img 
               src="/logo.png" 
               alt="Brand Logo" 
+              referrerPolicy="no-referrer"
               className="h-12 w-auto drop-shadow-[0_0_10px_rgba(255,0,255,0.5)]"
               onError={(e) => {
                 // Hide if the user hasn't uploaded the image to public/logo.png yet
@@ -90,7 +92,7 @@ export default function App() {
             <a href="#services" className="hover:text-synth-cyan transition-colors">SERVICES</a>
             <a href="#stack" className="hover:text-synth-cyan transition-colors">STACK</a>
             <a href="https://notebooklm.google.com/notebook/dea47e58-def2-444c-a0a9-a9a797a2cd57/preview" target="_blank" rel="noopener noreferrer" className="text-synth-cyan hover:text-white transition-colors flex items-center gap-1.5 bg-synth-cyan/10 px-3 py-1.5 rounded-full border border-synth-cyan/30">
-              <img src="https://www.gstatic.com/images/branding/product/1x/notebooklm_64dp.png" alt="NotebookLM" className="w-4 h-4 object-contain brightness-0 invert" onError={(e) => { e.currentTarget.src = 'https://notebooklm.google.com/favicon.ico'; }} /> NEW Notebook LM / How To GitHub
+              <img src="https://www.gstatic.com/images/branding/product/1x/notebooklm_64dp.png" alt="NotebookLM" referrerPolicy="no-referrer" className="w-4 h-4 object-contain brightness-0 invert" onError={(e) => { e.currentTarget.src = 'https://notebooklm.google.com/favicon.ico'; }} /> NEW Notebook LM / How To GitHub
             </a>
             <a href="#contact" className="text-synth-magenta hover:text-white transition-colors">CONTACT</a>
           </div>
@@ -114,7 +116,7 @@ export default function App() {
             <a href="#services" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">SERVICES</a>
             <a href="#stack" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">STACK</a>
             <a href="https://notebooklm.google.com/notebook/dea47e58-def2-444c-a0a9-a9a797a2cd57/preview" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)} className="text-synth-cyan hover:text-white transition-colors flex items-center gap-2 py-2 border-b border-synth-cyan/10">
-              <img src="https://www.gstatic.com/images/branding/product/1x/notebooklm_64dp.png" alt="NotebookLM" className="w-4 h-4 object-contain brightness-0 invert" onError={(e) => { e.currentTarget.src = 'https://notebooklm.google.com/favicon.ico'; }} /> NEW Notebook LM / How To GitHub
+              <img src="https://www.gstatic.com/images/branding/product/1x/notebooklm_64dp.png" alt="NotebookLM" referrerPolicy="no-referrer" className="w-4 h-4 object-contain brightness-0 invert" onError={(e) => { e.currentTarget.src = 'https://notebooklm.google.com/favicon.ico'; }} /> NEW Notebook LM / How To GitHub
             </a>
             <a href="#contact" onClick={() => setIsMobileMenuOpen(false)} className="text-synth-magenta hover:text-white transition-colors py-2">CONTACT</a>
           </motion.div>
@@ -417,7 +419,7 @@ export default function App() {
             <BookOpen className="w-5 h-5" />
           </a>
           <a href="https://notebooklm.google.com/notebook/dea47e58-def2-444c-a0a9-a9a797a2cd57/preview" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-synth-cyan transition-colors flex items-center gap-2" title="Chat with my Notebook LM research">
-            <img src="https://www.gstatic.com/images/branding/product/1x/notebooklm_64dp.png" alt="NotebookLM" className="w-5 h-5 object-contain brightness-0 invert opacity-70 hover:opacity-100 transition-all" onError={(e) => { e.currentTarget.src = 'https://notebooklm.google.com/favicon.ico'; }} />
+            <img src="https://www.gstatic.com/images/branding/product/1x/notebooklm_64dp.png" alt="NotebookLM" referrerPolicy="no-referrer" className="w-5 h-5 object-contain brightness-0 invert opacity-70 hover:opacity-100 transition-all" onError={(e) => { e.currentTarget.src = 'https://notebooklm.google.com/favicon.ico'; }} />
             <span className="hidden sm:inline">NEW Notebook LM / How To GitHub</span>
           </a>
         </div>
