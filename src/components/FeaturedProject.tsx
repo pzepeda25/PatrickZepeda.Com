@@ -3,10 +3,10 @@ import { ExternalLink, Sparkles, Code } from 'lucide-react';
 import { motion } from 'motion/react';
 
 // Import project images to ensure they are processed by Vite
-import imageForgeImg from '@/assets/image-forge.png';
-import dachshundChefImg from '@/assets/dachshund-chef.png';
-import tvFishBowlImg from '@/assets/tv-fish-bowl.png';
-import lakeCabinImg from '@/assets/lake-cabin.png';
+import imageForgeImg from '../assets/image-forge.png';
+import dachshundChefImg from '../assets/dachshund-chef.png';
+import tvFishBowlImg from '../assets/tv-fish-bowl.png';
+import lakeCabinImg from '../assets/lake-cabin.png';
 
 const FeaturedProject = () => {
   return (
