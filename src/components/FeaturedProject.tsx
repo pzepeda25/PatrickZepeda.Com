@@ -111,10 +111,10 @@ const FeaturedProject = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="relative lg:absolute lg:top-[5%] lg:left-[0%] w-full lg:w-[45%] xl:w-[40%] z-30 hover:z-50 transition-all duration-500 lg:hover:scale-110 lg:hover:-translate-y-4 group cursor-zoom-in lg:-rotate-6 lg:hover:rotate-0"
-                onClick={() => openLightbox("/xml-image-forge/dachshund-chef.png", "Generated Output: Dog Chef")}
+                onClick={() => openLightbox("/xml-image-forge/dog-chef.png", "Generated Output: Dog Chef")}
               >
                 <div className="relative rounded-lg overflow-hidden border border-synth-purple/50 lg:border-2 shadow-lg lg:shadow-[0_20px_40px_rgba(0,0,0,0.8)] transition-all duration-500 group-hover:border-synth-purple">
-                  <img src="/xml-image-forge/dachshund-chef.png" alt="Generated Output: Dog Chef" referrerPolicy="no-referrer" className="w-full aspect-square object-cover lg:grayscale-[30%] group-hover:grayscale-0 transition-all duration-500" />
+                  <img src="/xml-image-forge/dog-chef.png" alt="Generated Output: Dog Chef" referrerPolicy="no-referrer" className="w-full aspect-square object-cover lg:grayscale-[30%] group-hover:grayscale-0 transition-all duration-500" />
                   <div className="absolute bottom-0 left-0 w-full bg-black/90 backdrop-blur-md p-1.5 lg:p-2 border-t border-synth-purple/30 lg:translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                     <p className="text-[8px] lg:text-[10px] xl:text-xs font-mono text-fuchsia-400 truncate">&lt;subject&gt;Dachshund Chef&lt;/subject&gt;</p>
                   </div>
