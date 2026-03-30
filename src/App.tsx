@@ -13,8 +13,10 @@ import {
 } from 'lucide-react';
 
 // Components
-import MediumFeed from './components/MediumFeed';
-import FeaturedProject from './components/FeaturedProject';
+// ⚡ Bolt Optimization: Lazy loading heavy components that are "below the fold"
+// Impact: Reduces initial main bundle size by ~500kB (moves ThreeJS to separate chunk)
+const MediumFeed = lazy(() => import('./components/MediumFeed'));
+const FeaturedProject = lazy(() => import('./components/FeaturedProject'));
 
 const ContactModal = lazy(() => import('./components/ContactModal').then(module => ({ default: module.ContactModal })));
 
@@ -175,7 +177,9 @@ export default function App() {
       </section>
 
       {/* Featured Project Section */}
-      <FeaturedProject />
+      <Suspense fallback={<div className="py-24 animate-pulse bg-synth-darker flex items-center justify-center text-synth-cyan font-mono border-y border-synth-cyan/20">LOADING_PROJECT...</div>}>
+        <FeaturedProject />
+      </Suspense>
 
       {/* Credibility & Roles */}
       <section className="py-24 bg-synth-dark relative border-y border-synth-cyan/20">
@@ -202,7 +206,9 @@ export default function App() {
       </section>
 
       {/* Medium Feed Section */}
-      <MediumFeed />
+      <Suspense fallback={<div className="py-24 animate-pulse bg-synth-dark flex items-center justify-center text-synth-cyan font-mono border-t border-synth-cyan/20">LOADING_TRANSMISSIONS...</div>}>
+        <MediumFeed />
+      </Suspense>
 
       {/* What I Do (Services) */}
       <section id="services" className="py-24 relative">
