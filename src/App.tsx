@@ -9,13 +9,12 @@ import {
   Terminal, MonitorPlay, Layers, 
   Zap, ChevronRight, Mail,
   Radio, Aperture, Settings, Users, PlaySquare, Search,
-  Cpu, Code, Workflow, Camera, Briefcase, PenTool, Linkedin, BookOpen, Bot, Menu, X
+  Cpu, Code, Workflow, Camera, Briefcase, PenTool, Linkedin, BookOpen, Bot, Menu, X, BookText
 } from 'lucide-react';
 
 const ContactModal = lazy(() => import('./components/ContactModal').then(module => ({ default: module.ContactModal })));
 import MediumFeed from './components/MediumFeed';
 import FeaturedProject from './components/FeaturedProject';
-import Admin from './pages/Admin';
 
 const SectionHeading = ({ title, subtitle, align = 'left' }: { title: string, subtitle?: string, align?: 'left' | 'center' }) => (
   <div className={`mb-12 ${align === 'center' ? 'text-center' : ''}`}>
@@ -73,13 +72,6 @@ export default function App() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const isAdminRoute =
-    typeof window !== 'undefined' &&
-    (window.location.pathname === '/admin' ||
-      window.location.pathname.startsWith('/admin/') ||
-      window.location.hash === '#/admin' ||
-      window.location.hash.startsWith('#/admin/'));
-
   const isFormRoute =
     typeof window !== 'undefined' &&
     (window.location.pathname === '/form' ||
@@ -93,10 +85,6 @@ export default function App() {
       setIsContactModalOpen(true);
     }
   }, [isFormRoute]);
-
-  if (isAdminRoute) {
-    return <Admin />;
-  }
 
   return (
     <div className="min-h-screen crt relative selection:bg-synth-magenta selection:text-white">
@@ -122,8 +110,8 @@ export default function App() {
           <div className="hidden md:flex items-center gap-6 font-mono text-sm">
             <a href="#services" className="hover:text-synth-cyan transition-colors">SERVICES</a>
             <a href="#stack" className="hover:text-synth-cyan transition-colors">STACK</a>
-            <a href="https://notebooklm.google.com/notebook/1ab7dcb4-d659-4da3-9d44-12bb22a62bee/preview" target="_blank" rel="noopener noreferrer" className="text-synth-cyan hover:text-white transition-colors flex items-center gap-1.5 bg-synth-cyan/10 px-3 py-1.5 rounded-full border border-synth-cyan/30">
-              <Bot className="w-4 h-4" /> NOTEBOOK LM / JULES
+            <a href="https://notebooklm.google.com/notebook/dea47e58-def2-444c-a0a9-a9a797a2cd57/preview" target="_blank" rel="noopener noreferrer" className="text-synth-cyan hover:text-white transition-colors flex items-center gap-1.5 bg-synth-cyan/10 px-3 py-1.5 rounded-full border border-synth-cyan/30">
+              <BookText className="w-4 h-4" /> New NoteBook - How to GitHub
             </a>
             <a href="#contact" className="text-synth-magenta hover:text-white transition-colors">CONTACT</a>
           </div>
@@ -146,8 +134,8 @@ export default function App() {
           >
             <a href="#services" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">SERVICES</a>
             <a href="#stack" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">STACK</a>
-            <a href="https://notebooklm.google.com/notebook/1ab7dcb4-d659-4da3-9d44-12bb22a62bee/preview" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)} className="text-synth-cyan hover:text-white transition-colors flex items-center gap-2 py-2 border-b border-synth-cyan/10">
-              <Bot className="w-4 h-4" /> NOTEBOOK LM / JULES
+            <a href="https://notebooklm.google.com/notebook/dea47e58-def2-444c-a0a9-a9a797a2cd57/preview" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)} className="text-synth-cyan hover:text-white transition-colors flex items-center gap-2 py-2 border-b border-synth-cyan/10">
+              <BookText className="w-4 h-4" /> New NoteBook - How to GitHub
             </a>
             <a href="#contact" onClick={() => setIsMobileMenuOpen(false)} className="text-synth-magenta hover:text-white transition-colors py-2">CONTACT</a>
           </motion.div>
@@ -449,9 +437,9 @@ export default function App() {
           <a href="https://patrickzepeda.medium.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-synth-cyan transition-colors" title="Medium">
             <BookOpen className="w-5 h-5" />
           </a>
-          <a href="https://notebooklm.google.com/notebook/1ab7dcb4-d659-4da3-9d44-12bb22a62bee/preview" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-synth-cyan transition-colors flex items-center gap-2" title="Chat with my Notebook LM research">
-            <Bot className="w-5 h-5" />
-            <span className="hidden sm:inline">NOTEBOOK LM / JULES</span>
+          <a href="https://notebooklm.google.com/notebook/dea47e58-def2-444c-a0a9-a9a797a2cd57/preview" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-synth-cyan transition-colors flex items-center gap-2" title="Chat with my Notebook LM research">
+            <BookText className="w-5 h-5" />
+            <span className="hidden sm:inline">New NoteBook - How to GitHub</span>
           </a>
         </div>
         <p className="hover-glitch inline-block cursor-default">SYSTEM.HALT // © {new Date().getFullYear()} PATRICK ZEPEDA. ALL RIGHTS RESERVED.</p>

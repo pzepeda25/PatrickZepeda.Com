@@ -1,6 +1,10 @@
-const { getStore } = require('@netlify/blobs');
+import { getStore } from '@netlify/blobs';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 
-exports.handler = async (event) => {
+const LOCAL_DATA_PATH = path.join(process.cwd(), '.netlify/local-data/form-submissions.json');
+
+export const handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
@@ -16,10 +20,40 @@ exports.handler = async (event) => {
     };
   }
 
-  const store = getStore('form-submissions');
   const timestamp = new Date().toISOString();
+  const submission = { ...payload, receivedAt: timestamp };
 
-  await store.setJSON(timestamp, { ...payload, receivedAt: timestamp });
+  try {
+    // Try using Netlify Blobs first
+    const store = getStore('form-submissions');
+    await store.setJSON(timestamp, submission);
+    console.log('✅ Form submission stored in Netlify Blobs');
+  } catch (error) {
+    console.warn('⚠️ Netlify Blobs not available locally, falling back to local file storage:', error.message);
+    
+    // Fallback: Local file-based storage
+    try {
+      let submissions = [];
+      try {
+        const data = await fs.readFile(LOCAL_DATA_PATH, 'utf8');
+        submissions = JSON.parse(data);
+      } catch (err) {
+        // File doesn't exist yet, ignore
+      }
+      
+      submissions.push(submission);
+      await fs.mkdir(path.dirname(LOCAL_DATA_PATH), { recursive: true });
+      await fs.writeFile(LOCAL_DATA_PATH, JSON.stringify(submissions, null, 2));
+      console.log('✅ Form submission stored in local JSON file');
+    } catch (fallbackError) {
+      console.error('❌ Failed to store form submission locally:', fallbackError.message);
+      return {
+        statusCode: 500,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: 'Failed to store submission' }),
+      };
+    }
+  }
 
   return {
     statusCode: 200,
@@ -27,4 +61,3 @@ exports.handler = async (event) => {
     body: JSON.stringify({ ok: true }),
   };
 };
-
