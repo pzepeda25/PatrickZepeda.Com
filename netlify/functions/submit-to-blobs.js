@@ -22,15 +22,20 @@ export const handler = async (event) => {
   
   try {
     console.log('Attempting to access Blobs store...');
-    // We use the 'form-submissions' store. Netlify should create it if it doesn't exist.
-    const store = getStore('form-submissions');
+    
+    // Explicitly check for context or provide site ID if available
+    const store = getStore({
+      name: 'form-submissions',
+      siteID: process.env.NETLIFY_SITE_ID,
+      token: process.env.NETLIFY_AUTH_TOKEN,
+    });
     
     console.log('Attempting to setJSON in Blob:', key);
     await store.setJSON(key, {
       ...payload,
       receivedAt: timestamp,
       metadata: {
-        ip: event.headers['client-ip'] || 'hidden',
+        ip: event.headers['client-ip'] || event.headers['x-nf-client-connection-ip'] || 'hidden',
         ua: event.headers['user-agent'] || 'hidden'
       }
     });
@@ -55,7 +60,7 @@ export const handler = async (event) => {
       body: JSON.stringify({ 
         error: 'Vault storage failed', 
         details: error.message,
-        debug: missingVars.length > 0 ? `Missing: ${missingVars.join(', ')}` : 'Environment vars present'
+        debug: missingVars.length > 0 ? `Missing env vars: ${missingVars.join(', ')}` : `Error type: ${error.name}. Make sure Blobs are enabled in Netlify UI.`
       }),
     };
   }

@@ -61,7 +61,10 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
       const data = await response.json().catch(() => ({ error: 'Transmission error' }));
 
       if (!response.ok) {
-        throw new Error(data.error || data.details || 'Signal transmission failed.');
+        const errorMsg = data.debug 
+          ? `${data.error}: ${data.details}. ${data.debug}`
+          : data.error || data.details || 'Signal transmission failed.';
+        throw new Error(errorMsg);
       }
       
       setIsSuccess(true);
