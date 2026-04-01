@@ -41,33 +41,44 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
     const desc = formData.get('description') as string;
     const date = formData.get('date') as string;
 
-    const payload = {
+    const encode = (data: Record<string, string | string[]>) => {
+      return Object.keys(data)
+        .map(key => {
+          const value = data[key];
+          if (Array.isArray(value)) {
+            return value.map(v => `${encodeURIComponent(key)}=${encodeURIComponent(v)}`).join('&');
+          }
+          return `${encodeURIComponent(key)}=${encodeURIComponent(value || '')}`;
+        })
+        .join('&');
+    };
+
+    const payload: Record<string, string | string[]> = {
+      'form-name': 'contact',
       firstName: formData.get('firstName') as string,
       lastName: formData.get('lastName') as string,
       email: formData.get('email') as string,
       phone: formData.get('phone') as string,
       services: selectedServices,
+      services_other: formData.get('services_other') as string,
       urgency,
       description: desc,
-      facebook: facebook || null,
-      instagram: instagram || null,
-      linkedin: linkedin || null,
+      facebook: facebook || '',
+      instagram: instagram || '',
+      linkedin: linkedin || '',
       contactMethod: formData.get('contactMethod') as string,
-      date: date || null,
-      timestamp: new Date().toISOString(),
+      date: date || '',
     };
     
     try {
-      const response = await fetch('/api/submit-form', {
+      const response = await fetch('/', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: encode(payload),
       });
 
-      const data = await response.json().catch(() => ({ error: 'Unknown transmission error' }));
-
       if (!response.ok) {
-        throw new Error(data.error || data.details || 'Transmission failed');
+        throw new Error('Signal transmission failed. Please try again.');
       }
       
       setIsSuccess(true);
@@ -116,7 +127,12 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                     <p className="text-gray-400">Your signal has been received. I'll be in touch soon.</p>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-6">
+                  <form 
+                    onSubmit={handleSubmit} 
+                    className="space-y-6"
+                    data-netlify="true"
+                    name="contact"
+                  >
                     {/* Personal Info */}
                     <div className="space-y-4">
                       <h4 className="text-sm font-bold text-white uppercase tracking-wider border-b border-synth-cyan/20 pb-2">01. Identity</h4>
