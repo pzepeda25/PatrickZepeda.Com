@@ -59,7 +59,7 @@ const FeaturedProject = () => {
               
               <div className="flex items-center justify-center gap-3 px-8 py-4 border border-synth-purple/30 bg-synth-purple/5 rounded-sm w-full sm:w-auto">
                 <Code className="text-synth-purple w-5 h-5" />
-                <span className="text-gray-300 font-mono text-sm uppercase tracking-wider">Optimized for LLMs</span>
+                <span className="text-gray-300 font-mono text-sm uppercase tracking-wider">Now Serving Downloadable JSON Output!</span>
               </div>
             </div>
           </motion.div>
