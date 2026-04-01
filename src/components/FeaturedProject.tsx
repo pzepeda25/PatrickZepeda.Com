@@ -37,7 +37,7 @@ const FeaturedProject = () => {
                 Power up your image prompts. I engineered this tool to generate precise, structured XML configs for your Image Prompt Generator workflows in seconds—so every render is consistent, controllable, and production-ready.
               </p>
               <div className="flex flex-wrap gap-2 pt-2">
-                {['Frontend Development', 'Prompt Engineering', 'LLM Automation', 'UI/UX Design'].map(skill => (
+                {['Frontend Development', 'Prompt Engineering', 'UI/UX Design'].map(skill => (
                   <span key={skill} className="px-2 py-1 bg-synth-cyan/10 border border-synth-cyan/30 rounded text-xs font-mono text-synth-cyan">
                     {skill}
                   </span>
