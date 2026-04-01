@@ -43,12 +43,12 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
       services: selectedServices,
       services_other: formData.get('services_other') as string,
       urgency,
-      description: desc,
-      facebook: facebook || '',
-      instagram: instagram || '',
-      linkedin: linkedin || '',
+      description: formData.get('description') as string,
+      facebook: formData.get('facebook') as string || '',
+      instagram: formData.get('instagram') as string || '',
+      linkedin: formData.get('linkedin') as string || '',
       contactMethod: formData.get('contactMethod') as string,
-      date: date || '',
+      date: formData.get('date') as string || '',
     };
     
     try {
