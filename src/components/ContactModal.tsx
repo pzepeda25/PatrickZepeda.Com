@@ -35,26 +35,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
     });
     if (otherServiceValue) selectedServices.push(otherServiceValue);
     
-    const facebook = formData.get('facebook') as string;
-    const instagram = formData.get('instagram') as string;
-    const linkedin = formData.get('linkedin') as string;
-    const desc = formData.get('description') as string;
-    const date = formData.get('date') as string;
-
-    const encode = (data: Record<string, string | string[]>) => {
-      return Object.keys(data)
-        .map(key => {
-          const value = data[key];
-          if (Array.isArray(value)) {
-            return value.map(v => `${encodeURIComponent(key)}=${encodeURIComponent(v)}`).join('&');
-          }
-          return `${encodeURIComponent(key)}=${encodeURIComponent(value || '')}`;
-        })
-        .join('&');
-    };
-
-    const payload: Record<string, string | string[]> = {
-      'form-name': 'contact',
+    const payload = {
       firstName: formData.get('firstName') as string,
       lastName: formData.get('lastName') as string,
       email: formData.get('email') as string,
@@ -71,14 +52,16 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
     };
     
     try {
-      const response = await fetch('/', {
+      const response = await fetch('/api/submit-to-blobs', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: encode(payload),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
       });
 
+      const data = await response.json().catch(() => ({ error: 'Transmission error' }));
+
       if (!response.ok) {
-        throw new Error('Signal transmission failed. Please try again.');
+        throw new Error(data.error || data.details || 'Signal transmission failed.');
       }
       
       setIsSuccess(true);
@@ -130,31 +113,29 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   <form 
                     onSubmit={handleSubmit} 
                     className="space-y-6"
-                    data-netlify="true"
-                    name="contact"
                   >
                     {/* Personal Info */}
                     <div className="space-y-4">
                       <h4 className="text-sm font-bold text-white uppercase tracking-wider border-b border-synth-cyan/20 pb-2">01. Identity</h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1">
-                          <label className="text-xs font-mono text-synth-cyan uppercase">First Name *</label>
-                          <input required type="text" name="firstName" className="w-full bg-black/50 border border-synth-cyan/30 p-2.5 text-white focus:border-synth-cyan focus:outline-none focus:ring-1 focus:ring-synth-cyan transition-all" />
+                          <label htmlFor="firstName" className="text-xs font-mono text-synth-cyan uppercase">First Name *</label>
+                          <input required id="firstName" type="text" name="firstName" autoComplete="given-name" className="w-full bg-black/50 border border-synth-cyan/30 p-2.5 text-white focus:border-synth-cyan focus:outline-none focus:ring-1 focus:ring-synth-cyan transition-all" />
                         </div>
                         <div className="space-y-1">
-                          <label className="text-xs font-mono text-synth-cyan uppercase">Last Name *</label>
-                          <input required type="text" name="lastName" className="w-full bg-black/50 border border-synth-cyan/30 p-2.5 text-white focus:border-synth-cyan focus:outline-none focus:ring-1 focus:ring-synth-cyan transition-all" />
+                          <label htmlFor="lastName" className="text-xs font-mono text-synth-cyan uppercase">Last Name *</label>
+                          <input required id="lastName" type="text" name="lastName" autoComplete="family-name" className="w-full bg-black/50 border border-synth-cyan/30 p-2.5 text-white focus:border-synth-cyan focus:outline-none focus:ring-1 focus:ring-synth-cyan transition-all" />
                         </div>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1">
-                          <label className="text-xs font-mono text-synth-cyan uppercase">Email Address *</label>
-                          <input required type="email" name="email" className="w-full bg-black/50 border border-synth-cyan/30 p-2.5 text-white focus:border-synth-cyan focus:outline-none focus:ring-1 focus:ring-synth-cyan transition-all" />
+                          <label htmlFor="email" className="text-xs font-mono text-synth-cyan uppercase">Email Address *</label>
+                          <input required id="email" type="email" name="email" autoComplete="email" className="w-full bg-black/50 border border-synth-cyan/30 p-2.5 text-white focus:border-synth-cyan focus:outline-none focus:ring-1 focus:ring-synth-cyan transition-all" />
                         </div>
                         <div className="space-y-1">
-                          <label className="text-xs font-mono text-synth-cyan uppercase">Phone Number</label>
-                          <input type="tel" name="phone" className="w-full bg-black/50 border border-synth-cyan/30 p-2.5 text-white focus:border-synth-cyan focus:outline-none focus:ring-1 focus:ring-synth-cyan transition-all" />
+                          <label htmlFor="phone" className="text-xs font-mono text-synth-cyan uppercase">Phone Number</label>
+                          <input id="phone" type="tel" name="phone" autoComplete="tel" className="w-full bg-black/50 border border-synth-cyan/30 p-2.5 text-white focus:border-synth-cyan focus:outline-none focus:ring-1 focus:ring-synth-cyan transition-all" />
                         </div>
                       </div>
                     </div>
@@ -164,16 +145,16 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       <h4 className="text-sm font-bold text-white uppercase tracking-wider border-b border-synth-cyan/20 pb-2">02. Digital Footprint</h4>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="space-y-1">
-                          <label className="text-xs font-mono text-gray-400 uppercase">LinkedIn URL</label>
-                          <input type="url" name="linkedin" placeholder="https://" className="w-full bg-black/50 border border-synth-cyan/30 p-2.5 text-white focus:border-synth-cyan focus:outline-none focus:ring-1 focus:ring-synth-cyan transition-all" />
+                          <label htmlFor="linkedin" className="text-xs font-mono text-gray-400 uppercase">LinkedIn URL</label>
+                          <input id="linkedin" type="url" name="linkedin" placeholder="https://" className="w-full bg-black/50 border border-synth-cyan/30 p-2.5 text-white focus:border-synth-cyan focus:outline-none focus:ring-1 focus:ring-synth-cyan transition-all" />
                         </div>
                         <div className="space-y-1">
-                          <label className="text-xs font-mono text-gray-400 uppercase">Instagram URL</label>
-                          <input type="url" name="instagram" placeholder="https://" className="w-full bg-black/50 border border-synth-cyan/30 p-2.5 text-white focus:border-synth-cyan focus:outline-none focus:ring-1 focus:ring-synth-cyan transition-all" />
+                          <label htmlFor="instagram" className="text-xs font-mono text-gray-400 uppercase">Instagram URL</label>
+                          <input id="instagram" type="url" name="instagram" placeholder="https://" className="w-full bg-black/50 border border-synth-cyan/30 p-2.5 text-white focus:border-synth-cyan focus:outline-none focus:ring-1 focus:ring-synth-cyan transition-all" />
                         </div>
                         <div className="space-y-1">
-                          <label className="text-xs font-mono text-gray-400 uppercase">Facebook URL</label>
-                          <input type="url" name="facebook" placeholder="https://" className="w-full bg-black/50 border border-synth-cyan/30 p-2.5 text-white focus:border-synth-cyan focus:outline-none focus:ring-1 focus:ring-synth-cyan transition-all" />
+                          <label htmlFor="facebook" className="text-xs font-mono text-gray-400 uppercase">Facebook URL</label>
+                          <input id="facebook" type="url" name="facebook" placeholder="https://" className="w-full bg-black/50 border border-synth-cyan/30 p-2.5 text-white focus:border-synth-cyan focus:outline-none focus:ring-1 focus:ring-synth-cyan transition-all" />
                         </div>
                       </div>
                     </div>
@@ -202,19 +183,20 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                             <span className="text-sm text-gray-300 group-hover:text-white transition-colors">Content Strategy</span>
                           </label>
                           <label className="flex items-center gap-2 cursor-pointer group w-full">
-                            <input type="checkbox" name="services" value="__other_option__" className="w-4 h-4 accent-synth-cyan bg-black/50 border-synth-cyan/30 peer" />
+                            <input id="services_other_check" type="checkbox" name="services" value="__other_option__" className="w-4 h-4 accent-synth-cyan bg-black/50 border-synth-cyan/30 peer" />
                             <span className="text-sm text-gray-300 group-hover:text-white transition-colors">Other:</span>
-                            <input type="text" name="services_other" className="flex-1 bg-transparent border-b border-synth-cyan/30 text-white text-sm focus:outline-none focus:border-synth-cyan px-2 py-1 opacity-50 peer-checked:opacity-100 transition-opacity" placeholder="Please specify..." />
+                            <input id="services_other" type="text" name="services_other" aria-label="Other service" className="flex-1 bg-transparent border-b border-synth-cyan/30 text-white text-sm focus:outline-none focus:border-synth-cyan px-2 py-1 opacity-50 peer-checked:opacity-100 transition-opacity" placeholder="Please specify..." />
                           </label>
                         </div>
                       </div>
 
                       <div className="space-y-2 pt-2">
-                        <label className="text-xs font-mono text-synth-cyan uppercase flex justify-between">
+                        <label htmlFor="urgency" className="text-xs font-mono text-synth-cyan uppercase flex justify-between">
                           <span>Project Urgency</span>
                           <span className="text-white font-bold">{urgency} / 5</span>
                         </label>
                         <input 
+                          id="urgency"
                           type="range" 
                           name="urgency" 
                           min="1" 
@@ -231,8 +213,8 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       </div>
 
                       <div className="space-y-1 pt-2">
-                        <label className="text-xs font-mono text-synth-cyan uppercase">Description of Inquiry *</label>
-                        <textarea required name="description" rows={4} className="w-full bg-black/50 border border-synth-cyan/30 p-2.5 text-white focus:border-synth-cyan focus:outline-none focus:ring-1 focus:ring-synth-cyan transition-all resize-none"></textarea>
+                        <label htmlFor="description" className="text-xs font-mono text-synth-cyan uppercase">Description of Inquiry *</label>
+                        <textarea required id="description" name="description" rows={4} className="w-full bg-black/50 border border-synth-cyan/30 p-2.5 text-white focus:border-synth-cyan focus:outline-none focus:ring-1 focus:ring-synth-cyan transition-all resize-none"></textarea>
                       </div>
                     </div>
 
@@ -241,8 +223,8 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       <h4 className="text-sm font-bold text-white uppercase tracking-wider border-b border-synth-cyan/20 pb-2">04. Logistics</h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1">
-                          <label className="text-xs font-mono text-synth-cyan uppercase">Preferred Contact Method *</label>
-                          <select required name="contactMethod" className="w-full bg-black/50 border border-synth-cyan/30 p-2.5 text-white focus:border-synth-cyan focus:outline-none focus:ring-1 focus:ring-synth-cyan transition-all appearance-none">
+                          <label htmlFor="contactMethod" className="text-xs font-mono text-synth-cyan uppercase">Preferred Contact Method *</label>
+                          <select required id="contactMethod" name="contactMethod" className="w-full bg-black/50 border border-synth-cyan/30 p-2.5 text-white focus:border-synth-cyan focus:outline-none focus:ring-1 focus:ring-synth-cyan transition-all appearance-none">
                             <option value="">Select an option...</option>
                             <option value="Email">Email</option>
                             <option value="Phone Call">Phone Call</option>
@@ -250,8 +232,8 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                           </select>
                         </div>
                         <div className="space-y-1">
-                          <label className="text-xs font-mono text-synth-cyan uppercase">Earliest Available Date</label>
-                          <input type="date" name="date" className="w-full bg-black/50 border border-synth-cyan/30 p-2.5 text-white focus:border-synth-cyan focus:outline-none focus:ring-1 focus:ring-synth-cyan transition-all [color-scheme:dark]" />
+                          <label htmlFor="date" className="text-xs font-mono text-synth-cyan uppercase">Earliest Available Date</label>
+                          <input id="date" type="date" name="date" className="w-full bg-black/50 border border-synth-cyan/30 p-2.5 text-white focus:border-synth-cyan focus:outline-none focus:ring-1 focus:ring-synth-cyan transition-all [color-scheme:dark]" />
                         </div>
                       </div>
                     </div>

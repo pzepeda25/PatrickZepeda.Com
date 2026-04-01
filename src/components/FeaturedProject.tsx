@@ -140,27 +140,27 @@ const FeaturedProject = () => {
             </div>
             
             {/* Decorative connection lines (SVG) */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-20 hidden lg:block" style={{ filter: 'drop-shadow(0 0 5px rgba(0,255,255,0.5))' }}>
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-20 hidden lg:block" style={{ filter: 'drop-shadow(0 0 5px rgba(0,255,255,0.5))' }}>
               <motion.path 
                 initial={{ pathLength: 0 }}
                 whileInView={{ pathLength: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 1.5, delay: 0.5 }}
-                d="M 25% 25% L 50% 50%" stroke="#0ff" strokeWidth="1" strokeDasharray="4 4" fill="none" 
+                d="M 25 25 L 50 50" stroke="#0ff" strokeWidth="0.5" strokeDasharray="1 1" fill="none" 
               />
               <motion.path 
                 initial={{ pathLength: 0 }}
                 whileInView={{ pathLength: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 1.5, delay: 0.7 }}
-                d="M 75% 30% L 50% 50%" stroke="#f0f" strokeWidth="1" strokeDasharray="4 4" fill="none" 
+                d="M 75 30 L 50 50" stroke="#f0f" strokeWidth="0.5" strokeDasharray="1 1" fill="none" 
               />
               <motion.path 
                 initial={{ pathLength: 0 }}
                 whileInView={{ pathLength: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 1.5, delay: 0.9 }}
-                d="M 25% 75% L 50% 50%" stroke="#0ff" strokeWidth="1" strokeDasharray="4 4" fill="none" 
+                d="M 25 75 L 50 50" stroke="#0ff" strokeWidth="0.5" strokeDasharray="1 1" fill="none" 
               />
             </svg>
 
