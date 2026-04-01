@@ -64,8 +64,10 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
         body: JSON.stringify(payload),
       });
 
+      const data = await response.json().catch(() => ({ error: 'Unknown transmission error' }));
+
       if (!response.ok) {
-        throw new Error('Transmission failed');
+        throw new Error(data.error || data.details || 'Transmission failed');
       }
       
       setIsSuccess(true);
@@ -73,9 +75,9 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
         setIsSuccess(false);
         onClose();
       }, 3000);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting form:', error);
-      alert('There was an error submitting the form. Please try again.');
+      alert(`There was an error submitting the form: ${error.message || 'Please try again.'}`);
     } finally {
       setIsSubmitting(false);
     }
