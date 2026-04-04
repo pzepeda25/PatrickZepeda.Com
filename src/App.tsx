@@ -9,7 +9,7 @@ import {
   Terminal, MonitorPlay, Layers, 
   Zap, ChevronRight, Mail,
   Radio, Aperture, Settings, Users, PlaySquare, Search,
-  Cpu, Code, Workflow, Camera, Briefcase, PenTool, Linkedin, BookOpen, Bot, Menu, X, BookText
+  Cpu, Code, Workflow, Camera, Briefcase, PenTool, Linkedin, BookOpen, Bot, Menu, X, BookText, Youtube, Pin
 } from 'lucide-react';
 
 const ContactModal = lazy(() => import('./components/ContactModal').then(module => ({ default: module.ContactModal })));
@@ -134,6 +134,12 @@ export default function App() {
           >
             <a href="#services" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">SERVICES</a>
             <a href="#stack" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">STACK</a>
+            <a href="https://www.youtube.com/@Patrick_Lee_Zepeda" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10 flex items-center gap-2">
+              <Youtube className="w-4 h-4" /> YOUTUBE
+            </a>
+            <a href="https://www.pinterest.com/p_lee_zepeda/ai-lm-notebook-tool-kit/" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10 flex items-center gap-2">
+              <Pin className="w-4 h-4" /> PINTEREST
+            </a>
             <a href="https://notebooklm.google.com/notebook/dea47e58-def2-444c-a0a9-a9a797a2cd57/preview" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)} className="text-synth-cyan hover:text-white transition-colors flex items-center gap-2 py-2 border-b border-synth-cyan/10">
               <BookText className="w-4 h-4" /> New NoteBook - How to GitHub
             </a>
@@ -185,6 +191,28 @@ export default function App() {
                 title="LinkedIn Profile"
               >
                 <Linkedin className="w-5 h-5" />
+              </motion.a>
+              <motion.a 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                href="https://www.youtube.com/@Patrick_Lee_Zepeda" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-4 border border-synth-magenta text-synth-magenta hover:bg-synth-magenta/10 transition-all flex items-center justify-center hover-3d-glasses"
+                title="YouTube Channel"
+              >
+                <Youtube className="w-5 h-5" />
+              </motion.a>
+              <motion.a 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                href="https://www.pinterest.com/p_lee_zepeda/ai-lm-notebook-tool-kit/" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-4 border border-synth-magenta text-synth-magenta hover:bg-synth-magenta/10 transition-all flex items-center justify-center hover-3d-glasses"
+                title="Pinterest Toolkit"
+              >
+                <Pin className="w-5 h-5" />
               </motion.a>
             </div>
           </div>
@@ -430,12 +458,18 @@ export default function App() {
 
       {/* Footer */}
       <footer className="py-8 border-t border-synth-cyan/20 bg-synth-dark text-center font-mono text-sm text-gray-500">
-        <div className="flex justify-center items-center gap-6 mb-4">
+        <div className="flex flex-wrap justify-center items-center gap-6 mb-4">
           <a href="https://www.linkedin.com/in/patrickleezepeda/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-synth-magenta transition-colors" title="LinkedIn">
             <Linkedin className="w-5 h-5" />
           </a>
           <a href="https://patrickzepeda.medium.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-synth-cyan transition-colors" title="Medium">
             <BookOpen className="w-5 h-5" />
+          </a>
+          <a href="https://www.youtube.com/@Patrick_Lee_Zepeda" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-500 transition-colors" title="YouTube">
+            <Youtube className="w-5 h-5" />
+          </a>
+          <a href="https://www.pinterest.com/p_lee_zepeda/ai-lm-notebook-tool-kit/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-600 transition-colors" title="Pinterest">
+            <Pin className="w-5 h-5" />
           </a>
           <a href="https://notebooklm.google.com/notebook/dea47e58-def2-444c-a0a9-a9a797a2cd57/preview" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-synth-cyan transition-colors flex items-center gap-2" title="Chat with my Notebook LM research">
             <BookText className="w-5 h-5" />

@@ -17,7 +17,6 @@
         "npm:@types/three@~0.183.1",
         "npm:@vitejs/plugin-react@^5.0.4",
         "npm:autoprefixer@^10.4.21",
-        "npm:axios@^1.13.6",
         "npm:gh-pages@^6.3.0",
         "npm:lucide-react@0.546",
         "npm:motion@^12.23.24",

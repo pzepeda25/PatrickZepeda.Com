@@ -1,4 +1,8 @@
 import { getStore } from '@netlify/blobs';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+
+const LOCAL_DATA_PATH = path.join(process.cwd(), '.netlify/local-data/form-submissions.json');
 
 export const handler = async (event) => {
   console.log('--- Submission Function Triggered ---');
@@ -19,16 +23,23 @@ export const handler = async (event) => {
 
   const timestamp = new Date().toISOString();
   const key = `${timestamp.replace(/[:.]/g, '-')}-${Math.random().toString(36).substring(2, 7)}`;
+  const isProduction = !!process.env.NETLIFY;
   
   try {
     console.log('Attempting to access Blobs store...');
     
-    // Explicitly check for context or provide site ID if available
-    const store = getStore({
-      name: 'form-submissions',
-      siteID: process.env.NETLIFY_SITE_ID,
-      token: process.env.NETLIFY_AUTH_TOKEN,
-    });
+    // Try primary method: Automatic context
+    let store;
+    try {
+      store = getStore('form-submissions');
+    } catch (e) {
+      console.log('Automatic getStore failed, trying explicit config...');
+      store = getStore({
+        name: 'form-submissions',
+        siteID: process.env.NETLIFY_SITE_ID,
+        token: process.env.NETLIFY_AUTH_TOKEN,
+      });
+    }
     
     console.log('Attempting to setJSON in Blob:', key);
     await store.setJSON(key, {
@@ -40,27 +51,55 @@ export const handler = async (event) => {
       }
     });
 
-    console.log('✅ Success: Submission stored.');
+    console.log('✅ Success: Submission stored in Blobs.');
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ok: true, id: key }),
+      body: JSON.stringify({ ok: true, id: key, provider: 'blobs' }),
     };
   } catch (error) {
-    console.error('❌ Blobs Error:', error);
+    console.error('❌ Blobs Error:', error.message);
     
-    // Check if we're missing environment variables
-    const missingVars = [];
-    if (!process.env.NETLIFY_SITE_ID) missingVars.push('NETLIFY_SITE_ID');
-    if (!process.env.NETLIFY_AUTH_TOKEN) missingVars.push('NETLIFY_AUTH_TOKEN');
-    
+    // Fallback: Only if NOT in production (for local testing as requested)
+    if (!isProduction) {
+      console.log('⚠️ Falling back to local file storage for testing...');
+      try {
+        let submissions = [];
+        try {
+          const data = await fs.readFile(LOCAL_DATA_PATH, 'utf8');
+          submissions = JSON.parse(data);
+        } catch (readErr) { /* ignore missing file */ }
+        
+        const localEntry = { ...payload, key, receivedAt: timestamp };
+        submissions.push(localEntry);
+        
+        await fs.mkdir(path.dirname(LOCAL_DATA_PATH), { recursive: true });
+        await fs.writeFile(LOCAL_DATA_PATH, JSON.stringify(submissions, null, 2));
+        
+        console.log('✅ Success: Submission stored in local file.');
+        return {
+          statusCode: 200,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ok: true, id: key, provider: 'local-file' }),
+        };
+      } catch (fallbackError) {
+        console.error('❌ Local fallback failed:', fallbackError.message);
+      }
+    }
+
+    // In production, we MUST use Blobs. Return failure info.
+    const debug = [];
+    if (!process.env.NETLIFY_SITE_ID) debug.push('Missing SITE_ID');
+    if (!process.env.NETLIFY_AUTH_TOKEN) debug.push('Missing AUTH_TOKEN');
+    if (!isProduction) debug.push('Not in production environment');
+
     return {
       statusCode: 500,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
         error: 'Vault storage failed', 
         details: error.message,
-        debug: missingVars.length > 0 ? `Missing env vars: ${missingVars.join(', ')}` : `Error type: ${error.name}. Make sure Blobs are enabled in Netlify UI.`
+        debug: debug.length > 0 ? debug.join(' | ') : 'Check Netlify Blobs permissions in Dashboard'
       }),
     };
   }
