@@ -1,0 +1,3 @@
+## 2024-05-24 - Intersection Observer for Canvas/WebGL Animations
+**Learning:** Found a heavy requestAnimationFrame loop running THREE.js and custom Canvas 2D rendering continuously, even when the `ScannerCardStream` component was completely off-screen. This is a common performance anti-pattern in React apps that use Canvas/WebGL. Pausing it with an IntersectionObserver drastically reduces idle CPU/GPU usage.
+**Action:** When working with continuous animations (especially WebGL/Canvas), always verify if the component runs its render loop unconditionally. Wrap it in an IntersectionObserver to pause the loop when not visible.

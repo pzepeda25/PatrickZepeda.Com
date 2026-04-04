@@ -246,7 +246,30 @@ export const ScannerCardStream = ({
     window.addEventListener("touchend", handleMouseUp);
     cardLine.addEventListener("wheel", handleWheel, { passive: true });
 
+    // ⚡ Bolt Optimization: Use IntersectionObserver to pause the animation loop
+    // when the component is off-screen. This significantly reduces idle CPU/GPU usage
+    // by not calculating WebGL/Canvas updates for unseen elements.
+    let isVisible = true;
+    let isAnimating = true;
+    const container = cardLine.parentElement;
+    const observer = new IntersectionObserver((entries) => {
+      isVisible = entries[0].isIntersecting;
+      if (isVisible && !isAnimating) {
+        isAnimating = true;
+        // Reset lastTime to avoid massive deltaTime jump when resuming
+        cardStreamState.current.lastTime = performance.now();
+        animationFrameId = requestAnimationFrame(animate);
+      }
+    });
+    if (container) observer.observe(container);
+
     const animate = (currentTime: number) => {
+      // ⚡ Bolt Optimization: Skip frame if off-screen
+      if (!isVisible) {
+        isAnimating = false;
+        return;
+      }
+
       const deltaTime = (currentTime - cardStreamState.current.lastTime) / 1000;
       cardStreamState.current.lastTime = currentTime;
       
@@ -315,6 +338,7 @@ export const ScannerCardStream = ({
       geometry.dispose();
       material.dispose();
       texture.dispose();
+      if (container) observer.unobserve(container);
     };
   }, [isPaused, cards, cardGap, friction, scanEffect]);
 
