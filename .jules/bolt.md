@@ -1,0 +1,3 @@
+## 2024-05-24 - Expensive WebGL contexts and React state
+**Learning:** Using React state (like `isPaused`) for simple UI interactions and including it in a `useEffect` dependency array that initializes heavy graphics contexts (like Three.js scenes) causes extreme performance drops when those contexts are repeatedly destroyed and recreated. Similarly, updating React state inside a `requestAnimationFrame` loop simply for CSS toggles or unused variables causes constant, heavy component re-renders.
+**Action:** Use `useRef` for variables updated within animation loops or variables that trigger logic but don't need to drive a full UI re-render, and manipulate the DOM directly for simple opacity toggles rather than driving them with state.
