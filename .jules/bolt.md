@@ -1,0 +1,3 @@
+## 2024-03-01 - [Layout Thrashing in React Animation Loops]
+**Learning:** Found a specific bottleneck in `src/components/ui/scanner-card-stream.tsx`. Inside `updateCardEffects()` running in a `requestAnimationFrame` loop, `getBoundingClientRect()` was being called inside a `.forEach` loop across all card elements, interleaved with `style.setProperty()`. This forces synchronous layout calculation (layout thrashing) on every frame and limits the frame rate significantly on mobile and low-end devices.
+**Action:** Always pre-calculate DOM coordinates mathematically based on current scroll position or cache bounds outside of render loops. Separate all DOM reads from all DOM writes to prevent forced reflows inside animation ticks.
