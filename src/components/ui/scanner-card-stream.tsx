@@ -6,15 +6,15 @@ import * as THREE from 'three';
 // --- Helper function to generate ASCII-like code ---
 const ASCII_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789(){}[]<>;:,._-+=!@#$%^&*|\\/\"'`~?";
 const generateCode = (width: number, height: number): string => {
-  let text = "";
-  for (let i = 0; i < width * height; i++) {
-    text += ASCII_CHARS[Math.floor(Math.random() * ASCII_CHARS.length)];
-  }
-  let out = "";
+  const lines = [];
   for (let i = 0; i < height; i++) {
-    out += text.substring(i * width, (i + 1) * width) + "\n";
+    let line = "";
+    for (let j = 0; j < width; j++) {
+      line += ASCII_CHARS[Math.floor(Math.random() * ASCII_CHARS.length)];
+    }
+    lines.push(line);
   }
-  return out;
+  return lines.join("\n") + "\n";
 };
 
 export type CardData = {
@@ -292,7 +292,7 @@ export const ScannerCardStream = ({
         p.x += p.vx; p.y += p.vy; p.life -= p.decay;
         if (p.life <= 0 || p.x > window.innerWidth) Object.assign(p, createScannerParticle());
         ctx.globalAlpha = p.alpha * p.life; ctx.fillStyle = "white";
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fill();
+        ctx.fillRect(p.x - p.radius, p.y - p.radius, p.radius * 2, p.radius * 2);
       });
       
       animationFrameId = requestAnimationFrame(animate);
