@@ -67,10 +67,12 @@ export const ScannerCardStream = ({
     }))
   }, [cardsData, repeat, cardWidth]);
 
+  const containerRef = useRef<HTMLDivElement>(null);
   const cardLineRef = useRef<HTMLDivElement>(null);
   const particleCanvasRef = useRef<HTMLCanvasElement>(null);
   const scannerCanvasRef = useRef<HTMLCanvasElement>(null);
   const originalAscii = useRef(new Map<number, string>());
+  const isVisible = useRef(true);
 
   const cardStreamState = useRef({
     position: 0, 
@@ -98,6 +100,24 @@ export const ScannerCardStream = ({
     
     cards.forEach(card => originalAscii.current.set(card.id, card.ascii));
     let animationFrameId: number;
+
+    const container = containerRef.current;
+    let observer: IntersectionObserver | null = null;
+    if (container) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            isVisible.current = entry.isIntersecting;
+            if (entry.isIntersecting) {
+              // Reset lastTime to prevent big jump when resuming
+              cardStreamState.current.lastTime = performance.now();
+            }
+          });
+        },
+        { threshold: 0 }
+      );
+      observer.observe(container);
+    }
 
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(-window.innerWidth / 2, window.innerWidth / 2, 125, -125, 1, 1000);
@@ -247,6 +267,12 @@ export const ScannerCardStream = ({
     cardLine.addEventListener("wheel", handleWheel, { passive: true });
 
     const animate = (currentTime: number) => {
+      if (!isVisible.current) {
+        cardStreamState.current.lastTime = currentTime;
+        animationFrameId = requestAnimationFrame(animate);
+        return;
+      }
+
       const deltaTime = (currentTime - cardStreamState.current.lastTime) / 1000;
       cardStreamState.current.lastTime = currentTime;
       
@@ -302,6 +328,9 @@ export const ScannerCardStream = ({
     animationFrameId = requestAnimationFrame(animate);
     
     return () => { 
+      if (observer) {
+        observer.disconnect();
+      }
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', resizeCanvas);
       cardLine.removeEventListener("mousedown", handleMouseDown);
@@ -319,7 +348,7 @@ export const ScannerCardStream = ({
   }, [isPaused, cards, cardGap, friction, scanEffect]);
 
   return (
-    <div className="relative w-full h-[400px] flex items-center justify-center overflow-hidden"
+    <div ref={containerRef} className="relative w-full h-[400px] flex items-center justify-center overflow-hidden"
          onMouseEnter={() => setIsPaused(true)}
          onMouseLeave={() => setIsPaused(false)}>
       <style>{`
