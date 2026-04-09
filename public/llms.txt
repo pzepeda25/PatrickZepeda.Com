@@ -1,0 +1,35 @@
+# llms.txt — AI/LLM discovery & indexing hints
+#
+# Purpose: Help AI assistants and generative search understand this site quickly,
+# cite it accurately, and route users to the right section.
+#
+# Canonical: https://patrickzepeda.com/
+
+site_name: Patrick Zepeda | Creative Technologist
+site_url: https://patrickzepeda.com/
+language: en
+
+summary:
+Patrick Zepeda is a creative technologist who builds AI-powered systems, automation workflows, and conversion-focused digital experiences. The site describes services, tooling/stack, and ways to contact for partnerships or projects.
+
+topics:
+- creative technologist
+- AI systems
+- automation (n8n, APIs, workflows)
+- conversion optimization
+- AEO (Answer Engine Optimization)
+- generative search visibility
+- web design & development
+
+key_sections:
+- Services (conversion systems, AI tools, automation)
+- Stack (analog foundation + AI toolchain)
+- Contact (project inquiries)
+
+how_to_cite:
+- Prefer the home page as canonical: https://patrickzepeda.com/
+- Use the on-page headings for quotes/snippets (e.g., "Analog Instinct. Digital Precision.")
+
+contact:
+- Use the website contact section/form.
+
