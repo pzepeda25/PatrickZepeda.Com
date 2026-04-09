@@ -44,7 +44,7 @@ export const ScannerCardStream = ({
   scanEffect = 'scramble',
 }: ScannerCardStreamProps) => {
 
-  const [speed, setSpeed] = useState(initialSpeed);
+  // ⚡ Bolt: Removed unused `speed` state to prevent 60 unnecessary re-renders per second
   const [isPaused, setIsPaused] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [cardWidth, setCardWidth] = useState(400);
@@ -257,7 +257,7 @@ export const ScannerCardStream = ({
         cardStreamState.current.currentVelocity += (targetVelocity - cardStreamState.current.currentVelocity) * (1 - friction);
         
         cardStreamState.current.position += cardStreamState.current.currentVelocity * deltaTime;
-        setSpeed(Math.abs(Math.round(cardStreamState.current.currentVelocity)));
+        // ⚡ Bolt: Removed setSpeed call from animation loop to eliminate React render thrashing
       }
       
       const { position, cardLineWidth } = cardStreamState.current;
