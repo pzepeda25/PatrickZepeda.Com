@@ -1,5 +1,5 @@
 # Compatibility alias. See /llms.txt
 
 This file exists for tools that look for `llm.txt`.
-Primary file: https://patrickzepeda.com/llms.txt
+Primary file: https://patrickleezepeda.com/llms.txt
 

@@ -3,8 +3,8 @@
 # Simple pointer file for AI systems.
 #
 # Discovery:
-# - https://patrickzepeda.com/llms.txt
-# - https://patrickzepeda.com/sitemap.xml
+# - https://patrickleezepeda.com/llms.txt
+# - https://patrickleezepeda.com/sitemap.xml
 
-llms: https://patrickzepeda.com/llms.txt
-sitemap: https://patrickzepeda.com/sitemap.xml
+llms: https://patrickleezepeda.com/llms.txt
+sitemap: https://patrickleezepeda.com/sitemap.xml

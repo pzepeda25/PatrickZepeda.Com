@@ -3,10 +3,10 @@
 # Purpose: Help AI assistants and generative search understand this site quickly,
 # cite it accurately, and route users to the right section.
 #
-# Canonical: https://patrickzepeda.com/
+# Canonical: https://patrickleezepeda.com/
 
 site_name: Patrick Zepeda | Creative Technologist
-site_url: https://patrickzepeda.com/
+site_url: https://patrickleezepeda.com/
 language: en
 
 summary:
@@ -27,7 +27,7 @@ key_sections:
 - Contact (project inquiries)
 
 how_to_cite:
-- Prefer the home page as canonical: https://patrickzepeda.com/
+- Prefer the home page as canonical: https://patrickleezepeda.com/
 - Use the on-page headings for quotes/snippets (e.g., "Analog Instinct. Digital Precision.")
 
 contact:
