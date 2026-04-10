@@ -195,17 +195,29 @@ export const ScannerCardStream = ({
         }, 30);
     };
 
+    // Cache DOM elements to avoid querySelectorAll inside the animation loop
+    const cachedCardElements = Array.from(cardLine.querySelectorAll(".card-wrapper")).map((wrapperNode) => {
+      const wrapper = wrapperNode as HTMLElement;
+      return {
+        wrapper,
+        asciiCard: wrapper.querySelector(".card-ascii") as HTMLElement,
+        asciiContent: wrapper.querySelector(".card-ascii pre") as HTMLElement,
+      };
+    });
+
     const updateCardEffects = () => {
       const scannerX = window.innerWidth * SCANNER_X_RATIO;
       const scannerWidth = 8;
       const scannerLeft = scannerX - scannerWidth / 2;
       const scannerRight = scannerX + scannerWidth / 2;
       let anyCardIsScanning = false;
-      cardLine.querySelectorAll(".card-wrapper").forEach((wrapper, index) => {
-        const wrapperEl = wrapper as HTMLElement;
-        const rect = wrapperEl.getBoundingClientRect();
-        const asciiCard = wrapperEl.querySelector(".card-ascii") as HTMLElement;
-        const asciiContent = asciiCard.querySelector('pre') as HTMLElement;
+
+      // Phase 1: Read all layout properties
+      const rects = cachedCardElements.map(({ wrapper }) => wrapper.getBoundingClientRect());
+
+      // Phase 2: Write all layout properties
+      cachedCardElements.forEach(({ wrapper, asciiCard, asciiContent }, index) => {
+        const rect = rects[index];
         
         if (rect.left < scannerRight && rect.right > scannerLeft) {
           anyCardIsScanning = true;
@@ -224,8 +236,11 @@ export const ScannerCardStream = ({
           }
         }
       });
-      setIsScanning(anyCardIsScanning);
-      scannerState.current.isScanning = anyCardIsScanning;
+
+      if (scannerState.current.isScanning !== anyCardIsScanning) {
+        setIsScanning(anyCardIsScanning);
+        scannerState.current.isScanning = anyCardIsScanning;
+      }
     };
     
     const handleMouseDown = (e: MouseEvent | TouchEvent) => { 
@@ -285,8 +300,8 @@ export const ScannerCardStream = ({
          cardStreamState.current.position -= cardLineWidth / 2;
       }
       
-      cardLine.style.transform = `translateX(${cardStreamState.current.position}px)`;
       updateCardEffects();
+      cardLine.style.transform = `translateX(${cardStreamState.current.position}px)`;
       
       const time = currentTime * 0.001;
       for (let i = 0; i < particleCount; i++) {
