@@ -5,6 +5,12 @@ import * as THREE from 'three';
 
 // --- Helper function to generate ASCII-like code ---
 const ASCII_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789(){}[]<>;:,._-+=!@#$%^&*|\\/\"'`~?";
+/** Horizontal position of the scan line (0–1). Left of center reveals the title card longer as cards scroll. */
+const SCANNER_X_RATIO = 0.30;
+
+/** Matches the stream section height (`h-[400px]`). Particles use full vertical band. */
+const STREAM_SECTION_HEIGHT = 400;
+
 const generateCode = (width: number, height: number): string => {
   let text = "";
   for (let i = 0; i < width * height; i++) {
@@ -100,10 +106,11 @@ export const ScannerCardStream = ({
     let animationFrameId: number;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.OrthographicCamera(-window.innerWidth / 2, window.innerWidth / 2, 125, -125, 1, 1000);
+    const halfH = STREAM_SECTION_HEIGHT / 2;
+    const camera = new THREE.OrthographicCamera(-window.innerWidth / 2, window.innerWidth / 2, halfH, -halfH, 1, 1000);
     camera.position.z = 100;
     const renderer = new THREE.WebGLRenderer({ canvas: particleCanvas, alpha: true, antialias: true });
-    renderer.setSize(window.innerWidth, 288);
+    renderer.setSize(window.innerWidth, STREAM_SECTION_HEIGHT);
     renderer.setClearColor(0x000000, 0);
     const particleCount = 400;
     const geometry = new THREE.BufferGeometry();
@@ -125,7 +132,7 @@ export const ScannerCardStream = ({
     const texture = new THREE.CanvasTexture(texCanvas);
     for (let i = 0; i < particleCount; i++) {
         positions[i * 3] = (Math.random() - 0.5) * window.innerWidth * 2;
-        positions[i * 3 + 1] = (Math.random() - 0.5) * 288;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * STREAM_SECTION_HEIGHT;
         velocities[i] = Math.random() * 60 + 30;
         alphas[i] = (Math.random() * 8 + 2) / 10;
     }
@@ -143,10 +150,12 @@ export const ScannerCardStream = ({
     
     const resizeCanvas = () => {
       scannerCanvas.width = window.innerWidth;
-      scannerCanvas.height = 340;
-      renderer.setSize(window.innerWidth, 288);
+      scannerCanvas.height = STREAM_SECTION_HEIGHT;
+      renderer.setSize(window.innerWidth, STREAM_SECTION_HEIGHT);
       camera.left = -window.innerWidth / 2;
       camera.right = window.innerWidth / 2;
+      camera.top = STREAM_SECTION_HEIGHT / 2;
+      camera.bottom = -STREAM_SECTION_HEIGHT / 2;
       camera.updateProjectionMatrix();
     };
     window.addEventListener('resize', resizeCanvas);
@@ -156,9 +165,16 @@ export const ScannerCardStream = ({
     const baseMaxParticles = 800;
     let currentMaxParticles = baseMaxParticles;
     const scanTargetMaxParticles = 2500;
+    /** Full-height sparkle band (still drawn below cards via z-index). */
     const createScannerParticle = () => ({
-      x: window.innerWidth / 2 + (Math.random() - 0.5) * 3, y: Math.random() * 300, vx: Math.random() * 0.8 + 0.2, vy: (Math.random() - 0.5) * 0.3,
-      radius: Math.random() * 0.6 + 0.4, alpha: Math.random() * 0.4 + 0.6, life: 1.0, decay: Math.random() * 0.02 + 0.005,
+      x: window.innerWidth * SCANNER_X_RATIO + (Math.random() - 0.5) * 3,
+      y: Math.random() * STREAM_SECTION_HEIGHT,
+      vx: Math.random() * 0.8 + 0.2,
+      vy: (Math.random() - 0.5) * 0.3,
+      radius: Math.random() * 0.6 + 0.4,
+      alpha: Math.random() * 0.4 + 0.6,
+      life: 1.0,
+      decay: Math.random() * 0.02 + 0.005,
     });
     for (let i = 0; i < baseMaxParticles; i++) scannerParticles.push(createScannerParticle());
     
@@ -180,7 +196,7 @@ export const ScannerCardStream = ({
     };
 
     const updateCardEffects = () => {
-      const scannerX = window.innerWidth / 2;
+      const scannerX = window.innerWidth * SCANNER_X_RATIO;
       const scannerWidth = 8;
       const scannerLeft = scannerX - scannerWidth / 2;
       const scannerRight = scannerX + scannerWidth / 2;
@@ -283,14 +299,16 @@ export const ScannerCardStream = ({
       geometry.attributes.alpha.needsUpdate = true;
       renderer.render(scene, camera);
       
-      ctx.clearRect(0, 0, window.innerWidth, 300);
+      ctx.clearRect(0, 0, window.innerWidth, STREAM_SECTION_HEIGHT);
       const targetCount = scannerState.current.isScanning ? scanTargetMaxParticles : baseMaxParticles;
       currentMaxParticles += (targetCount - currentMaxParticles) * 0.05;
       while (scannerParticles.length < currentMaxParticles) scannerParticles.push(createScannerParticle());
       while (scannerParticles.length > currentMaxParticles) scannerParticles.pop();
       scannerParticles.forEach(p => {
         p.x += p.vx; p.y += p.vy; p.life -= p.decay;
-        if (p.life <= 0 || p.x > window.innerWidth) Object.assign(p, createScannerParticle());
+        if (p.life <= 0 || p.x > window.innerWidth || p.y > STREAM_SECTION_HEIGHT + 15 || p.y < -15) {
+          Object.assign(p, createScannerParticle());
+        }
         ctx.globalAlpha = p.alpha * p.life; ctx.fillStyle = "white";
         ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fill();
       });
@@ -326,30 +344,33 @@ export const ScannerCardStream = ({
         @keyframes glitch { 0%, 16%, 50%, 100% { opacity: 1; } 15%, 99% { opacity: 0.9; } 49% { opacity: 0.8; } }
         .animate-glitch { animation: glitch 0.1s infinite linear alternate-reverse; }
         @keyframes scanPulse {
-          0% { opacity: 0.75; transform: scaleY(1) translateX(-50%); }
-          100% { opacity: 1; transform: scaleY(1.03) translateX(-50%); }
+          0% { opacity: 0.85; transform: translate(-50%, -50%) scaleY(1); }
+          100% { opacity: 1; transform: translate(-50%, -50%) scaleY(1.02); }
         }
         .animate-scan-pulse {
           animation: scanPulse 1.5s infinite alternate ease-in-out;
         }
       `}</style>
       
-      <canvas ref={particleCanvasRef} className="absolute top-1/2 left-0 -translate-y-1/2 w-full h-[288px] z-0 pointer-events-none" />
-      <canvas ref={scannerCanvasRef} className="absolute top-1/2 left-0 -translate-y-1/2 w-full h-[340px] z-10 pointer-events-none" />
+      <canvas ref={particleCanvasRef} className="absolute inset-0 w-full h-full z-0 pointer-events-none" />
+      {/* Below cards (z-15) so white scan sparkles are not painted over the Medium card UI */}
+      <canvas ref={scannerCanvasRef} className="absolute inset-0 w-full h-full z-[5] pointer-events-none" />
       
       <div
         className={`
-          scanner-line absolute top-1/2 left-1/2 h-[320px] w-0.5 -translate-y-1/2 
-          bg-gradient-to-b from-transparent via-synth-cyan to-transparent rounded-full
+          scanner-line absolute top-1/2 h-[288px] w-px 
+          bg-gradient-to-b from-transparent via-synth-cyan/85 to-transparent rounded-full
           transition-opacity duration-300 z-20 pointer-events-none animate-scan-pulse
           ${isScanning ? 'opacity-100' : 'opacity-0'}
         `}
         style={{
-          boxShadow: '0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff'
+          left: `${SCANNER_X_RATIO * 100}%`,
+          // Glow only to the left of the beam — avoids blowing out the decrypted image/title on the right
+          boxShadow: '-6px 0 14px rgba(0,255,255,0.45), -14px 0 28px rgba(0,255,255,0.18)',
         }}
       />
 
-      <div className="absolute w-full h-[288px] flex items-center">
+      <div className="absolute inset-x-0 h-[288px] flex items-center justify-center z-[15] min-w-0">
         <div ref={cardLineRef} className="flex items-center whitespace-nowrap select-none will-change-transform" style={{ gap: `${cardGap}px`, width: 'max-content', touchAction: 'pan-y' }}>
           {cards.map((card, idx) => (
             <div key={`${card.id}-${idx}`} className="card-wrapper relative h-[288px] shrink-0" style={{ width: `${cardWidth}px` }}>
