@@ -15,6 +15,7 @@ import {
 const ContactModal = lazy(() => import('./components/ContactModal').then(module => ({ default: module.ContactModal })));
 import MediumFeed from './components/MediumFeed';
 import FeaturedProject from './components/FeaturedProject';
+import YouTubeLatestVideos from './components/YouTubeLatestVideos';
 
 const SectionHeading = ({ title, subtitle, align = 'left' }: { title: string, subtitle?: string, align?: 'left' | 'center' }) => (
   <div className={`mb-12 ${align === 'center' ? 'text-center' : ''}`}>
@@ -92,8 +93,8 @@ export default function App() {
       
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-40 bg-synth-bg/80 backdrop-blur-md border-b border-synth-cyan/30">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-4">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-y-3 gap-x-4">
+          <div className="flex items-center gap-4 min-w-0 shrink-0">
             <img 
               src="/logo.png" 
               alt="Brand Logo" 
@@ -107,13 +108,16 @@ export default function App() {
               <span className="neon-flicker text-glow-cyan">P</span>_ZEPEDA<span className="text-synth-magenta animate-pulse">_</span>
             </div>
           </div>
-          <div className="hidden md:flex items-center gap-6 font-mono text-sm">
-            <a href="#services" className="hover:text-synth-cyan transition-colors">SERVICES</a>
-            <a href="#stack" className="hover:text-synth-cyan transition-colors">STACK</a>
-            <a href="https://notebooklm.google.com/notebook/dea47e58-def2-444c-a0a9-a9a797a2cd57/preview" target="_blank" rel="noopener noreferrer" className="text-synth-cyan hover:text-white transition-colors flex items-center gap-1.5 bg-synth-cyan/10 px-3 py-1.5 rounded-full border border-synth-cyan/30">
-              <BookText className="w-4 h-4" /> New NoteBook - How to GitHub
+          <div className="hidden md:flex flex-1 min-w-0 flex-wrap items-center justify-end gap-x-4 gap-y-2 font-mono text-sm">
+            <a href="#services" className="hover:text-synth-cyan transition-colors whitespace-nowrap">SERVICES</a>
+            <a href="#latest-build" className="hover:text-synth-cyan transition-colors whitespace-nowrap">Latest Build</a>
+            <a href="#read" className="hover:text-synth-cyan transition-colors whitespace-nowrap">Read</a>
+            <a href="#vids" className="hover:text-synth-cyan transition-colors whitespace-nowrap">View Vids</a>
+            <a href="#stack" className="hover:text-synth-cyan transition-colors whitespace-nowrap">STACK</a>
+            <a href="https://notebooklm.google.com/notebook/dea47e58-def2-444c-a0a9-a9a797a2cd57/preview" target="_blank" rel="noopener noreferrer" className="text-synth-cyan hover:text-white transition-colors inline-flex items-center gap-1.5 bg-synth-cyan/10 px-3 py-1.5 rounded-full border border-synth-cyan/30 whitespace-nowrap">
+              <BookText className="w-4 h-4 shrink-0" /> <span className="hidden xl:inline">New NoteBook - How to GitHub</span><span className="xl:hidden">NotebookLM</span>
             </a>
-            <a href="#contact" className="text-synth-magenta hover:text-white transition-colors">CONTACT</a>
+            <a href="#contact" className="text-synth-magenta hover:text-white transition-colors whitespace-nowrap">CONTACT</a>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -133,6 +137,9 @@ export default function App() {
             className="md:hidden absolute top-full left-0 w-full bg-synth-bg/95 backdrop-blur-xl border-b border-synth-cyan/30 py-4 px-6 flex flex-col gap-4 font-mono text-sm shadow-2xl"
           >
             <a href="#services" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">SERVICES</a>
+            <a href="#latest-build" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">Latest Build</a>
+            <a href="#read" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">Read</a>
+            <a href="#vids" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">View Vids</a>
             <a href="#stack" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">STACK</a>
             <a href="https://www.youtube.com/@Patrick_Lee_Zepeda" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10 flex items-center gap-2">
               <Youtube className="w-4 h-4" /> YOUTUBE
@@ -315,6 +322,13 @@ export default function App() {
               </ul>
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* YouTube — above Analog / AI stack */}
+      <section id="vids" className="py-24 bg-synth-dark border-t border-synth-cyan/20 scroll-mt-24">
+        <div className="max-w-7xl mx-auto px-6">
+          <YouTubeLatestVideos />
         </div>
       </section>
 

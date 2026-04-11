@@ -69,7 +69,10 @@ export default function MediumFeed() {
 
   if (loading) {
     return (
-      <section className="py-24 relative overflow-hidden bg-synth-dark border-t border-synth-cyan/20">
+      <section
+        id="read"
+        className="py-24 relative overflow-hidden bg-synth-dark border-t border-synth-cyan/20 scroll-mt-24"
+      >
         <div className="h-[400px] flex items-center justify-center text-synth-cyan font-mono animate-pulse">
           LOADING_TRANSMISSIONS...
         </div>
@@ -78,7 +81,10 @@ export default function MediumFeed() {
   }
 
   return (
-    <section className="py-24 relative overflow-hidden bg-synth-dark border-t border-synth-cyan/20">
+    <section
+      id="read"
+      className="py-24 relative overflow-hidden bg-synth-dark border-t border-synth-cyan/20 scroll-mt-24"
+    >
       <div className="max-w-7xl mx-auto px-6 mb-12 relative z-30">
         <motion.h2 
           initial={{ opacity: 0, y: 20 }}
