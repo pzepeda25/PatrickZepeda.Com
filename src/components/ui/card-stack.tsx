@@ -162,6 +162,13 @@ export function CardStack<T extends CardStackItem>({
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowLeft') prev();
     if (e.key === 'ArrowRight') next();
+    if (e.key === 'Enter') {
+      const cur = items[active];
+      if (cur?.href) {
+        e.preventDefault();
+        window.open(cur.href, '_blank', 'noopener,noreferrer');
+      }
+    }
   };
 
   React.useEffect(() => {
@@ -247,24 +254,22 @@ export function CardStack<T extends CardStackItem>({
 
               const zIndex = 100 - abs;
 
-              const hasLink = Boolean(item.href);
-              const dragProps =
-                isActive && !hasLink
-                  ? {
-                      drag: 'x' as const,
-                      dragConstraints: { left: 0, right: 0 },
-                      dragElastic: 0.18,
-                      onDragEnd: (_e: unknown, info: DragEndInfo) => {
-                        if (reduceMotion) return;
-                        const travel = info.offset.x;
-                        const v = info.velocity.x;
-                        const threshold = Math.min(160, cardWidth * 0.22);
+              const dragProps = isActive
+                ? {
+                    drag: 'x' as const,
+                    dragConstraints: { left: 0, right: 0 },
+                    dragElastic: 0.18,
+                    onDragEnd: (_e: unknown, info: DragEndInfo) => {
+                      if (reduceMotion) return;
+                      const travel = info.offset.x;
+                      const v = info.velocity.x;
+                      const threshold = Math.min(160, cardWidth * 0.22);
 
-                        if (travel > threshold || v > 650) prev();
-                        else if (travel < -threshold || v < -650) next();
-                      },
-                    }
-                  : {};
+                      if (travel > threshold || v > 650) prev();
+                      else if (travel < -threshold || v < -650) next();
+                    },
+                  }
+                : {};
 
               return (
                 <motion.div
@@ -272,11 +277,9 @@ export function CardStack<T extends CardStackItem>({
                   className={cn(
                     'absolute bottom-0 rounded-2xl border-4 border-black/10 dark:border-white/10 overflow-hidden shadow-xl',
                     'will-change-transform select-none',
-                    hasLink
-                      ? 'cursor-pointer'
-                      : isActive
-                        ? 'cursor-grab active:cursor-grabbing'
-                        : 'cursor-pointer',
+                    isActive
+                      ? 'cursor-grab active:cursor-grabbing touch-pan-x'
+                      : 'cursor-pointer',
                   )}
                   style={{
                     width: cardWidth,
@@ -310,7 +313,13 @@ export function CardStack<T extends CardStackItem>({
                     damping: springDamping,
                   }}
                   onClick={() => {
-                    if (!hasLink) setActive(i);
+                    if (!isActive) {
+                      setActive(i);
+                      return;
+                    }
+                    if (item.href) {
+                      window.open(item.href, '_blank', 'noopener,noreferrer');
+                    }
                   }}
                   {...dragProps}
                 >
@@ -321,22 +330,7 @@ export function CardStack<T extends CardStackItem>({
                       transformStyle: 'preserve-3d',
                     }}
                   >
-                    {hasLink ? (
-                      <a
-                        href={item.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block h-full w-full rounded-[inherit] overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-synth-cyan focus-visible:ring-offset-2 focus-visible:ring-offset-synth-dark"
-                        aria-label={`Open video: ${item.title}`}
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {renderCard ? (
-                          renderCard(item, { active: isActive })
-                        ) : (
-                          <DefaultFanCard item={item} active={isActive} />
-                        )}
-                      </a>
-                    ) : renderCard ? (
+                    {renderCard ? (
                       renderCard(item, { active: isActive })
                     ) : (
                       <DefaultFanCard item={item} active={isActive} />
@@ -350,7 +344,7 @@ export function CardStack<T extends CardStackItem>({
       </div>
 
       {showDots ? (
-        <div className="mt-6 flex items-center justify-center gap-3">
+        <div className="mt-3 sm:mt-4 md:mt-6 flex items-center justify-center gap-3">
           <div className="flex items-center gap-2">
             {items.map((it, idx) => {
               const on = idx === active;

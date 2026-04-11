@@ -254,7 +254,7 @@ export default function App() {
       </section>
 
       {/* YouTube — after Identity; Medium follows Services */}
-      <section id="vids" className="py-24 bg-synth-dark border-t border-synth-cyan/20 scroll-mt-24">
+      <section id="vids" className="py-10 sm:py-16 md:py-24 bg-synth-dark border-t border-synth-cyan/20 scroll-mt-24">
         <div className="w-full max-w-[min(100%,88rem)] mx-auto px-4 sm:px-6 lg:px-10">
           <YouTubeLatestVideos />
         </div>

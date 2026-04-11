@@ -157,8 +157,8 @@ export default function YouTubeLatestVideos() {
 
   if (loading) {
     return (
-      <div className="mb-16 md:mb-20">
-        <div className="h-[420px] flex items-center justify-center rounded-lg border border-synth-cyan/20 bg-synth-bg/30 text-synth-cyan font-mono text-sm animate-pulse">
+      <div className="mb-6 sm:mb-10 md:mb-16">
+        <div className="h-[220px] sm:h-[300px] md:h-[420px] flex items-center justify-center rounded-lg border border-synth-cyan/20 bg-synth-bg/30 text-synth-cyan font-mono text-xs sm:text-sm animate-pulse px-2 text-center">
           LOADING_CHANNEL_FEED...
         </div>
       </div>
@@ -166,8 +166,8 @@ export default function YouTubeLatestVideos() {
   }
 
   return (
-    <div className="mb-16 md:mb-20 w-full">
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div className="mb-6 sm:mb-10 md:mb-16 w-full">
+      <div className="mb-4 sm:mb-6 md:mb-8 flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <motion.h2
             initial={{ opacity: 0, y: 12 }}
