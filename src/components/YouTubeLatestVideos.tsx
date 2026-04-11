@@ -34,18 +34,73 @@ const FALLBACK_ITEMS: CardStackItem[] = [
   },
 ];
 
+function useCardStackLayout() {
+  const [layout, setLayout] = useState({
+    cardWidth: 300,
+    cardHeight: 200,
+    maxVisible: 5,
+    spreadDeg: 36,
+    overlap: 0.5,
+  });
+
+  useEffect(() => {
+    const apply = () => {
+      const w = window.innerWidth;
+      if (w < 480) {
+        setLayout({
+          cardWidth: Math.max(260, Math.min(300, w - 40)),
+          cardHeight: 180,
+          maxVisible: 3,
+          spreadDeg: 28,
+          overlap: 0.55,
+        });
+      } else if (w < 640) {
+        setLayout({
+          cardWidth: 300,
+          cardHeight: 200,
+          maxVisible: 5,
+          spreadDeg: 32,
+          overlap: 0.5,
+        });
+      } else if (w < 900) {
+        setLayout({
+          cardWidth: 380,
+          cardHeight: 240,
+          maxVisible: 5,
+          spreadDeg: 38,
+          overlap: 0.46,
+        });
+      } else if (w < 1200) {
+        setLayout({
+          cardWidth: 460,
+          cardHeight: 270,
+          maxVisible: 7,
+          spreadDeg: 42,
+          overlap: 0.44,
+        });
+      } else {
+        setLayout({
+          cardWidth: 560,
+          cardHeight: 300,
+          maxVisible: 7,
+          spreadDeg: 44,
+          overlap: 0.42,
+        });
+      }
+    };
+    apply();
+    window.addEventListener('resize', apply);
+    return () => window.removeEventListener('resize', apply);
+  }, []);
+
+  return layout;
+}
+
 export default function YouTubeLatestVideos() {
   const [items, setItems] = useState<CardStackItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [narrow, setNarrow] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia('(max-width: 640px)');
-    const apply = () => setNarrow(mq.matches);
-    apply();
-    mq.addEventListener('change', apply);
-    return () => mq.removeEventListener('change', apply);
-  }, []);
+  const { cardWidth, cardHeight, maxVisible, spreadDeg, overlap } =
+    useCardStackLayout();
 
   useEffect(() => {
     let cancelled = false;
@@ -98,9 +153,6 @@ export default function YouTubeLatestVideos() {
     };
   }, []);
 
-  const cardWidth = narrow ? 300 : 480;
-  const cardHeight = narrow ? 200 : 270;
-
   const displayItems = items.length > 0 ? items : FALLBACK_ITEMS;
 
   if (loading) {
@@ -114,7 +166,7 @@ export default function YouTubeLatestVideos() {
   }
 
   return (
-    <div className="mb-16 md:mb-20">
+    <div className="mb-16 md:mb-20 w-full">
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <motion.h2
@@ -147,7 +199,8 @@ export default function YouTubeLatestVideos() {
         </a>
       </div>
 
-      <div className="mx-auto w-full max-w-5xl overflow-x-hidden px-0 sm:px-2">
+      {/* overflow-x-clip avoids horizontal bleed; do not use overflow-x-hidden (forces vertical scrollbars). */}
+      <div className="mx-auto w-full max-w-[min(100%,82rem)] overflow-x-clip overflow-y-visible">
         <CardStack
           items={displayItems}
           initialIndex={0}
@@ -155,10 +208,11 @@ export default function YouTubeLatestVideos() {
           intervalMs={3200}
           pauseOnHover
           showDots
+          maxVisible={maxVisible}
           cardWidth={cardWidth}
           cardHeight={cardHeight}
-          overlap={0.42}
-          spreadDeg={44}
+          overlap={overlap}
+          spreadDeg={spreadDeg}
         />
       </div>
     </div>

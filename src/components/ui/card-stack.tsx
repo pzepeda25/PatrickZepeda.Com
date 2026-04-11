@@ -4,7 +4,6 @@ import {
   AnimatePresence,
   useReducedMotion,
 } from 'motion/react';
-import { SquareArrowOutUpRight } from 'lucide-react';
 
 function cn(...classes: Array<string | undefined | null | false>) {
   return classes.filter(Boolean).join(' ');
@@ -193,17 +192,21 @@ export function CardStack<T extends CardStackItem>({
 
   if (!len) return null;
 
-  const activeItem = items[active]!;
+  /** Extra vertical room so rotated / lifted cards do not force parent overflow-y: auto (e.g. beside overflow-x-hidden). */
+  const stageHeight = Math.max(
+    420,
+    Math.round(cardHeight + 100 + activeLiftPx + cardHeight * 0.14 + Math.abs(tiltXDeg) * 2.5),
+  );
 
   return (
     <div
-      className={cn('w-full', className)}
+      className={cn('w-full overflow-x-clip', className)}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
       <div
-        className="relative w-full"
-        style={{ height: Math.max(380, cardHeight + 80) }}
+        className="relative w-full overflow-visible"
+        style={{ height: stageHeight, minHeight: stageHeight }}
         tabIndex={0}
         onKeyDown={onKeyDown}
       >
@@ -244,22 +247,24 @@ export function CardStack<T extends CardStackItem>({
 
               const zIndex = 100 - abs;
 
-              const dragProps = isActive
-                ? {
-                    drag: 'x' as const,
-                    dragConstraints: { left: 0, right: 0 },
-                    dragElastic: 0.18,
-                    onDragEnd: (_e: unknown, info: DragEndInfo) => {
-                      if (reduceMotion) return;
-                      const travel = info.offset.x;
-                      const v = info.velocity.x;
-                      const threshold = Math.min(160, cardWidth * 0.22);
+              const hasLink = Boolean(item.href);
+              const dragProps =
+                isActive && !hasLink
+                  ? {
+                      drag: 'x' as const,
+                      dragConstraints: { left: 0, right: 0 },
+                      dragElastic: 0.18,
+                      onDragEnd: (_e: unknown, info: DragEndInfo) => {
+                        if (reduceMotion) return;
+                        const travel = info.offset.x;
+                        const v = info.velocity.x;
+                        const threshold = Math.min(160, cardWidth * 0.22);
 
-                      if (travel > threshold || v > 650) prev();
-                      else if (travel < -threshold || v < -650) next();
-                    },
-                  }
-                : {};
+                        if (travel > threshold || v > 650) prev();
+                        else if (travel < -threshold || v < -650) next();
+                      },
+                    }
+                  : {};
 
               return (
                 <motion.div
@@ -267,9 +272,11 @@ export function CardStack<T extends CardStackItem>({
                   className={cn(
                     'absolute bottom-0 rounded-2xl border-4 border-black/10 dark:border-white/10 overflow-hidden shadow-xl',
                     'will-change-transform select-none',
-                    isActive
-                      ? 'cursor-grab active:cursor-grabbing'
-                      : 'cursor-pointer',
+                    hasLink
+                      ? 'cursor-pointer'
+                      : isActive
+                        ? 'cursor-grab active:cursor-grabbing'
+                        : 'cursor-pointer',
                   )}
                   style={{
                     width: cardWidth,
@@ -302,7 +309,9 @@ export function CardStack<T extends CardStackItem>({
                     stiffness: springStiffness,
                     damping: springDamping,
                   }}
-                  onClick={() => setActive(i)}
+                  onClick={() => {
+                    if (!hasLink) setActive(i);
+                  }}
                   {...dragProps}
                 >
                   <div
@@ -312,7 +321,22 @@ export function CardStack<T extends CardStackItem>({
                       transformStyle: 'preserve-3d',
                     }}
                   >
-                    {renderCard ? (
+                    {hasLink ? (
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block h-full w-full rounded-[inherit] overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-synth-cyan focus-visible:ring-offset-2 focus-visible:ring-offset-synth-dark"
+                        aria-label={`Open video: ${item.title}`}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {renderCard ? (
+                          renderCard(item, { active: isActive })
+                        ) : (
+                          <DefaultFanCard item={item} active={isActive} />
+                        )}
+                      </a>
+                    ) : renderCard ? (
                       renderCard(item, { active: isActive })
                     ) : (
                       <DefaultFanCard item={item} active={isActive} />
@@ -346,17 +370,6 @@ export function CardStack<T extends CardStackItem>({
               );
             })}
           </div>
-          {activeItem.href ? (
-            <a
-              href={activeItem.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-400 hover:text-synth-cyan transition"
-              aria-label="Open link"
-            >
-              <SquareArrowOutUpRight className="h-4 w-4" />
-            </a>
-          ) : null}
         </div>
       ) : null}
     </div>

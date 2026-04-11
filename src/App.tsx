@@ -109,15 +109,15 @@ export default function App() {
             </div>
           </div>
           <div className="hidden md:flex flex-1 min-w-0 flex-wrap items-center justify-end gap-x-4 gap-y-2 font-mono text-sm">
-            <a href="#services" className="hover:text-synth-cyan transition-colors whitespace-nowrap">SERVICES</a>
+            <a href="#services" className="hover:text-synth-cyan transition-colors whitespace-nowrap">Services</a>
             <a href="#latest-build" className="hover:text-synth-cyan transition-colors whitespace-nowrap">Latest Build</a>
             <a href="#read" className="hover:text-synth-cyan transition-colors whitespace-nowrap">Read</a>
             <a href="#vids" className="hover:text-synth-cyan transition-colors whitespace-nowrap">View Vids</a>
-            <a href="#stack" className="hover:text-synth-cyan transition-colors whitespace-nowrap">STACK</a>
+            <a href="#stack" className="hover:text-synth-cyan transition-colors whitespace-nowrap">Stack</a>
             <a href="https://notebooklm.google.com/notebook/dea47e58-def2-444c-a0a9-a9a797a2cd57/preview" target="_blank" rel="noopener noreferrer" className="text-synth-cyan hover:text-white transition-colors inline-flex items-center gap-1.5 bg-synth-cyan/10 px-3 py-1.5 rounded-full border border-synth-cyan/30 whitespace-nowrap">
-              <BookText className="w-4 h-4 shrink-0" /> <span className="hidden xl:inline">New NoteBook - How to GitHub</span><span className="xl:hidden">NotebookLM</span>
+              <BookText className="w-4 h-4 shrink-0" /> <span className="hidden xl:inline">New Notebook - How to GitHub</span><span className="xl:hidden">NotebookLM</span>
             </a>
-            <a href="#contact" className="text-synth-magenta hover:text-white transition-colors whitespace-nowrap">CONTACT</a>
+            <a href="#contact" className="text-synth-magenta hover:text-white transition-colors whitespace-nowrap">Contact</a>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -136,21 +136,21 @@ export default function App() {
             animate={{ opacity: 1, y: 0 }}
             className="md:hidden absolute top-full left-0 w-full bg-synth-bg/95 backdrop-blur-xl border-b border-synth-cyan/30 py-4 px-6 flex flex-col gap-4 font-mono text-sm shadow-2xl"
           >
-            <a href="#services" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">SERVICES</a>
+            <a href="#services" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">Services</a>
             <a href="#latest-build" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">Latest Build</a>
             <a href="#read" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">Read</a>
             <a href="#vids" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">View Vids</a>
-            <a href="#stack" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">STACK</a>
+            <a href="#stack" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">Stack</a>
             <a href="https://www.youtube.com/@Patrick_Lee_Zepeda" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10 flex items-center gap-2">
-              <Youtube className="w-4 h-4" /> YOUTUBE
+              <Youtube className="w-4 h-4" /> YouTube
             </a>
             <a href="https://www.pinterest.com/p_lee_zepeda/ai-lm-notebook-tool-kit/" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10 flex items-center gap-2">
-              <Pin className="w-4 h-4" /> PINTEREST
+              <Pin className="w-4 h-4" /> Pinterest
             </a>
             <a href="https://notebooklm.google.com/notebook/dea47e58-def2-444c-a0a9-a9a797a2cd57/preview" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)} className="text-synth-cyan hover:text-white transition-colors flex items-center gap-2 py-2 border-b border-synth-cyan/10">
-              <BookText className="w-4 h-4" /> New NoteBook - How to GitHub
+              <BookText className="w-4 h-4" /> New Notebook - How to GitHub
             </a>
-            <a href="#contact" onClick={() => setIsMobileMenuOpen(false)} className="text-synth-magenta hover:text-white transition-colors py-2">CONTACT</a>
+            <a href="#contact" onClick={() => setIsMobileMenuOpen(false)} className="text-synth-magenta hover:text-white transition-colors py-2">Contact</a>
           </motion.div>
         )}
       </nav>
@@ -253,8 +253,12 @@ export default function App() {
         </div>
       </section>
 
-      {/* Medium Feed Section */}
-      <MediumFeed />
+      {/* YouTube — after Identity; Medium follows Services */}
+      <section id="vids" className="py-24 bg-synth-dark border-t border-synth-cyan/20 scroll-mt-24">
+        <div className="w-full max-w-[min(100%,88rem)] mx-auto px-4 sm:px-6 lg:px-10">
+          <YouTubeLatestVideos />
+        </div>
+      </section>
 
       {/* What I Do (Services) */}
       <section id="services" className="py-24 relative">
@@ -325,12 +329,8 @@ export default function App() {
         </div>
       </section>
 
-      {/* YouTube — above Analog / AI stack */}
-      <section id="vids" className="py-24 bg-synth-dark border-t border-synth-cyan/20 scroll-mt-24">
-        <div className="max-w-7xl mx-auto px-6">
-          <YouTubeLatestVideos />
-        </div>
-      </section>
+      {/* Medium Feed Section */}
+      <MediumFeed />
 
       {/* The Stacks (Analog + AI) */}
       <section id="stack" className="py-24 bg-synth-dark border-y border-synth-cyan/20">

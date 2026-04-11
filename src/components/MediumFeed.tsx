@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { ScannerCardStream, CardData } from './ui/scanner-card-stream';
 import { motion } from 'motion/react';
+import { BookOpen, ExternalLink } from 'lucide-react';
+
+const MEDIUM_PROFILE_URL = 'https://patrickzepeda.medium.com/';
 
 const FALLBACK_CARDS: CardData[] = [
   {
@@ -85,24 +88,36 @@ export default function MediumFeed() {
       id="read"
       className="py-24 relative overflow-hidden bg-synth-dark border-t border-synth-cyan/20 scroll-mt-24"
     >
-      <div className="max-w-7xl mx-auto px-6 mb-12 relative z-30">
-        <motion.h2 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-3xl md:text-5xl font-bold text-white mb-4 uppercase tracking-wider text-glow-cyan font-mono"
+      <div className="max-w-7xl mx-auto px-6 mb-12 relative z-30 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-3xl md:text-5xl font-bold text-white mb-4 uppercase tracking-wider text-glow-cyan font-mono flex items-center gap-3"
+          >
+            <BookOpen className="w-8 h-8 text-synth-cyan shrink-0" />
+            Latest Transmissions
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-synth-magenta text-lg md:text-xl font-mono"
+          >
+            &gt; Decrypting thoughts from the Medium feed...
+          </motion.p>
+        </div>
+        <a
+          href={MEDIUM_PROFILE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 text-sm font-mono text-synth-cyan hover:text-white border border-synth-cyan/40 px-4 py-2 rounded transition-colors shrink-0 self-start sm:self-auto"
         >
-          Latest Transmissions
-        </motion.h2>
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-          className="text-synth-magenta text-lg md:text-xl font-mono"
-        >
-          &gt; Decrypting thoughts from the Medium feed...
-        </motion.p>
+          Visit Medium
+          <ExternalLink className="w-4 h-4" />
+        </a>
       </div>
       
       <div className="relative w-full">
