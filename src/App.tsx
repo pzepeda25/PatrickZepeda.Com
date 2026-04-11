@@ -13,9 +13,9 @@ import {
 } from 'lucide-react';
 
 const ContactModal = lazy(() => import('./components/ContactModal').then(module => ({ default: module.ContactModal })));
-import MediumFeed from './components/MediumFeed';
-import FeaturedProject from './components/FeaturedProject';
-import YouTubeLatestVideos from './components/YouTubeLatestVideos';
+const MediumFeed = lazy(() => import('./components/MediumFeed'));
+const FeaturedProject = lazy(() => import('./components/FeaturedProject'));
+const YouTubeLatestVideos = lazy(() => import('./components/YouTubeLatestVideos'));
 
 const SectionHeading = ({ title, subtitle, align = 'left' }: { title: string, subtitle?: string, align?: 'left' | 'center' }) => (
   <div className={`mb-12 ${align === 'center' ? 'text-center' : ''}`}>
@@ -227,7 +227,7 @@ export default function App() {
       </section>
 
       {/* Featured Project Section */}
-      <FeaturedProject />
+      <Suspense fallback={<div className="min-h-screen"></div>}><FeaturedProject /></Suspense>
 
       {/* Credibility & Roles */}
       <section className="py-24 bg-synth-dark relative border-y border-synth-cyan/20">
@@ -256,7 +256,7 @@ export default function App() {
       {/* YouTube — after Identity; Medium follows Services */}
       <section id="vids" className="py-10 sm:py-16 md:py-24 bg-synth-dark border-t border-synth-cyan/20 scroll-mt-24">
         <div className="w-full max-w-[min(100%,88rem)] mx-auto px-4 sm:px-6 lg:px-10">
-          <YouTubeLatestVideos />
+          <Suspense fallback={<div className="min-h-[400px]"></div>}><YouTubeLatestVideos /></Suspense>
         </div>
       </section>
 
@@ -330,7 +330,7 @@ export default function App() {
       </section>
 
       {/* Medium Feed Section */}
-      <MediumFeed />
+      <Suspense fallback={<div className="min-h-[400px]"></div>}><MediumFeed /></Suspense>
 
       {/* The Stacks (Analog + AI) */}
       <section id="stack" className="py-24 bg-synth-dark border-y border-synth-cyan/20">
