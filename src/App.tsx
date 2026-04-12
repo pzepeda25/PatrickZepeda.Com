@@ -69,9 +69,20 @@ const RetroWindow = ({ title, children, className = '' }: RetroWindowProps) => (
   </motion.div>
 );
 
+/** Section order on the page — used for scroll-spy nav highlighting */
+const NAV_SCROLL_SECTION_IDS = [
+  'latest-build',
+  'vids',
+  'services',
+  'read',
+  'stack',
+  'contact',
+] as const;
+
 export default function App() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeNavSection, setActiveNavSection] = useState<string>('');
 
   const isFormRoute =
     typeof window !== 'undefined' &&
@@ -86,6 +97,57 @@ export default function App() {
       setIsContactModalOpen(true);
     }
   }, [isFormRoute]);
+
+  // Highlight nav link for the section currently in view (lighter = active)
+  React.useEffect(() => {
+    const ids = [...NAV_SCROLL_SECTION_IDS];
+
+    const updateFromScroll = () => {
+      const offset = 140;
+      const y = window.scrollY + offset;
+      let current = '';
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const top = el.getBoundingClientRect().top + window.scrollY;
+        if (top <= y) current = id;
+      }
+      setActiveNavSection((prev) => (prev === current ? prev : current));
+    };
+
+    const applyHash = () => {
+      const raw = window.location.hash.replace(/^#/, '');
+      if (raw && (ids as readonly string[]).includes(raw)) {
+        setActiveNavSection(raw);
+        return true;
+      }
+      return false;
+    };
+
+    const onHashChange = () => {
+      if (!applyHash()) updateFromScroll();
+    };
+
+    if (!applyHash()) updateFromScroll();
+    window.addEventListener('scroll', updateFromScroll, { passive: true });
+    window.addEventListener('resize', updateFromScroll);
+    window.addEventListener('hashchange', onHashChange);
+    return () => {
+      window.removeEventListener('scroll', updateFromScroll);
+      window.removeEventListener('resize', updateFromScroll);
+      window.removeEventListener('hashchange', onHashChange);
+    };
+  }, []);
+
+  const navSectionClass = (id: string) =>
+    activeNavSection === id
+      ? 'text-white font-medium'
+      : 'text-gray-500 hover:text-synth-cyan';
+
+  const navContactClass =
+    activeNavSection === 'contact'
+      ? 'text-synth-magenta font-medium'
+      : 'text-synth-magenta/45 hover:text-white';
 
   return (
     <div className="min-h-screen crt relative selection:bg-synth-magenta selection:text-white">
@@ -108,16 +170,16 @@ export default function App() {
               <span className="neon-flicker text-glow-cyan">P</span>_ZEPEDA<span className="text-synth-magenta animate-pulse">_</span>
             </div>
           </div>
-          <div className="hidden md:flex flex-1 min-w-0 flex-wrap items-center justify-end gap-x-4 gap-y-2 font-mono text-sm">
-            <a href="#services" className="hover:text-synth-cyan transition-colors whitespace-nowrap">Services</a>
-            <a href="#latest-build" className="hover:text-synth-cyan transition-colors whitespace-nowrap">Latest Build</a>
-            <a href="#read" className="hover:text-synth-cyan transition-colors whitespace-nowrap">Read</a>
-            <a href="#vids" className="hover:text-synth-cyan transition-colors whitespace-nowrap">View Vids</a>
-            <a href="#stack" className="hover:text-synth-cyan transition-colors whitespace-nowrap">Stack</a>
+          <div className="hidden md:flex flex-1 min-w-0 flex-wrap items-center justify-end gap-x-4 gap-y-2 font-mono text-sm transition-colors">
+            <a href="#services" aria-current={activeNavSection === 'services' ? 'location' : undefined} className={`whitespace-nowrap transition-colors ${navSectionClass('services')}`}>Services</a>
+            <a href="#latest-build" aria-current={activeNavSection === 'latest-build' ? 'location' : undefined} className={`whitespace-nowrap transition-colors ${navSectionClass('latest-build')}`}>Latest Build</a>
+            <a href="#read" aria-current={activeNavSection === 'read' ? 'location' : undefined} className={`whitespace-nowrap transition-colors ${navSectionClass('read')}`}>Read</a>
+            <a href="#vids" aria-current={activeNavSection === 'vids' ? 'location' : undefined} className={`whitespace-nowrap transition-colors ${navSectionClass('vids')}`}>View Vids</a>
+            <a href="#stack" aria-current={activeNavSection === 'stack' ? 'location' : undefined} className={`whitespace-nowrap transition-colors ${navSectionClass('stack')}`}>Stack</a>
             <a href="https://notebooklm.google.com/notebook/dea47e58-def2-444c-a0a9-a9a797a2cd57/preview" target="_blank" rel="noopener noreferrer" className="text-synth-cyan hover:text-white transition-colors inline-flex items-center gap-1.5 bg-synth-cyan/10 px-3 py-1.5 rounded-full border border-synth-cyan/30 whitespace-nowrap">
               <BookText className="w-4 h-4 shrink-0" /> <span className="hidden xl:inline">New Notebook - How to GitHub</span><span className="xl:hidden">NotebookLM</span>
             </a>
-            <a href="#contact" className="text-synth-magenta hover:text-white transition-colors whitespace-nowrap">Contact</a>
+            <a href="#contact" aria-current={activeNavSection === 'contact' ? 'location' : undefined} className={`whitespace-nowrap transition-colors ${navContactClass}`}>Contact</a>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -136,11 +198,11 @@ export default function App() {
             animate={{ opacity: 1, y: 0 }}
             className="md:hidden absolute top-full left-0 w-full bg-synth-bg/95 backdrop-blur-xl border-b border-synth-cyan/30 py-4 px-6 flex flex-col gap-4 font-mono text-sm shadow-2xl"
           >
-            <a href="#services" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">Services</a>
-            <a href="#latest-build" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">Latest Build</a>
-            <a href="#read" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">Read</a>
-            <a href="#vids" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">View Vids</a>
-            <a href="#stack" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10">Stack</a>
+            <a href="#services" onClick={() => setIsMobileMenuOpen(false)} className={`py-2 border-b border-synth-cyan/10 transition-colors ${navSectionClass('services')}`}>Services</a>
+            <a href="#latest-build" onClick={() => setIsMobileMenuOpen(false)} className={`py-2 border-b border-synth-cyan/10 transition-colors ${navSectionClass('latest-build')}`}>Latest Build</a>
+            <a href="#read" onClick={() => setIsMobileMenuOpen(false)} className={`py-2 border-b border-synth-cyan/10 transition-colors ${navSectionClass('read')}`}>Read</a>
+            <a href="#vids" onClick={() => setIsMobileMenuOpen(false)} className={`py-2 border-b border-synth-cyan/10 transition-colors ${navSectionClass('vids')}`}>View Vids</a>
+            <a href="#stack" onClick={() => setIsMobileMenuOpen(false)} className={`py-2 border-b border-synth-cyan/10 transition-colors ${navSectionClass('stack')}`}>Stack</a>
             <a href="https://www.youtube.com/@Patrick_Lee_Zepeda" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10 flex items-center gap-2">
               <Youtube className="w-4 h-4" /> YouTube
             </a>
@@ -150,7 +212,7 @@ export default function App() {
             <a href="https://notebooklm.google.com/notebook/dea47e58-def2-444c-a0a9-a9a797a2cd57/preview" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)} className="text-synth-cyan hover:text-white transition-colors flex items-center gap-2 py-2 border-b border-synth-cyan/10">
               <BookText className="w-4 h-4" /> New Notebook - How to GitHub
             </a>
-            <a href="#contact" onClick={() => setIsMobileMenuOpen(false)} className="text-synth-magenta hover:text-white transition-colors py-2">Contact</a>
+            <a href="#contact" onClick={() => setIsMobileMenuOpen(false)} className={`py-2 transition-colors ${navContactClass}`}>Contact</a>
           </motion.div>
         )}
       </nav>
