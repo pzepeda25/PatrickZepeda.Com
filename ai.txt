@@ -1,0 +1,10 @@
+# ai.txt
+#
+# Simple pointer file for AI systems.
+#
+# Discovery:
+# - https://patrickleezepeda.com/llms.txt
+# - https://patrickleezepeda.com/sitemap.xml
+
+llms: https://patrickleezepeda.com/llms.txt
+sitemap: https://patrickleezepeda.com/sitemap.xml

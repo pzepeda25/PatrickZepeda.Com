@@ -1,0 +1,8 @@
+# 1. Map /api/ to your functions
+/api/* /.netlify/functions/:splat  200
+
+# 2. React SPA Catch-all (The "Safety Net")
+/* /index.html  200
+
+# Old Form Redirect
+/form   /   301
