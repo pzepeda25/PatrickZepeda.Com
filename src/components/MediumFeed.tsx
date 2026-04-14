@@ -26,7 +26,14 @@ const FALLBACK_CARDS: CardData[] = [
   }
 ];
 
-export default function MediumFeed() {
+/*
+ * ⚡ Bolt Performance Optimization:
+ * Wrapped MediumFeed in React.memo to prevent unnecessary re-renders when
+ * App.tsx updates its activeNavSection scroll state.
+ * This component contains a heavy Three.js canvas (ScannerCardStream) which
+ * shouldn't be re-rendered during normal scrolling.
+ */
+const MediumFeed = React.memo(function MediumFeed() {
   const [cards, setCards] = useState<CardData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -125,4 +132,6 @@ export default function MediumFeed() {
       </div>
     </section>
   );
-}
+});
+
+export default MediumFeed;
