@@ -260,17 +260,6 @@ export default function App() {
                 DESIGN WHAT'S NEXT
                 <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </motion.button>
-              <motion.a 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                href="https://www.linkedin.com/in/patrickleezepeda/" 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-4 border border-synth-magenta text-synth-magenta hover:bg-synth-magenta/10 transition-all flex items-center justify-center hover-3d-glasses"
-                title="LinkedIn Profile"
-              >
-                <Linkedin className="w-5 h-5" />
-              </motion.a>
             </div>
           </div>
         </div>

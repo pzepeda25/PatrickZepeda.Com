@@ -250,10 +250,10 @@ export function LeadChatbot() {
                 {success ? (
                   <div className="flex flex-col items-center justify-center py-10 text-center gap-4">
                     <CheckCircle className="h-12 w-12 text-synth-cyan" />
-                    <p className="text-white text-lg font-semibold">Thanks — you&apos;re in.</p>
+                    <p className="text-white text-lg font-semibold">Awesome — got it.</p>
                     <p className="text-gray-400 max-w-xs">
-                      I&apos;ll review your submission and follow up by email. If it&apos;s urgent, use
-                      the contact form on the page too.
+                      Thanks for reaching out. Patrick will review this and follow up by email soon. If it&apos;s time-sensitive,
+                      use the contact form on the page and mention it&apos;s urgent.
                     </p>
                     <button
                       type="button"
