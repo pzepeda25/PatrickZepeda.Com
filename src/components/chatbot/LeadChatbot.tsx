@@ -223,15 +223,18 @@ export function LeadChatbot() {
               className="fixed z-[101] inset-x-0 bottom-0 top-[12vh] md:inset-auto md:bottom-8 md:right-8 md:top-auto md:h-[min(640px,calc(100vh-8rem))] md:w-[min(100%,420px)] flex flex-col md:rounded-lg overflow-hidden border border-synth-cyan/40 bg-synth-bg shadow-2xl"
             >
               <div className="retro-window-header shrink-0 flex items-center justify-between gap-3 px-4 py-3 border-b border-synth-cyan/20">
-                <div className="min-w-0 grid grid-cols-[auto_1fr] grid-rows-2 items-center gap-x-2">
-                  <Bot className="h-5 w-5 text-synth-magenta row-span-2 self-center" />
+                <div className="min-w-0 grid grid-cols-[auto_1fr] grid-rows-2 gap-x-2">
+                  <div className="col-start-1 row-start-1 flex items-center">
+                    <Bot className="h-5 w-5 text-synth-magenta" />
+                  </div>
                   <h2
                     id="chatbot-title"
-                    className="font-mono text-sm font-bold text-synth-magenta truncate leading-[0.9] self-center"
+                    className="col-start-2 row-start-1 font-mono text-sm font-bold text-synth-magenta truncate leading-none flex items-center"
                   >
                     assistant.exe
                   </h2>
-                  <p className="text-[10px] text-synth-cyan/80 font-mono truncate leading-[0.9] self-center -mt-0.5">
+                  <div className="col-start-1 row-start-2" />
+                  <p className="col-start-2 row-start-2 text-[10px] text-synth-cyan/80 font-mono truncate leading-none -mt-0.5">
                     {step === 'welcome'
                       ? 'How can I help?'
                       : success
