@@ -222,23 +222,22 @@ export function LeadChatbot() {
               transition={{ type: 'spring', damping: 28, stiffness: 320 }}
               className="fixed z-[101] inset-x-0 bottom-0 top-[12vh] md:inset-auto md:bottom-8 md:right-8 md:top-auto md:h-[min(640px,calc(100vh-8rem))] md:w-[min(100%,420px)] flex flex-col md:rounded-lg overflow-hidden border border-synth-cyan/40 bg-synth-bg shadow-2xl"
             >
-              <div className="retro-window-header shrink-0 grid grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 py-3 border-b border-synth-cyan/20">
-                <div className="flex items-center justify-start">
-                  <Bot className="h-5 w-5 text-synth-magenta" />
+              <div className="retro-window-header shrink-0 flex items-center justify-between gap-3 px-4 py-3 border-b border-synth-cyan/20">
+                <div className="flex items-center gap-2 min-w-0">
+                  <Bot className="h-5 w-5 text-synth-magenta shrink-0" />
+                  <div className="min-w-0">
+                    <h2 id="chatbot-title" className="font-mono text-sm font-bold text-synth-magenta truncate">
+                      assistant.exe
+                    </h2>
+                    <p className="text-[10px] text-synth-cyan/80 font-mono truncate">
+                      {step === 'welcome'
+                        ? 'How can I help?'
+                        : success
+                          ? 'Received'
+                          : `Step · ${stepLabel(step)}`}
+                    </p>
+                  </div>
                 </div>
-                <div className="min-w-0 text-center flex flex-col items-center justify-center">
-                  <h2 id="chatbot-title" className="font-mono text-sm font-bold text-synth-magenta truncate">
-                    assistant.exe
-                  </h2>
-                  <p className="text-[10px] text-synth-cyan/80 font-mono truncate">
-                    {step === 'welcome'
-                      ? 'How can I help?'
-                      : success
-                        ? 'Received'
-                        : `Step · ${stepLabel(step)}`}
-                  </p>
-                </div>
-                <div className="flex items-center justify-end">
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
@@ -247,7 +246,6 @@ export function LeadChatbot() {
                 >
                   <X className="h-5 w-5" />
                 </button>
-                </div>
               </div>
 
               <div className="flex-1 overflow-y-auto p-4 space-y-4 font-sans text-sm">
