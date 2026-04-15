@@ -211,6 +211,8 @@ export default function YouTubeLatestVideos() {
           maxVisible={maxVisible}
           cardWidth={cardWidth}
           cardHeight={cardHeight}
+          stageExtraHeightPx={40}
+          stageMinHeight={Math.max(260, cardHeight + 50)}
           overlap={overlap}
           spreadDeg={spreadDeg}
         />

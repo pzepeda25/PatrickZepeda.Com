@@ -13,6 +13,9 @@ import {
 } from 'lucide-react';
 
 const ContactModal = lazy(() => import('./components/ContactModal').then(module => ({ default: module.ContactModal })));
+const LeadChatbot = lazy(() =>
+  import('./components/chatbot/LeadChatbot').then((m) => ({ default: m.LeadChatbot })),
+);
 import MediumFeed from './components/MediumFeed';
 import FeaturedProject from './components/FeaturedProject';
 import YouTubeLatestVideos from './components/YouTubeLatestVideos';
@@ -141,13 +144,13 @@ export default function App() {
 
   const navSectionClass = (id: string) =>
     activeNavSection === id
-      ? 'text-white font-medium'
-      : 'text-gray-500 hover:text-synth-cyan';
+      ? 'text-blue-400 font-medium opacity-60 hover:opacity-100 transition-opacity'
+      : 'text-blue-300/80 hover:text-blue-200 hover:opacity-100 transition-colors transition-opacity';
 
   const navContactClass =
     activeNavSection === 'contact'
-      ? 'text-synth-magenta font-medium'
-      : 'text-synth-magenta/45 hover:text-white';
+      ? 'text-blue-400 font-medium opacity-60 hover:opacity-100 transition-opacity'
+      : 'text-blue-300/80 hover:text-blue-200 hover:opacity-100 transition-colors transition-opacity';
 
   return (
     <div className="min-h-screen crt relative selection:bg-synth-magenta selection:text-white">
@@ -171,10 +174,10 @@ export default function App() {
             </div>
           </div>
           <div className="hidden md:flex flex-1 min-w-0 flex-wrap items-center justify-end gap-x-4 gap-y-2 font-mono text-sm transition-colors">
-            <a href="#services" aria-current={activeNavSection === 'services' ? 'location' : undefined} className={`whitespace-nowrap transition-colors ${navSectionClass('services')}`}>Services</a>
             <a href="#latest-build" aria-current={activeNavSection === 'latest-build' ? 'location' : undefined} className={`whitespace-nowrap transition-colors ${navSectionClass('latest-build')}`}>Latest Build</a>
-            <a href="#read" aria-current={activeNavSection === 'read' ? 'location' : undefined} className={`whitespace-nowrap transition-colors ${navSectionClass('read')}`}>Read</a>
             <a href="#vids" aria-current={activeNavSection === 'vids' ? 'location' : undefined} className={`whitespace-nowrap transition-colors ${navSectionClass('vids')}`}>View Vids</a>
+            <a href="#services" aria-current={activeNavSection === 'services' ? 'location' : undefined} className={`whitespace-nowrap transition-colors ${navSectionClass('services')}`}>Services</a>
+            <a href="#read" aria-current={activeNavSection === 'read' ? 'location' : undefined} className={`whitespace-nowrap transition-colors ${navSectionClass('read')}`}>Read</a>
             <a href="#stack" aria-current={activeNavSection === 'stack' ? 'location' : undefined} className={`whitespace-nowrap transition-colors ${navSectionClass('stack')}`}>Stack</a>
             <a href="https://notebooklm.google.com/notebook/dea47e58-def2-444c-a0a9-a9a797a2cd57/preview" target="_blank" rel="noopener noreferrer" className="text-synth-cyan hover:text-white transition-colors inline-flex items-center gap-1.5 bg-synth-cyan/10 px-3 py-1.5 rounded-full border border-synth-cyan/30 whitespace-nowrap">
               <BookText className="w-4 h-4 shrink-0" /> <span className="hidden xl:inline">New Notebook - How to GitHub</span><span className="xl:hidden">NotebookLM</span>
@@ -198,10 +201,10 @@ export default function App() {
             animate={{ opacity: 1, y: 0 }}
             className="md:hidden absolute top-full left-0 w-full bg-synth-bg/95 backdrop-blur-xl border-b border-synth-cyan/30 py-4 px-6 flex flex-col gap-4 font-mono text-sm shadow-2xl"
           >
-            <a href="#services" onClick={() => setIsMobileMenuOpen(false)} className={`py-2 border-b border-synth-cyan/10 transition-colors ${navSectionClass('services')}`}>Services</a>
             <a href="#latest-build" onClick={() => setIsMobileMenuOpen(false)} className={`py-2 border-b border-synth-cyan/10 transition-colors ${navSectionClass('latest-build')}`}>Latest Build</a>
-            <a href="#read" onClick={() => setIsMobileMenuOpen(false)} className={`py-2 border-b border-synth-cyan/10 transition-colors ${navSectionClass('read')}`}>Read</a>
             <a href="#vids" onClick={() => setIsMobileMenuOpen(false)} className={`py-2 border-b border-synth-cyan/10 transition-colors ${navSectionClass('vids')}`}>View Vids</a>
+            <a href="#services" onClick={() => setIsMobileMenuOpen(false)} className={`py-2 border-b border-synth-cyan/10 transition-colors ${navSectionClass('services')}`}>Services</a>
+            <a href="#read" onClick={() => setIsMobileMenuOpen(false)} className={`py-2 border-b border-synth-cyan/10 transition-colors ${navSectionClass('read')}`}>Read</a>
             <a href="#stack" onClick={() => setIsMobileMenuOpen(false)} className={`py-2 border-b border-synth-cyan/10 transition-colors ${navSectionClass('stack')}`}>Stack</a>
             <a href="https://www.youtube.com/@Patrick_Lee_Zepeda" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10 flex items-center gap-2">
               <Youtube className="w-4 h-4" /> YouTube
@@ -271,17 +274,6 @@ export default function App() {
                 title="YouTube Channel"
               >
                 <Youtube className="w-5 h-5" />
-              </motion.a>
-              <motion.a 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                href="https://www.pinterest.com/p_lee_zepeda/ai-lm-notebook-tool-kit/" 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-4 border border-synth-magenta text-synth-magenta hover:bg-synth-magenta/10 transition-all flex items-center justify-center hover-3d-glasses"
-                title="Pinterest Toolkit"
-              >
-                <Pin className="w-5 h-5" />
               </motion.a>
             </div>
           </div>
@@ -557,6 +549,7 @@ export default function App() {
 
       <Suspense fallback={null}>
         <ContactModal isOpen={isContactModalOpen} onClose={() => setIsContactModalOpen(false)} />
+        <LeadChatbot />
       </Suspense>
     </div>
   );

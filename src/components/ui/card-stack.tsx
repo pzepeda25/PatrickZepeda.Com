@@ -32,6 +32,10 @@ export type CardStackProps<T extends CardStackItem> = {
   cardWidth?: number;
   cardHeight?: number;
 
+  /** Stage sizing (vertical canvas around the cards) */
+  stageMinHeight?: number;
+  stageExtraHeightPx?: number;
+
   /** How much cards overlap each other (0..0.8). Higher = more overlap */
   overlap?: number;
 
@@ -95,6 +99,9 @@ export function CardStack<T extends CardStackItem>({
 
   cardWidth = 520,
   cardHeight = 320,
+
+  stageMinHeight = 420,
+  stageExtraHeightPx = 72,
 
   overlap = 0.48,
   spreadDeg = 48,
@@ -201,8 +208,14 @@ export function CardStack<T extends CardStackItem>({
 
   /** Extra vertical room so rotated / lifted cards do not force parent overflow-y: auto (e.g. beside overflow-x-hidden). */
   const stageHeight = Math.max(
-    420,
-    Math.round(cardHeight + 100 + activeLiftPx + cardHeight * 0.14 + Math.abs(tiltXDeg) * 2.5),
+    stageMinHeight,
+    Math.round(
+      cardHeight +
+        stageExtraHeightPx +
+        activeLiftPx +
+        cardHeight * 0.14 +
+        Math.abs(tiltXDeg) * 2.5,
+    ),
   );
 
   return (
@@ -227,7 +240,7 @@ export function CardStack<T extends CardStackItem>({
         />
 
         <div
-          className="absolute inset-0 flex items-end justify-center"
+          className="absolute bottom-0 right-0 flex items-end justify-center"
           style={{
             perspective: `${perspectivePx}px`,
           }}
