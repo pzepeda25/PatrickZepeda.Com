@@ -222,7 +222,7 @@ export function LeadChatbot() {
               transition={{ type: 'spring', damping: 28, stiffness: 320 }}
               className="fixed z-[101] inset-x-0 bottom-0 top-[12vh] md:inset-auto md:bottom-8 md:right-8 md:top-auto md:h-[min(640px,calc(100vh-8rem))] md:w-[min(100%,420px)] flex flex-col md:rounded-lg overflow-hidden border border-synth-cyan/40 bg-synth-bg shadow-2xl"
             >
-              <div className="retro-window-header shrink-0 flex items-center justify-between gap-3 px-4 py-3 border-b border-synth-cyan/20">
+              <div className="retro-window-header shrink-0 flex items-center justify-between gap-3 px-4 py-4 border-b border-synth-cyan/20">
                 <div className="min-w-0 grid grid-cols-[auto_1fr] grid-rows-2 gap-x-2">
                   <div className="col-start-1 row-start-1 flex items-center">
                     <Bot className="h-5 w-5 text-synth-magenta" />
