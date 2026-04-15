@@ -229,7 +229,7 @@ export function LeadChatbot() {
                   </div>
                   <h2
                     id="chatbot-title"
-                    className="col-start-2 row-start-1 font-mono text-sm font-bold text-synth-magenta truncate leading-none flex items-center"
+                    className="col-start-2 row-start-1 font-mono text-sm font-bold text-synth-magenta truncate leading-none flex items-center relative top-[2px]"
                   >
                     assistant.exe
                   </h2>
