@@ -130,6 +130,10 @@ export const ScannerCardStream = ({
     texCtx.arc(half, half, half, 0, Math.PI * 2);
     texCtx.fill();
     const texture = new THREE.CanvasTexture(texCanvas);
+    // Keep WebGL pixel-store flags compatible with any internal 3D texture uploads.
+    // three.js leaves UNPACK_FLIP_Y / UNPACK_PREMULTIPLY_ALPHA as last-set, and WebGL forbids these for texImage3D.
+    texture.flipY = false;
+    texture.premultiplyAlpha = false;
     for (let i = 0; i < particleCount; i++) {
         positions[i * 3] = (Math.random() - 0.5) * window.innerWidth * 2;
         positions[i * 3 + 1] = (Math.random() - 0.5) * STREAM_SECTION_HEIGHT;
