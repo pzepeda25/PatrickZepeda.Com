@@ -227,11 +227,11 @@ export function LeadChatbot() {
                   <Bot className="h-5 w-5 text-synth-magenta row-span-2 self-center" />
                   <h2
                     id="chatbot-title"
-                    className="font-mono text-sm font-bold text-synth-magenta truncate leading-none self-center"
+                    className="font-mono text-sm font-bold text-synth-magenta truncate leading-[0.9] self-center"
                   >
                     assistant.exe
                   </h2>
-                  <p className="text-[10px] text-synth-cyan/80 font-mono truncate leading-none self-center">
+                  <p className="text-[10px] text-synth-cyan/80 font-mono truncate leading-[0.9] self-center -mt-0.5">
                     {step === 'welcome'
                       ? 'How can I help?'
                       : success
