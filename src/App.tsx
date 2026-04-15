@@ -101,6 +101,13 @@ export default function App() {
     }
   }, [isFormRoute]);
 
+  // Allow other UI (e.g. chatbot) to open the contact modal.
+  React.useEffect(() => {
+    const handler = () => setIsContactModalOpen(true);
+    window.addEventListener('open-contact-modal', handler as EventListener);
+    return () => window.removeEventListener('open-contact-modal', handler as EventListener);
+  }, []);
+
   // Highlight nav link for the section currently in view (lighter = active)
   React.useEffect(() => {
     const ids = [...NAV_SCROLL_SECTION_IDS];
@@ -144,13 +151,13 @@ export default function App() {
 
   const navSectionClass = (id: string) =>
     activeNavSection === id
-      ? 'text-blue-400 font-medium opacity-60 hover:opacity-100 transition-opacity'
-      : 'text-blue-300/80 hover:text-blue-200 hover:opacity-100 transition-colors transition-opacity';
+      ? 'text-synth-cyan font-medium opacity-35 hover:opacity-70 transition-opacity duration-300'
+      : 'text-synth-cyan/80 hover:text-synth-cyan hover:opacity-100 transition-colors transition-opacity';
 
   const navContactClass =
     activeNavSection === 'contact'
-      ? 'text-blue-400 font-medium opacity-60 hover:opacity-100 transition-opacity'
-      : 'text-blue-300/80 hover:text-blue-200 hover:opacity-100 transition-colors transition-opacity';
+      ? 'text-synth-cyan font-medium opacity-35 hover:opacity-70 transition-opacity duration-300'
+      : 'text-synth-cyan/80 hover:text-synth-cyan hover:opacity-100 transition-colors transition-opacity';
 
   return (
     <div className="min-h-screen crt relative selection:bg-synth-magenta selection:text-white">
@@ -263,17 +270,6 @@ export default function App() {
                 title="LinkedIn Profile"
               >
                 <Linkedin className="w-5 h-5" />
-              </motion.a>
-              <motion.a 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                href="https://www.youtube.com/@Patrick_Lee_Zepeda" 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-4 border border-synth-magenta text-synth-magenta hover:bg-synth-magenta/10 transition-all flex items-center justify-center hover-3d-glasses"
-                title="YouTube Channel"
-              >
-                <Youtube className="w-5 h-5" />
               </motion.a>
             </div>
           </div>

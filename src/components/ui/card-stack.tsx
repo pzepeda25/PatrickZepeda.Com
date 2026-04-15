@@ -240,7 +240,7 @@ export function CardStack<T extends CardStackItem>({
         />
 
         <div
-          className="absolute bottom-0 right-0 flex items-end justify-center"
+          className="absolute inset-x-0 bottom-0 flex items-end justify-center"
           style={{
             perspective: `${perspectivePx}px`,
           }}

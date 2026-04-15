@@ -58,7 +58,7 @@ export type StepId =
   | 'budget'
   | 'contact';
 
-export type QuickActionId = 'quote' | 'ai' | 'pricing' | 'inquiry';
+export type QuickActionId = 'contact' | 'quote' | 'ai' | 'pricing' | 'inquiry';
 
 export const QUICK_ACTIONS: {
   id: QuickActionId;
@@ -67,6 +67,11 @@ export const QUICK_ACTIONS: {
   /** If set, skips the project-type step and starts here */
   projectType?: (typeof PROJECT_TYPES)[number];
 }[] = [
+  {
+    id: 'contact',
+    label: 'Contact Patrick / Book a call',
+    hint: 'Open the contact form',
+  },
   {
     id: 'quote',
     label: 'Get a website quote',
