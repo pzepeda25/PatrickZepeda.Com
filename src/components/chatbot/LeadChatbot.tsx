@@ -121,6 +121,8 @@ export function LeadChatbot() {
       'websiteStatus',
       'timeline',
       'budget',
+      'name',
+      'email',
     ];
     const missing = requiredKeys.filter((k) => !draft[k]?.trim());
     if (missing.length > 0) {
@@ -163,7 +165,7 @@ export function LeadChatbot() {
   };
 
   const renderChips = (key: keyof typeof draft, options: readonly string[]) => (
-    <div className="flex flex-col gap-2 mt-3">
+    <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
       {options.map((opt) => (
         <button
           key={opt}
@@ -220,22 +222,23 @@ export function LeadChatbot() {
               transition={{ type: 'spring', damping: 28, stiffness: 320 }}
               className="fixed z-[101] inset-x-0 bottom-0 top-[12vh] md:inset-auto md:bottom-8 md:right-8 md:top-auto md:h-[min(640px,calc(100vh-8rem))] md:w-[min(100%,420px)] flex flex-col md:rounded-lg overflow-hidden border border-synth-cyan/40 bg-synth-bg shadow-2xl"
             >
-              <div className="retro-window-header shrink-0 flex items-center justify-between gap-2 px-4 py-3 border-b border-synth-cyan/20">
-                <div className="flex items-center gap-2 min-w-0">
-                  <Bot className="h-5 w-5 text-synth-magenta shrink-0" />
-                  <div className="min-w-0">
-                    <h2 id="chatbot-title" className="font-mono text-sm font-bold text-synth-magenta truncate">
-                      assistant.exe
-                    </h2>
-                    <p className="text-[10px] text-synth-cyan/80 font-mono truncate">
-                      {step === 'welcome'
-                        ? 'How can I help?'
-                        : success
-                          ? 'Received'
-                          : `Step · ${stepLabel(step)}`}
-                    </p>
-                  </div>
+              <div className="retro-window-header shrink-0 grid grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 py-3 border-b border-synth-cyan/20">
+                <div className="flex items-center justify-start">
+                  <Bot className="h-5 w-5 text-synth-magenta" />
                 </div>
+                <div className="min-w-0 text-center flex flex-col items-center justify-center">
+                  <h2 id="chatbot-title" className="font-mono text-sm font-bold text-synth-magenta truncate">
+                    assistant.exe
+                  </h2>
+                  <p className="text-[10px] text-synth-cyan/80 font-mono truncate">
+                    {step === 'welcome'
+                      ? 'How can I help?'
+                      : success
+                        ? 'Received'
+                        : `Step · ${stepLabel(step)}`}
+                  </p>
+                </div>
+                <div className="flex items-center justify-end">
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
@@ -244,6 +247,7 @@ export function LeadChatbot() {
                 >
                   <X className="h-5 w-5" />
                 </button>
+                </div>
               </div>
 
               <div className="flex-1 overflow-y-auto p-4 space-y-4 font-sans text-sm">
@@ -252,8 +256,7 @@ export function LeadChatbot() {
                     <CheckCircle className="h-12 w-12 text-synth-cyan" />
                     <p className="text-white text-lg font-semibold">Awesome — got it.</p>
                     <p className="text-gray-400 max-w-xs">
-                      Thanks for reaching out. Patrick will review this and follow up by email soon. If it&apos;s time-sensitive,
-                      use the contact form on the page and mention it&apos;s urgent.
+                      Thanks for reaching out. Patrick will review this and follow up by email soon.
                     </p>
                     <button
                       type="button"
