@@ -17,12 +17,6 @@ import {
 const API_PATH = '/api/submit-chatbot-lead';
 const OPEN_CONTACT_MODAL_EVENT = 'open-contact-modal';
 
-type ChatMessage = {
-  id: string;
-  role: 'user' | 'assistant';
-  text: string;
-};
-
 const initialDraft = (): Omit<ChatbotLeadPayload, 'pageUrl'> => ({
   projectType: '',
   businessType: '',
@@ -65,8 +59,6 @@ export function LeadChatbot() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [questionDraft, setQuestionDraft] = useState('');
 
   const resetFlow = useCallback(() => {
     setStep('welcome');
@@ -74,8 +66,6 @@ export function LeadChatbot() {
     setSubmitError(null);
     setSuccess(false);
     setSubmitting(false);
-    setMessages([]);
-    setQuestionDraft('');
   }, []);
 
   useEffect(() => {
@@ -106,62 +96,6 @@ export function LeadChatbot() {
 
     setDraft((d) => ({ ...d, projectType: action.projectType ?? '' }));
     goToStep(action.projectType ? 'business' : 'project');
-  };
-
-  const detectIntent = (text: string): 'contact' | 'pricing' | 'services' | 'timeline' | 'unknown' => {
-    const t = text.toLowerCase();
-    if (
-      /\b(contact|reach|email|call|book|meeting|schedule|consult|consultation)\b/.test(t) ||
-      /\bphone\b/.test(t)
-    )
-      return 'contact';
-    if (/\b(price|pricing|cost|rate|budget)\b/.test(t)) return 'pricing';
-    if (/\b(services|offer|do you do|can you|help with|automation|ai|chatbot|website|seo|aeo)\b/.test(t))
-      return 'services';
-    if (/\b(timeline|how long|turnaround|delivery|launch|weeks|months|asap)\b/.test(t)) return 'timeline';
-    return 'unknown';
-  };
-
-  const assistantReplyFor = (intent: ReturnType<typeof detectIntent>): string => {
-    switch (intent) {
-      case 'contact':
-        return "Yep — easiest is the contact form. Want me to open it for you?";
-      case 'pricing':
-        return "Pricing depends on scope (new build vs redesign vs automation). If you share what you’re trying to achieve, I’ll point you to the right range — or you can send a quick inquiry and Patrick will follow up.";
-      case 'timeline':
-        return "Timelines vary by scope, but a focused build can be weeks while bigger systems are usually 1–2+ months. If you tell me your deadline, I’ll recommend a path.";
-      case 'services':
-        return "Patrick builds high-conversion sites, AI automation/workflows, and SEO/AEO systems. If you tell me what you’re building and what ‘success’ means, I’ll route you to the best next step.";
-      default:
-        return "Ask me anything — or hit “Contact Patrick” and send a quick note. What are you trying to build?";
-    }
-  };
-
-  const sendQuestion = () => {
-    const text = questionDraft.trim();
-    if (!text) return;
-
-    const userMsg: ChatMessage = {
-      id: `${Date.now()}-u`,
-      role: 'user',
-      text,
-    };
-    const intent = detectIntent(text);
-    const botText = assistantReplyFor(intent);
-    const botMsg: ChatMessage = {
-      id: `${Date.now()}-a`,
-      role: 'assistant',
-      text: botText,
-    };
-
-    setMessages((m) => [...m, userMsg, botMsg]);
-    setQuestionDraft('');
-
-    if (intent === 'contact') {
-      // Keep it one-tap: open contact automatically after the reply.
-      openContact();
-      setOpen(false);
-    }
   };
 
   const currentIndex = STEP_ORDER.indexOf(step);
@@ -340,59 +274,6 @@ export function LeadChatbot() {
                           I&apos;m Patrick&apos;s site assistant. I can answer questions about services,
                           and capture a short project brief if you&apos;d like a reply.
                         </p>
-
-                        {messages.length > 0 && (
-                          <div className="mb-4 space-y-2">
-                            {messages.map((msg) => (
-                              <div
-                                key={msg.id}
-                                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                              >
-                                <div
-                                  className={`max-w-[85%] rounded px-3 py-2 text-sm leading-relaxed ${
-                                    msg.role === 'user'
-                                      ? 'bg-synth-cyan/15 border border-synth-cyan/30 text-white'
-                                      : 'bg-synth-dark/60 border border-synth-magenta/20 text-gray-200'
-                                  }`}
-                                >
-                                  {msg.text}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-
-                        <div className="mb-4">
-                          <label htmlFor="cb-question" className="block text-xs font-mono text-synth-cyan mb-1">
-                            Ask a question
-                          </label>
-                          <div className="flex gap-2">
-                            <input
-                              id="cb-question"
-                              value={questionDraft}
-                              onChange={(e) => setQuestionDraft(e.target.value)}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                  e.preventDefault();
-                                  sendQuestion();
-                                }
-                              }}
-                              placeholder="e.g. Can we book a call?"
-                              className="flex-1 px-3 py-2 rounded bg-synth-dark border border-synth-cyan/30 text-white focus:border-synth-cyan outline-none"
-                            />
-                            <button
-                              type="button"
-                              onClick={sendQuestion}
-                              className="px-3 py-2 rounded bg-synth-magenta text-white hover:bg-white hover:text-synth-magenta transition-colors border border-synth-magenta/60"
-                              aria-label="Send question"
-                            >
-                              <Send className="h-4 w-4" />
-                            </button>
-                          </div>
-                          <p className="mt-1 text-[10px] text-gray-500">
-                            If you ask to contact/book a call, I&apos;ll open the contact form.
-                          </p>
-                        </div>
 
                         <p className="text-synth-magenta font-mono text-xs mb-3 uppercase tracking-wider">
                           Quick actions
