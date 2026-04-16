@@ -9,7 +9,7 @@ import {
   Terminal, MonitorPlay, Layers, 
   Zap, ChevronRight, Mail,
   Radio, Aperture, Settings, Users, PlaySquare, Search,
-  Cpu, Code, Workflow, Camera, Briefcase, PenTool, Linkedin, BookOpen, Bot, Menu, X, BookText, Youtube, Pin
+  Cpu, Code, Workflow, Camera, Briefcase, PenTool, Linkedin, BookOpen, Bot, Menu, X, Youtube, Pin
 } from 'lucide-react';
 
 const ContactModal = lazy(() => import('./components/ContactModal').then(module => ({ default: module.ContactModal })));
@@ -517,10 +517,6 @@ export default function App() {
           </a>
           <a href="https://www.pinterest.com/p_lee_zepeda/ai-lm-notebook-tool-kit/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-600 transition-colors" title="Pinterest">
             <Pin className="w-5 h-5" />
-          </a>
-          <a href="https://notebooklm.google.com/notebook/dea47e58-def2-444c-a0a9-a9a797a2cd57/preview" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-synth-cyan transition-colors flex items-center gap-2" title="Chat with my Notebook LM research">
-            <BookText className="w-5 h-5" />
-            <span className="hidden sm:inline">New NoteBook - How to GitHub</span>
           </a>
         </div>
         <p className="hover-glitch inline-block cursor-default">SYSTEM.HALT // © {new Date().getFullYear()} PATRICK ZEPEDA. ALL RIGHTS RESERVED.</p>
