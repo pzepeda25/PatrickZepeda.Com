@@ -186,9 +186,6 @@ export default function App() {
             <a href="#services" aria-current={activeNavSection === 'services' ? 'location' : undefined} className={`whitespace-nowrap transition-colors ${navSectionClass('services')}`}>Services</a>
             <a href="#read" aria-current={activeNavSection === 'read' ? 'location' : undefined} className={`whitespace-nowrap transition-colors ${navSectionClass('read')}`}>Read</a>
             <a href="#stack" aria-current={activeNavSection === 'stack' ? 'location' : undefined} className={`whitespace-nowrap transition-colors ${navSectionClass('stack')}`}>Stack</a>
-            <a href="https://notebooklm.google.com/notebook/dea47e58-def2-444c-a0a9-a9a797a2cd57/preview" target="_blank" rel="noopener noreferrer" className="text-synth-cyan hover:text-white transition-colors inline-flex items-center gap-1.5 bg-synth-cyan/10 px-3 py-1.5 rounded-full border border-synth-cyan/30 whitespace-nowrap">
-              <BookText className="w-4 h-4 shrink-0" /> <span className="hidden xl:inline">New Notebook - How to GitHub</span><span className="xl:hidden">NotebookLM</span>
-            </a>
             <a href="#contact" aria-current={activeNavSection === 'contact' ? 'location' : undefined} className={`whitespace-nowrap transition-colors ${navContactClass}`}>Contact</a>
           </div>
 
@@ -218,9 +215,6 @@ export default function App() {
             </a>
             <a href="https://www.pinterest.com/p_lee_zepeda/ai-lm-notebook-tool-kit/" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-synth-cyan transition-colors py-2 border-b border-synth-cyan/10 flex items-center gap-2">
               <Pin className="w-4 h-4" /> Pinterest
-            </a>
-            <a href="https://notebooklm.google.com/notebook/dea47e58-def2-444c-a0a9-a9a797a2cd57/preview" target="_blank" rel="noopener noreferrer" onClick={() => setIsMobileMenuOpen(false)} className="text-synth-cyan hover:text-white transition-colors flex items-center gap-2 py-2 border-b border-synth-cyan/10">
-              <BookText className="w-4 h-4" /> New Notebook - How to GitHub
             </a>
             <a href="#contact" onClick={() => setIsMobileMenuOpen(false)} className={`py-2 transition-colors ${navContactClass}`}>Contact</a>
           </motion.div>
