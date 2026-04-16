@@ -267,6 +267,9 @@ export function CardStack<T extends CardStackItem>({
 
               const zIndex = 100 - abs;
 
+              const blurPx = isActive ? 0 : Math.min(8, 2 + abs * 2);
+              const cardOpacity = isActive ? 1 : Math.max(0.3, 0.75 - (abs - 1) * 0.2);
+
               const dragProps = isActive
                 ? {
                     drag: 'x' as const,
@@ -310,15 +313,17 @@ export function CardStack<T extends CardStackItem>({
                           rotateZ,
                           rotateX,
                           scale,
+                          filter: `blur(${blurPx}px)`,
                         }
                   }
                   animate={{
-                    opacity: 1,
+                    opacity: cardOpacity,
                     x,
                     y: y + lift,
                     rotateZ,
                     rotateX,
                     scale,
+                    filter: `blur(${blurPx}px)`,
                   }}
                   transition={{
                     type: 'spring',
