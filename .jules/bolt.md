@@ -1,0 +1,3 @@
+## 2024-05-24 - Root Level Scroll State Over-Rendering
+**Learning:** In React applications where active scroll section is tracked at the root level (`App.tsx` using `window.scrollY`), every scroll event that changes the active section forces a re-render of the entire component tree. This is especially problematic for heavy child components (like `MediumFeed` using Three.js, `FeaturedProject`, and `YouTubeLatestVideos`) which don't depend on the scroll state but get re-rendered anyway, causing severe performance bottlenecks.
+**Action:** Always wrap heavy child components in `React.memo` when a parent component manages frequent state updates (like scroll position) that don't need to be passed down. This breaks the re-render chain and preserves performance.
