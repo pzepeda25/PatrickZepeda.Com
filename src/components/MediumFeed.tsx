@@ -26,7 +26,10 @@ const FALLBACK_CARDS: CardData[] = [
   }
 ];
 
-export default function MediumFeed() {
+// ⚡ Bolt Optimization: Memoize MediumFeed to prevent expensive re-renders
+// Since App.tsx tracks scroll state (activeNavSection), it triggers app-wide re-renders.
+// Memoizing this component prevents the heavy Three.js ScannerCardStream from re-rendering on every scroll tick.
+export default React.memo(function MediumFeed() {
   const [cards, setCards] = useState<CardData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -126,3 +129,4 @@ export default function MediumFeed() {
     </section>
   );
 }
+)
