@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { getSupabaseAdmin } from './lib/supabase.js';
 import { sendEmail } from './lib/resend.js';
 import { buildEmail } from './lib/email/buildEmail.js';
+import { buildWelcomeEmail } from './lib/email/buildWelcomeEmail.js';
 
 const BATCH_SIZE = 10;
 const STEP_ONE = 1;
@@ -9,29 +10,6 @@ const STEP_TWO = 2;
 const STEP_TWO_DELAY_MS = 4 * 24 * 60 * 60 * 1000;
 const CONTACT_SOURCE = 'site-form';
 const EARLY_PIPELINE_STATUSES = ['new', 'warming-up'];
-
-const WELCOME_TEMPLATE = {
-  subject: 'Got your message - here is what happens next',
-  preheader: 'Thanks for reaching out. Here is the next step.',
-  title: 'Thanks for reaching out',
-  bodyHtml: `
-    <p style="margin:0 0 14px 0;">Hey {{firstName}},</p>
-    <p style="margin:0 0 14px 0;">Thanks for reaching out through my site. I help people with modern, fast web design and development - clean builds that support the rest of your business, not just sit there.</p>
-    <p style="margin:0 0 10px 0;">Here is what happens next:</p>
-    <ol style="margin:0 0 14px 22px;padding:0;">
-      <li style="margin:0 0 8px 0;">I review what you shared about your project.</li>
-      <li style="margin:0 0 8px 0;">If it looks like a fit, I reply with a couple of options and a simple timeline.</li>
-    </ol>
-    <p style="margin:0 0 10px 0;">If you want to speed things up, hit reply and tell me:</p>
-    <ul style="margin:0 0 14px 22px;padding:0;">
-      <li style="margin:0 0 8px 0;">What your business does</li>
-      <li style="margin:0 0 8px 0;">The one thing your current site is not doing for you</li>
-      <li style="margin:0 0 8px 0;">Your rough timing (this month, next few months, etc.)</li>
-    </ul>
-    <p style="margin:0;">Talk soon,</p>
-  `,
-  ctaLabel: 'Book a quick call',
-};
 
 const REMINDER_TEMPLATE = {
   subject: 'Quick check-in about your site project',
@@ -107,6 +85,29 @@ async function getEligibleStepTwoContacts(supabase, cutoffIso) {
 
   if (query.error) throw query.error;
   return query.data || [];
+}
+
+async function getContactTagSlugs(supabase, contactId) {
+  const query = await supabase
+    .from('contact_tags')
+    .select('tags(slug)')
+    .eq('contact_id', contactId);
+
+  if (query.error) throw query.error;
+
+  const rows = query.data || [];
+  const slugs = [];
+  for (const row of rows) {
+    const nested = row?.tags;
+    if (Array.isArray(nested)) {
+      for (const item of nested) {
+        if (item?.slug) slugs.push(item.slug);
+      }
+    } else if (nested?.slug) {
+      slugs.push(nested.slug);
+    }
+  }
+  return slugs;
 }
 
 async function hasInboundReplySince(supabase, contactId, sinceIso) {
@@ -245,15 +246,26 @@ async function sendSequenceStep({
   template,
 }) {
   const nowIso = new Date().toISOString();
-  const emailPayload = buildEmail({
-    ...template,
-    heroImageUrl: '',
-    contact: {
-      ...contact,
-      serviceInterest: humanizeServiceSlug(CONTACT_SOURCE),
-    },
-    primaryCtaUrl: resolvePrimaryCtaUrl(),
-  });
+  let emailPayload;
+  if (flow === 'welcome-step-1') {
+    const tags = await getContactTagSlugs(supabase, contact.id);
+    emailPayload = buildWelcomeEmail({
+      name: contact.name,
+      email: contact.email,
+      serviceInterest: contact.service_interest || contact.serviceInterest,
+      tags,
+    });
+  } else {
+    emailPayload = buildEmail({
+      ...template,
+      heroImageUrl: '',
+      contact: {
+        ...contact,
+        serviceInterest: humanizeServiceSlug(CONTACT_SOURCE),
+      },
+      primaryCtaUrl: resolvePrimaryCtaUrl(),
+    });
+  }
 
   const { threadId, replyAddress } = await findOrCreateThread({
     supabase,
@@ -356,7 +368,7 @@ export const handler = async (event) => {
           dryrun,
           step: STEP_ONE,
           flow: 'welcome-step-1',
-          template: WELCOME_TEMPLATE,
+          template: null,
         });
         results.push(processed);
         welcomedContactIds.add(contact.id);
