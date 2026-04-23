@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Send, CheckCircle } from 'lucide-react';
 
@@ -10,11 +10,29 @@ interface ContactModalProps {
 export function ContactModal({ isOpen, onClose }: ContactModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [urgency, setUrgency] = useState('3');
+  const [formStartedAt, setFormStartedAt] = useState<string>('');
+  const lastSubmitAtRef = useRef(0);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    setFormStartedAt(new Date().toISOString());
+    setSubmitError(null);
+  }, [isOpen]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const now = Date.now();
+    if (now - lastSubmitAtRef.current < 1500) {
+      setSubmitError('Please wait a moment and try again.');
+      return;
+    }
+    lastSubmitAtRef.current = now;
+
     setIsSubmitting(true);
+    setSubmitError(null);
 
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -35,24 +53,40 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
     });
     if (otherServiceValue) selectedServices.push(otherServiceValue);
     
+    const firstName = (formData.get('firstName') as string) || '';
+    const lastName = (formData.get('lastName') as string) || '';
+    const name = `${firstName} ${lastName}`.trim();
+    const website =
+      (formData.get('linkedin') as string) ||
+      (formData.get('instagram') as string) ||
+      (formData.get('facebook') as string) ||
+      '';
+
     const payload = {
-      firstName: formData.get('firstName') as string,
-      lastName: formData.get('lastName') as string,
-      email: formData.get('email') as string,
-      phone: formData.get('phone') as string,
-      services: selectedServices,
-      services_other: formData.get('services_other') as string,
-      urgency,
-      description: formData.get('description') as string,
-      facebook: formData.get('facebook') as string || '',
-      instagram: formData.get('instagram') as string || '',
-      linkedin: formData.get('linkedin') as string || '',
-      contactMethod: formData.get('contactMethod') as string,
-      date: formData.get('date') as string || '',
+      name,
+      email: (formData.get('email') as string) || '',
+      message: (formData.get('description') as string) || '',
+      company: '',
+      website,
+      phone: (formData.get('phone') as string) || '',
+      serviceinterest: selectedServices.join(', '),
+      serviceInterest: selectedServices.join(', '),
+      budget: '',
+      timeline:
+        (formData.get('date') as string) || `Urgency ${urgency}/5`,
+      referralSource: '',
+      sourceDetail: 'contact-modal',
+      buttonContext: 'contact-modal',
+      pagePath:
+        typeof window !== 'undefined'
+          ? `${window.location.pathname}${window.location.search}${window.location.hash}`
+          : '/',
+      formStartedAt,
+      faxNumber: (formData.get('faxNumber') as string) || '',
     };
     
     try {
-      const response = await fetch('/api/submit-to-blobs', {
+      const response = await fetch('/api/create-contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -74,7 +108,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
       }, 3000);
     } catch (error: any) {
       console.error('Error submitting form:', error);
-      alert(`There was an error submitting the form: ${error.message || 'Please try again.'}`);
+      setSubmitError(error.message || 'Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -117,6 +151,14 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                     onSubmit={handleSubmit} 
                     className="space-y-6"
                   >
+                    <input
+                      type="text"
+                      name="faxNumber"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      className="hidden"
+                      aria-hidden="true"
+                    />
                     {/* Personal Info */}
                     <div className="space-y-4">
                       <h4 className="text-sm font-bold text-white uppercase tracking-wider border-b border-synth-cyan/20 pb-2">01. Identity</h4>
@@ -242,6 +284,18 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                     </div>
 
                     <div className="pt-6">
+                      <p aria-live="polite" className="text-xs text-gray-500 mb-2">
+                        {isSubmitting ? 'Transmitting your message...' : ' '}
+                      </p>
+                      {submitError && (
+                        <p
+                          role="alert"
+                          aria-live="assertive"
+                          className="mb-4 text-sm text-red-400 border border-red-400/30 bg-red-500/5 p-3"
+                        >
+                          {submitError}
+                        </p>
+                      )}
                       <button 
                         type="submit" 
                         disabled={isSubmitting}

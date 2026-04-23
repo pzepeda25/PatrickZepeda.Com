@@ -70,8 +70,8 @@ In Netlify (`Site configuration → Environment variables`) and locally in
 | `SUPABASE_SERVICE_ROLE_KEY` | both functions | **Service role**. Server-only. Bypasses RLS. |
 | `RESEND_API_KEY` | `send-followups` | From [resend.com/api-keys](https://resend.com/api-keys) |
 | `RESEND_WEBHOOK_SECRET` | `resend-inbound-webhook` | Any opaque random string. Paste the same value into Resend. |
-| `FROM_EMAIL` | `send-followups` | e.g. `Patrick <hello@yourdomain.com>` |
-| `REPLY_DOMAIN` | `send-followups` | e.g. `reply.yourdomain.com` (the inbound MX subdomain) |
+| `FROM_EMAIL` | `send-followups` | e.g. `Patrick <hello@patrickleezepeda.com>` |
+| `REPLY_DOMAIN` | `send-followups` | Use `patrickleezepeda.com` for current production setup. |
 | `DRY_RUN` | `send-followups` | Defaults to `true`. Set to `false` to actually send. |
 | `FOLLOWUPS_CRON_SECRET` | `send-followups` | Optional. If set, must be passed as `Authorization: Bearer <secret>`. |
 
@@ -128,11 +128,11 @@ Send follow-ups:   https://<your-site>.netlify.app/api/send-followups
 
 ## 5. The next 3 manual steps in Resend
 
-1. **Verify your sending domain.** In Resend → Domains, add `yourdomain.com`
+1. **Verify your sending domain.** In Resend → Domains, add `patrickleezepeda.com`
    and add the DNS records (DKIM, SPF, optionally DMARC). Wait for "verified".
-2. **Set up inbound on the reply subdomain.** Add `reply.yourdomain.com` as an
+2. **Set up inbound on the current reply domain.** Add `patrickleezepeda.com` as an
    inbound domain in Resend, then add the MX record they give you. This is the
-   address users will reply to (`r-<token>@reply.yourdomain.com`), and Resend
+   address users will reply to (`r-<token>@patrickleezepeda.com`), and Resend
    will forward those replies to the webhook.
 3. **Configure the inbound webhook.** In Resend → Webhooks, create a webhook
    pointing at `https://<your-site>/api/resend-inbound-webhook`, subscribe to
@@ -234,7 +234,7 @@ curl -i -X POST https://<your-site>/api/resend-inbound-webhook \
   -d '{
     "data": {
       "from": "smoketest@example.com",
-      "to":   "r-smoketest@reply.yourdomain.com",
+      "to":   "r-smoketest@patrickleezepeda.com",
       "subject": "smoke",
       "text": "hello",
       "message_id": "smoke-1"

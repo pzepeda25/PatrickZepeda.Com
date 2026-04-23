@@ -5,7 +5,7 @@ import { getSupabaseAdmin } from './lib/supabase.js';
  *
  * Resend posts inbound email events here. We:
  *   1. Verify a shared secret in the Authorization header.
- *   2. Try to match a thread by reply_address (recipient on a *@reply.<your-domain>).
+ *   2. Try to match a thread by reply_address (recipient on your reply domain).
  *   3. If no match, look up or create the contact by sender email and create a thread.
  *   4. Insert the inbound message and bump email_threads.last_message_at.
  *
@@ -35,6 +35,18 @@ function pickFirstEmail(value) {
     return value.email.toLowerCase();
   }
   return null;
+}
+
+function sanitizeString(value, max = 500) {
+  if (typeof value !== 'string') return '';
+  const cleaned = value
+    .trim()
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '');
+  return cleaned.length > max ? cleaned.slice(0, max) : cleaned;
+}
+
+function normalizeEmail(value) {
+  return sanitizeString(value, 254).toLowerCase();
 }
 
 function pickFirstAddress(value) {
@@ -81,8 +93,8 @@ export const handler = async (event) => {
   // Resend wraps inbound data under `data` for webhook events.
   const data = payload?.data ?? payload ?? {};
 
-  const fromEmail = pickFirstEmail(data.from);
-  const toEmail = pickFirstAddress(data.to);
+  const fromEmail = normalizeEmail(pickFirstEmail(data.from));
+  const toEmail = normalizeEmail(pickFirstAddress(data.to));
   const subject = (data.subject || '(no subject)').toString().slice(0, 1000);
   const textBody = (data.text || data.text_body || '').toString();
   const htmlBody = (data.html || data.html_body || '').toString();
@@ -119,19 +131,28 @@ export const handler = async (event) => {
 
   // 4. If no thread, find or create contact by sender email, then thread.
   if (!threadId) {
-    const { data: contact, error: contactErr } = await supabase
+    const { data: contacts, error: contactErr } = await supabase
       .from('contacts')
-      .select('id')
-      .eq('email', fromEmail)
-      .maybeSingle();
+      .select('id, email, created_at')
+      .ilike('email', fromEmail)
+      .order('created_at', { ascending: true, nullsFirst: true })
+      .order('id', { ascending: true })
+      .limit(10);
 
     if (contactErr) {
       console.error('contact lookup error', contactErr);
       return json(500, { ok: false, error: 'contact lookup failed' });
     }
 
-    if (contact) {
-      contactId = contact.id;
+    const primaryContact = (contacts || [])[0] || null;
+    if (primaryContact) {
+      contactId = primaryContact.id;
+      if ((contacts || []).length > 1) {
+        console.warn('duplicate contacts found for normalized inbound email', {
+          email: fromEmail,
+          duplicateCount: contacts.length - 1,
+        });
+      }
     } else {
       const { data: created, error: createErr } = await supabase
         .from('contacts')

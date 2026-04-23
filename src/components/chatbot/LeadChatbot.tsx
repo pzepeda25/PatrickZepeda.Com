@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Bot, X, Send, CheckCircle, ChevronLeft } from 'lucide-react';
-import type { ChatbotLeadPayload } from '@/types/chatbot-lead';
 import {
   QUICK_ACTIONS,
   STEP_ORDER,
@@ -14,10 +13,10 @@ import {
   type StepId,
 } from '@/data/chatbot-flow';
 
-const API_PATH = '/api/submit-chatbot-lead';
+const API_PATH = '/api/create-contact';
 const OPEN_CONTACT_MODAL_EVENT = 'open-contact-modal';
 
-const initialDraft = (): Omit<ChatbotLeadPayload, 'pageUrl'> => ({
+const initialDraft = () => ({
   projectType: '',
   businessType: '',
   goal: '',
@@ -56,6 +55,10 @@ export function LeadChatbot() {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<StepId>('welcome');
   const [draft, setDraft] = useState(initialDraft);
+  const [selectedQuickAction, setSelectedQuickAction] = useState<{
+    id: string;
+    label: string;
+  } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -63,6 +66,7 @@ export function LeadChatbot() {
   const resetFlow = useCallback(() => {
     setStep('welcome');
     setDraft(initialDraft());
+    setSelectedQuickAction(null);
     setSubmitError(null);
     setSuccess(false);
     setSubmitting(false);
@@ -88,6 +92,8 @@ export function LeadChatbot() {
   };
 
   const handleQuickAction = (action: (typeof QUICK_ACTIONS)[number]) => {
+    setSelectedQuickAction({ id: action.id, label: action.label });
+
     if (action.id === 'contact') {
       openContact();
       setOpen(false);
@@ -131,9 +137,23 @@ export function LeadChatbot() {
       return;
     }
 
-    const payload: ChatbotLeadPayload = {
+    const chatbotPath = [
+      `projectType:${draft.projectType}`,
+      `businessType:${draft.businessType}`,
+      `goal:${draft.goal}`,
+      `websiteStatus:${draft.websiteStatus}`,
+      `timeline:${draft.timeline}`,
+      `budget:${draft.budget}`,
+    ];
+
+    const payload = {
+      source: 'site-chatbot-inquiry',
       ...draft,
       pageUrl,
+      chatbotActionId: selectedQuickAction?.id || 'inquiry',
+      chatbotActionLabel:
+        selectedQuickAction?.label || 'Send a project inquiry',
+      chatbotPath,
     };
 
     try {
@@ -298,7 +318,17 @@ export function LeadChatbot() {
                         </div>
                         <button
                           type="button"
-                          onClick={() => goToStep('project')}
+                          onClick={() => {
+                            const inquiryAction = QUICK_ACTIONS.find(
+                              (action) => action.id === 'inquiry',
+                            );
+                            setSelectedQuickAction({
+                              id: inquiryAction?.id || 'inquiry',
+                              label:
+                                inquiryAction?.label || 'Send a project inquiry',
+                            });
+                            goToStep('project');
+                          }}
                           className="w-full mt-4 py-2 text-synth-cyan font-mono text-xs border border-dashed border-synth-cyan/40 rounded hover:bg-synth-cyan/5"
                         >
                           Skip to questions →

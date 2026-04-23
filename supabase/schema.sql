@@ -160,7 +160,7 @@ begin
       (v_contact_b, v_tag_vip)
     on conflict do nothing;
 
-    -- 1 thread
+    -- 1 thread (seed/demo only; non-production placeholder reply domain)
     insert into public.email_threads (contact_id, subject, reply_address, last_message_at)
       values (
         v_contact_a,

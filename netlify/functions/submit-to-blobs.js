@@ -1,10 +1,4 @@
-import { getStore } from '@netlify/blobs';
-import fs from 'node:fs/promises';
-import path from 'node:path';
-import { randomBytes } from 'node:crypto';
-
-const STORE_NAME = 'form-submissions';
-const LOCAL_DATA_PATH = path.join(process.cwd(), '.netlify/local-data/form-submissions.json');
+import { handler as createContactHandler } from './create-contact.js';
 
 function json(statusCode, body, extraHeaders = {}) {
   return {
@@ -51,12 +45,6 @@ export const handler = async (event) => {
     return json(400, { ok: false, error: 'Invalid JSON' });
   }
 
-  const receivedAt = new Date().toISOString();
-  const ts = Date.now();
-  const rand = randomBytes(5).toString('hex');
-  const key = `submissions/${ts}-${rand}.json`;
-  const isProduction = !!process.env.NETLIFY;
-
   // Minimal validation (matches current ContactModal payload shape).
   const firstName = sanitizeString(payload.firstName, 120);
   const lastName = sanitizeString(payload.lastName, 120);
@@ -75,65 +63,23 @@ export const handler = async (event) => {
     return json(400, { ok: false, error: 'Validation failed', details: errors });
   }
 
-  try {
-    let store;
-    try {
-      // On Netlify this uses the function context (no tokens required).
-      store = getStore(STORE_NAME);
-    } catch {
-      // Local dev fallback if you have env vars set (netlify dev can provide these).
-      store = getStore({
-        name: STORE_NAME,
-        siteID: process.env.NETLIFY_SITE_ID,
-        token: process.env.NETLIFY_AUTH_TOKEN,
-      });
-    }
+  const mappedPayload = {
+    name: `${firstName} ${lastName}`.trim(),
+    email,
+    message: description,
+    phone: sanitizeString(payload.phone, 80),
+    serviceInterest: contactMethod,
+    sourceDetail: 'legacy-submit-to-blobs',
+    buttonContext: 'legacy-submit-to-blobs',
+    pagePath: sanitizeString(payload.pagePath, 500),
+    formStartedAt: sanitizeString(payload.formStartedAt, 80),
+    faxNumber: sanitizeString(payload.faxNumber, 100),
+  };
 
-    await store.setJSON(key, {
-      ...payload,
-      receivedAt,
-      metadata: {
-        ip:
-          event.headers['client-ip'] ||
-          event.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
-          event.headers['x-nf-client-connection-ip'] ||
-          'unknown',
-        ua: event.headers['user-agent'] || 'unknown',
-      },
-    });
-
-    return json(200, { ok: true, id: key, provider: 'blobs' });
-  } catch (error) {
-    // Fallback: Only if NOT in production (for local testing as requested)
-    if (!isProduction) {
-      try {
-        let submissions = [];
-        try {
-          const data = await fs.readFile(LOCAL_DATA_PATH, 'utf8');
-          submissions = JSON.parse(data);
-          if (!Array.isArray(submissions)) submissions = [];
-        } catch {
-          // ignore missing file
-        }
-        
-        const localEntry = { ...payload, key, receivedAt };
-        submissions.push(localEntry);
-        
-        await fs.mkdir(path.dirname(LOCAL_DATA_PATH), { recursive: true });
-        await fs.writeFile(LOCAL_DATA_PATH, JSON.stringify(submissions, null, 2));
-
-        return json(200, { ok: true, id: key, provider: 'local-file' });
-      } catch (fallbackError) {
-        console.error('Local fallback failed:', fallbackError);
-      }
-    }
-
-    // In production, we MUST use Blobs. Return failure info.
-    console.error('Blobs write failed:', error);
-    return json(500, {
-      ok: false,
-      error: 'Vault storage failed',
-      details: process.env.NETLIFY ? undefined : String(error?.message || error),
-    });
-  }
+  const proxiedEvent = {
+    ...event,
+    httpMethod: 'POST',
+    body: JSON.stringify(mappedPayload),
+  };
+  return createContactHandler(proxiedEvent);
 };
