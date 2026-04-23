@@ -1,4 +1,6 @@
 const WELCOME_SUBJECT = 'Thanks for reaching out';
+const WELCOME_HERO_IMAGE_URL =
+  'https://patrickleezepeda.com/email/welcome-hero-80s.png';
 
 const SERVICE_LABEL_BY_SLUG = {
   'web-design': 'web design',
@@ -99,6 +101,7 @@ export function buildWelcomeEmail({ name, email, serviceInterest, tags }) {
   ].join('\n');
 
   const html = [
+    `<div style="margin:0 0 18px 0;text-align:center;"><img src="${WELCOME_HERO_IMAGE_URL}" alt="Retro-futurist welcome illustration" width="640" style="display:block;width:100%;max-width:640px;height:auto;margin:0 auto;border-radius:8px;" /></div>`,
     `<p>Hi ${firstName},</p>`,
     `<p>Thanks for your interest in my ${serviceLabel} services. I review each submission personally so I can tailor the right solution to what you actually need.</p>`,
     `<p>I'm excited to schedule a video call and learn more about your project and how I can help. If there's anything else you'd like me to know before we talk, just reply to this email with a few extra details.</p>`,
