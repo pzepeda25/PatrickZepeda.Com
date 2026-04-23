@@ -2,7 +2,8 @@ import React from 'react';
 import { ExternalLink, Sparkles, Code } from 'lucide-react';
 import { motion } from 'motion/react';
 
-const FeaturedProject = () => {
+// ⚡ Bolt: Added React.memo to prevent expensive re-renders when App.tsx scroll state changes
+const FeaturedProject = React.memo(() => {
   return (
     <section
       id="latest-build"
@@ -172,6 +173,6 @@ const FeaturedProject = () => {
       </div>
     </section>
   );
-};
+});
 
 export default FeaturedProject;
