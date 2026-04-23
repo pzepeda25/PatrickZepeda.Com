@@ -16,7 +16,7 @@ Set these in Netlify (`Site configuration -> Environment variables`):
 - `SUPABASE_SERVICE_ROLE_KEY=<service-role-key>`
 - `RESEND_API_KEY=<resend-api-key>`
 - `RESEND_WEBHOOK_SECRET=<long-random-secret>`
-- `FROM_EMAIL=Patrick <hello@patrickleezepeda.com>`
+- `FROM_EMAIL=Patrick <hello@your-sending-domain.com>`
 - `REPLY_DOMAIN=patrickleezepeda.com`
 - `DRY_RUN=true` (start safe; flip to `false` when ready)
 

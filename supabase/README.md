@@ -70,7 +70,7 @@ In Netlify (`Site configuration → Environment variables`) and locally in
 | `SUPABASE_SERVICE_ROLE_KEY` | both functions | **Service role**. Server-only. Bypasses RLS. |
 | `RESEND_API_KEY` | `send-followups` | From [resend.com/api-keys](https://resend.com/api-keys) |
 | `RESEND_WEBHOOK_SECRET` | `resend-inbound-webhook` | Any opaque random string. Paste the same value into Resend. |
-| `FROM_EMAIL` | `send-followups` | e.g. `Patrick <hello@patrickleezepeda.com>` |
+| `FROM_EMAIL` | `send-followups` | e.g. `Patrick <hello@your-sending-domain.com>` |
 | `REPLY_DOMAIN` | `send-followups` | Use `patrickleezepeda.com` for current production setup. |
 | `DRY_RUN` | `send-followups` | Defaults to `true`. Set to `false` to actually send. |
 | `FOLLOWUPS_CRON_SECRET` | `send-followups` | Optional. If set, must be passed as `Authorization: Bearer <secret>`. |
