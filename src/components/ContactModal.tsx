@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Send, CheckCircle } from 'lucide-react';
+import { createContact } from '@/lib/createContact';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -12,12 +13,10 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
   const [isSuccess, setIsSuccess] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [urgency, setUrgency] = useState('3');
-  const [formStartedAt, setFormStartedAt] = useState<string>('');
   const lastSubmitAtRef = useRef(0);
 
   useEffect(() => {
     if (!isOpen) return;
-    setFormStartedAt(new Date().toISOString());
     setSubmitError(null);
   }, [isOpen]);
 
@@ -62,44 +61,28 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
       (formData.get('facebook') as string) ||
       '';
 
+    const entryPath =
+      typeof window !== 'undefined'
+        ? `${window.location.pathname}${window.location.search}${window.location.hash}`
+        : '/';
+
     const payload = {
       name,
       email: (formData.get('email') as string) || '',
       message: (formData.get('description') as string) || '',
-      company: '',
+      serviceInterest: selectedServices.join(', '),
+      tags: selectedServices,
+      source: 'site-form',
+      formName: 'contact-modal',
+      entryPath,
+      // Keep these fields in raw payload for contextual debugging downstream.
       website,
       phone: (formData.get('phone') as string) || '',
-      serviceinterest: selectedServices.join(', '),
-      serviceInterest: selectedServices.join(', '),
-      budget: '',
-      timeline:
-        (formData.get('date') as string) || `Urgency ${urgency}/5`,
-      referralSource: '',
-      sourceDetail: 'contact-modal',
-      buttonContext: 'contact-modal',
-      pagePath:
-        typeof window !== 'undefined'
-          ? `${window.location.pathname}${window.location.search}${window.location.hash}`
-          : '/',
-      formStartedAt,
-      faxNumber: (formData.get('faxNumber') as string) || '',
+      timeline: (formData.get('date') as string) || `Urgency ${urgency}/5`,
     };
     
     try {
-      const response = await fetch('/api/create-contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json().catch(() => ({ error: 'Transmission error' }));
-
-      if (!response.ok) {
-        const errorMsg = data.debug 
-          ? `${data.error}: ${data.details}. ${data.debug}`
-          : data.error || data.details || 'Signal transmission failed.';
-        throw new Error(errorMsg);
-      }
+      await createContact(payload);
       
       setIsSuccess(true);
       setTimeout(() => {

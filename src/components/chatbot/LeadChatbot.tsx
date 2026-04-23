@@ -12,8 +12,7 @@ import {
   BUDGETS,
   type StepId,
 } from '@/data/chatbot-flow';
-
-const API_PATH = '/api/create-contact';
+import { createContact } from '@/lib/createContact';
 const OPEN_CONTACT_MODAL_EVENT = 'open-contact-modal';
 
 const initialDraft = () => ({
@@ -117,8 +116,10 @@ export function LeadChatbot() {
     setSubmitting(true);
     setSubmitError(null);
 
-    const pageUrl =
-      typeof window !== 'undefined' ? window.location.href : 'https://patrickleezepeda.com/';
+    const entryPath =
+      typeof window !== 'undefined'
+        ? `${window.location.pathname}${window.location.search}${window.location.hash}`
+        : '/';
 
     const requiredKeys: (keyof typeof draft)[] = [
       'projectType',
@@ -147,9 +148,16 @@ export function LeadChatbot() {
     ];
 
     const payload = {
-      source: 'site-chatbot-inquiry',
-      ...draft,
-      pageUrl,
+      name: draft.name,
+      email: draft.email,
+      message: draft.message,
+      source: 'site-form',
+      formName: 'lead-chatbot',
+      entryPath,
+      serviceInterest: draft.projectType,
+      tags: [draft.projectType, draft.goal].filter(Boolean),
+      // Keep chatbot context in raw payload for downstream analytics/debugging.
+      chatbotDraft: draft,
       chatbotActionId: selectedQuickAction?.id || 'inquiry',
       chatbotActionLabel:
         selectedQuickAction?.label || 'Send a project inquiry',
@@ -157,24 +165,7 @@ export function LeadChatbot() {
     };
 
     try {
-      const res = await fetch(API_PATH, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      const data = (await res.json().catch(() => ({}))) as {
-        ok?: boolean;
-        error?: string;
-        details?: string[];
-      };
-
-      if (!res.ok) {
-        const msg =
-          data.details?.join('. ') ||
-          data.error ||
-          `Request failed (${res.status})`;
-        throw new Error(msg);
-      }
+      await createContact(payload);
 
       setSuccess(true);
     } catch (err) {
