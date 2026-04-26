@@ -1,0 +1,3 @@
+## 2024-04-27 - Root Component Scroll State Triggers App-Wide Re-renders
+**Learning:** When a root component like `App.tsx` tracks active scroll sections (e.g., updating `activeNavSection` on scroll transitions), it triggers a re-render of the entire component tree. This is particularly problematic for heavy child components (like those using `Three.js` or complex animations) which re-render unnecessarily on every active section change.
+**Action:** Always wrap heavy child components in `React.memo` (e.g. `FeaturedProject`, `MediumFeed`, `YouTubeLatestVideos`, `ScannerCardStream`) when they are rendered inside a parent that frequently updates state based on scroll or other global UI events.

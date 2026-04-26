@@ -40,7 +40,7 @@ type ScannerCardStreamProps = {
   scanEffect?: 'clip' | 'scramble';
 };
 
-export const ScannerCardStream = ({
+export const ScannerCardStream = React.memo(({
   initialSpeed = 100,
   direction = -1,
   cardsData,
@@ -415,4 +415,6 @@ export const ScannerCardStream = ({
       </div>
     </div>
   );
-};
+});
+
+ScannerCardStream.displayName = 'ScannerCardStream';
