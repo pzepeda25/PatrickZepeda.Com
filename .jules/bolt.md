@@ -1,0 +1,3 @@
+## 2024-05-14 - Preventing Expensive Root Re-renders with React.memo()
+**Learning:** In a single-page app where scroll events trigger global state updates (like updating the `activeNavSection` in `App.tsx`), any child components connected to the root will unnecessarily re-render on every scroll state change. This is especially problematic when child components contain heavy processes or libraries (like `Three.js` visualizations) that shouldn't be recalculated frequently.
+**Action:** Always identify components with expensive rendering costs (e.g. 3D scenes, complex feeds, or heavy graphics) and ensure they are wrapped with `React.memo()` if their props are static or they don't depend on the frequently changing global state (like a scroll spy active section).
