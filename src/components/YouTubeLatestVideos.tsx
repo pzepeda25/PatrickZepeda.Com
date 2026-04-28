@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import { motion } from 'motion/react';
 import { CardStack, type CardStackItem } from '@/components/ui/card-stack';
 import { Youtube, ExternalLink } from 'lucide-react';
@@ -96,7 +96,8 @@ function useCardStackLayout() {
   return layout;
 }
 
-export default function YouTubeLatestVideos() {
+// ⚡ Bolt: Wrapped in React.memo() to prevent unnecessary re-renders when App.tsx scroll state changes
+const YouTubeLatestVideos = memo(() => {
   const [items, setItems] = useState<CardStackItem[]>([]);
   const [loading, setLoading] = useState(true);
   const { cardWidth, cardHeight, maxVisible, spreadDeg, overlap } =
@@ -219,4 +220,8 @@ export default function YouTubeLatestVideos() {
       </div>
     </div>
   );
-}
+});
+
+YouTubeLatestVideos.displayName = 'YouTubeLatestVideos';
+
+export default YouTubeLatestVideos;

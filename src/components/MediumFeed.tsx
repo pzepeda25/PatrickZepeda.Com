@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import { ScannerCardStream, CardData } from './ui/scanner-card-stream';
 import { motion } from 'motion/react';
 import { BookOpen, ExternalLink } from 'lucide-react';
@@ -26,7 +26,8 @@ const FALLBACK_CARDS: CardData[] = [
   }
 ];
 
-export default function MediumFeed() {
+// ⚡ Bolt: Wrapped in React.memo() to prevent unnecessary re-renders when App.tsx scroll state changes
+const MediumFeed = memo(() => {
   const [cards, setCards] = useState<CardData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -125,4 +126,8 @@ export default function MediumFeed() {
       </div>
     </section>
   );
-}
+});
+
+MediumFeed.displayName = 'MediumFeed';
+
+export default MediumFeed;
