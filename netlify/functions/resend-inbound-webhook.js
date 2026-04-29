@@ -66,6 +66,75 @@ function pickFirstAddress(value) {
   return null;
 }
 
+function escapeHtml(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function buildTextPreview(text, max = 500) {
+  const cleaned = String(text || '').replace(/\s+/g, ' ').trim();
+  if (!cleaned) return '(no text body)';
+  return cleaned.length > max ? `${cleaned.slice(0, max)}...` : cleaned;
+}
+
+async function sendInboundNotification({
+  fromEmail,
+  toEmail,
+  originalSubject,
+  textBody,
+  threadId,
+  contactId,
+}) {
+  const apiKey = process.env.RESEND_API_KEY || process.env.RESENDAPIKEY;
+  const fromAddress = process.env.FROM_EMAIL || process.env.FROMEMAIL;
+  if (!apiKey || !fromAddress) {
+    throw new Error('Missing RESEND API key or FROM email for notification send');
+  }
+
+  const textPreview = buildTextPreview(textBody);
+  const notifySubject = `New site email from ${fromEmail}`;
+  const text = [
+    `fromEmail: ${fromEmail || ''}`,
+    `toEmail: ${toEmail || ''}`,
+    `original subject: ${originalSubject || ''}`,
+    `text preview: ${textPreview}`,
+    `threadId: ${threadId || ''}`,
+    `contactId: ${contactId || ''}`,
+  ].join('\n');
+  const html = `
+    <p><strong>fromEmail:</strong> ${escapeHtml(fromEmail)}</p>
+    <p><strong>toEmail:</strong> ${escapeHtml(toEmail)}</p>
+    <p><strong>original subject:</strong> ${escapeHtml(originalSubject)}</p>
+    <p><strong>text preview:</strong> ${escapeHtml(textPreview)}</p>
+    <p><strong>threadId:</strong> ${escapeHtml(threadId)}</p>
+    <p><strong>contactId:</strong> ${escapeHtml(contactId)}</p>
+  `;
+
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: fromAddress,
+      to: ['me@patrickzepeda.com'],
+      subject: notifySubject,
+      text,
+      html,
+    }),
+  });
+
+  if (!res.ok) {
+    const err = await res.text().catch(() => '');
+    throw new Error(`Notification send failed (${res.status}): ${err}`);
+  }
+}
+
 export const handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return json(405, { ok: false, error: 'Method not allowed' });
@@ -217,6 +286,21 @@ export const handler = async (event) => {
       .from('contacts')
       .update({ updated_at: nowIso })
       .eq('id', contactId);
+  }
+
+  // Send owner notification only after inbound message persisted successfully.
+  try {
+    await sendInboundNotification({
+      fromEmail,
+      toEmail,
+      originalSubject: subject,
+      textBody,
+      threadId,
+      contactId,
+    });
+  } catch (notificationError) {
+    // Non-fatal by design: webhook write already succeeded.
+    console.error('inbound notification send error', notificationError);
   }
 
   return json(200, { ok: true, thread_id: threadId, contact_id: contactId });

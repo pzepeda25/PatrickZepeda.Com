@@ -12,6 +12,7 @@
     "packageJson": {
       "dependencies": [
         "npm:@netlify/blobs@^10.7.4",
+        "npm:@supabase/supabase-js@^2.103.3",
         "npm:@tailwindcss/vite@^4.1.14",
         "npm:@types/node@^22.14.0",
         "npm:@types/three@~0.183.1",

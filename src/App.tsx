@@ -168,11 +168,11 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-y-3 gap-x-4">
           <div className="flex items-center gap-4 min-w-0 shrink-0">
             <img 
-              src="/logo.png" 
-              alt="Brand Logo" 
-              className="h-12 w-auto drop-shadow-[0_0_10px_rgba(255,0,255,0.5)]"
+              src={`${import.meta.env.BASE_URL}images/header-logo.png`} 
+              alt="Neon hedgehog logo" 
+              className="h-10 md:h-12 w-auto drop-shadow-[0_0_10px_rgba(255,0,255,0.5)]"
               onError={(e) => {
-                // Hide if the user hasn't uploaded the image to public/logo.png yet
+                // Hide the image if the static asset is missing.
                 e.currentTarget.style.display = 'none';
               }}
             />
