@@ -40,7 +40,13 @@ type ScannerCardStreamProps = {
   scanEffect?: 'clip' | 'scramble';
 };
 
-export const ScannerCardStream = ({
+/*
+ * ⚡ Bolt Performance Optimization:
+ * Wrapped ScannerCardStream in React.memo(). This component contains an expensive Three.js scene
+ * and keeping it memoized prevents it from unnecessarily unmounting/remounting or re-rendering
+ * when the parent changes state (like during window scrolling).
+ */
+export const ScannerCardStream = React.memo(({
   initialSpeed = 100,
   direction = -1,
   cardsData,
@@ -415,4 +421,4 @@ export const ScannerCardStream = ({
       </div>
     </div>
   );
-};
+});
