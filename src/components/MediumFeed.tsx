@@ -26,7 +26,7 @@ const FALLBACK_CARDS: CardData[] = [
   }
 ];
 
-export default function MediumFeed() {
+function MediumFeedComponent() {
   const [cards, setCards] = useState<CardData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -126,3 +126,6 @@ export default function MediumFeed() {
     </section>
   );
 }
+
+const MediumFeed = React.memo(MediumFeedComponent);
+export default MediumFeed;

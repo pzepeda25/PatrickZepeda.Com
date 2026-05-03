@@ -96,7 +96,7 @@ function useCardStackLayout() {
   return layout;
 }
 
-export default function YouTubeLatestVideos() {
+function YouTubeLatestVideosComponent() {
   const [items, setItems] = useState<CardStackItem[]>([]);
   const [loading, setLoading] = useState(true);
   const { cardWidth, cardHeight, maxVisible, spreadDeg, overlap } =
@@ -220,3 +220,6 @@ export default function YouTubeLatestVideos() {
     </div>
   );
 }
+
+const YouTubeLatestVideos = React.memo(YouTubeLatestVideosComponent);
+export default YouTubeLatestVideos;
