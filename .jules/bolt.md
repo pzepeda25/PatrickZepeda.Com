@@ -1,0 +1,3 @@
+## 2025-03-01 - Prevent Expensive App-wide Re-renders on Scroll
+**Learning:** The root `App.tsx` component maintains an `activeNavSection` state that updates frequently during scrolling for a scroll-spy navigation highlighting feature. This causes the entire application tree, including heavy child components (like `ScannerCardStream` which initializes WebGL/Three.js contexts and particle systems), to re-render unnecessarily on almost every scroll event.
+**Action:** When a parent component manages frequent state updates (like scroll position), always wrap heavy child components (especially those involving canvas, WebGL, or complex DOM nodes) with `React.memo` to prevent cascading re-renders and save significant CPU/GPU cycles.
