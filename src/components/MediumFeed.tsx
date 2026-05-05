@@ -26,7 +26,9 @@ const FALLBACK_CARDS: CardData[] = [
   }
 ];
 
-export default function MediumFeed() {
+// ⚡ Bolt: Memoize heavy child component to prevent unnecessary re-renders when parent scroll state updates.
+// Reduces re-renders from scroll events, significantly improving frame rates when this component is off-screen.
+const MediumFeed = React.memo(function MediumFeed() {
   const [cards, setCards] = useState<CardData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -125,4 +127,6 @@ export default function MediumFeed() {
       </div>
     </section>
   );
-}
+});
+
+export default MediumFeed;
