@@ -2,7 +2,9 @@ import React from 'react';
 import { ExternalLink, Sparkles, Code } from 'lucide-react';
 import { motion } from 'motion/react';
 
-const FeaturedProject = () => {
+// ⚡ Bolt: Memoize heavy child component to prevent unnecessary re-renders when parent scroll state updates.
+// Reduces re-renders from scroll events, improving scroll performance across the app.
+const FeaturedProject = React.memo(function FeaturedProject() {
   return (
     <section
       id="latest-build"
@@ -172,6 +174,6 @@ const FeaturedProject = () => {
       </div>
     </section>
   );
-};
+});
 
 export default FeaturedProject;
