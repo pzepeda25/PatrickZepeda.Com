@@ -174,4 +174,5 @@ const FeaturedProject = () => {
   );
 };
 
-export default FeaturedProject;
+// ⚡ Bolt: Memoized to prevent expensive re-renders when App.tsx activeNavSection scroll state updates
+export default React.memo(FeaturedProject);
