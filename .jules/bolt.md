@@ -1,0 +1,3 @@
+## 2025-02-28 - Scroll State Re-render Bottleneck
+**Learning:** Found a major performance bottleneck where App.tsx manages scroll state (`activeNavSection`) and passes it implicitly or updates state, causing the entire tree (including heavy components like MediumFeed and FeaturedProject which use Three.js / motion animations) to re-render constantly during scrolling.
+**Action:** Used `React.memo()` on all heavy child components to prevent them from re-rendering when their props haven't changed, significantly improving scrolling performance by not re-computing expensive canvas and animation operations on every scroll tick.
