@@ -96,7 +96,10 @@ function useCardStackLayout() {
   return layout;
 }
 
-export default function YouTubeLatestVideos() {
+// ⚡ Bolt: Wrapped in React.memo to prevent unnecessary re-renders when App.tsx scroll state updates
+export default React.memo(YouTubeLatestVideos);
+
+function YouTubeLatestVideos() {
   const [items, setItems] = useState<CardStackItem[]>([]);
   const [loading, setLoading] = useState(true);
   const { cardWidth, cardHeight, maxVisible, spreadDeg, overlap } =

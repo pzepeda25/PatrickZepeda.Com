@@ -174,4 +174,5 @@ const FeaturedProject = () => {
   );
 };
 
-export default FeaturedProject;
+// ⚡ Bolt: Wrapped in React.memo to prevent unnecessary re-renders when App.tsx scroll state updates
+export default React.memo(FeaturedProject);
