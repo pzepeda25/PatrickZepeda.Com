@@ -174,4 +174,10 @@ const FeaturedProject = () => {
   );
 };
 
-export default FeaturedProject;
+/*
+ * ⚡ Bolt Optimization:
+ * Wrapped FeaturedProject in React.memo to prevent unnecessary re-renders
+ * triggered by the root App.tsx component tracking scroll position state.
+ * Impact: Prevents expensive re-evaluation of UI elements during scroll.
+ */
+export default React.memo(FeaturedProject);
