@@ -2,7 +2,9 @@ import React from 'react';
 import { ExternalLink, Sparkles, Code } from 'lucide-react';
 import { motion } from 'motion/react';
 
-const FeaturedProject = () => {
+// ⚡ Bolt: Wrapped in React.memo() to prevent unnecessary re-renders when
+// the parent App component's scroll state (activeNavSection) updates.
+const FeaturedProject = React.memo(() => {
   return (
     <section
       id="latest-build"
@@ -172,6 +174,8 @@ const FeaturedProject = () => {
       </div>
     </section>
   );
-};
+});
+
+FeaturedProject.displayName = 'FeaturedProject';
 
 export default FeaturedProject;
