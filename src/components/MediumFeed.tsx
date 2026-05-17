@@ -26,7 +26,7 @@ const FALLBACK_CARDS: CardData[] = [
   }
 ];
 
-export default function MediumFeed() {
+function MediumFeed() {
   const [cards, setCards] = useState<CardData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -126,3 +126,7 @@ export default function MediumFeed() {
     </section>
   );
 }
+
+// ⚡ Bolt: Wrapped in React.memo to prevent unnecessary re-renders when App.tsx scroll state updates.
+// Expected Impact: Reduces frame drops on scroll by preventing expensive React tree reconciliation and Three.js canvas updates for this section.
+export default React.memo(MediumFeed);
