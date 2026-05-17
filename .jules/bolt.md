@@ -1,0 +1,3 @@
+## 2024-05-18 - Prevent Expensive Re-renders from App Scroll State
+**Learning:** `App.tsx` tracks active scroll section state (`activeNavSection`), which triggers an expensive app-wide re-render across all child components (including heavy Three.js components) every time the scroll threshold is crossed. This causes significant frame drops on scroll.
+**Action:** Any heavy child component (especially those containing 3D or canvas elements like `ScannerCardStream` in `MediumFeed`, `FeaturedProject`, and `YouTubeLatestVideos`) must be wrapped in `React.memo` to prevent re-rendering when the top-level scroll state updates.
