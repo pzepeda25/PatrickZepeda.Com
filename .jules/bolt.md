@@ -1,0 +1,3 @@
+## 2025-02-18 - Heavy child components re-rendering on root state change
+**Learning:** In a React application like this personal portfolio site, tracking active scroll state (like `activeNavSection`) at the root `App` component level causes heavy re-renders of all child components during scrolling. Specifically, child components that implement Three.js or complex animations (e.g., `ScannerCardStream`, `YouTubeLatestVideos`) can cause noticeable performance stuttering if they are re-rendered continuously on scroll events.
+**Action:** When a root component tracks high-frequency state updates like scroll position, ensure all expensive or deeply-nested child components are wrapped in `React.memo` to prevent them from re-rendering unless their specific props change.
