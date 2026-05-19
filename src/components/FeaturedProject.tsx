@@ -2,7 +2,12 @@ import React from 'react';
 import { ExternalLink, Sparkles, Code } from 'lucide-react';
 import { motion } from 'motion/react';
 
-const FeaturedProject = () => {
+/*
+ * ⚡ Bolt Performance Optimization:
+ * Wrapped FeaturedProject in React.memo to prevent unnecessary re-renders
+ * when App.tsx updates its activeNavSection scroll state.
+ */
+const FeaturedProject = React.memo(() => {
   return (
     <section
       id="latest-build"
@@ -172,6 +177,6 @@ const FeaturedProject = () => {
       </div>
     </section>
   );
-};
+});
 
 export default FeaturedProject;
