@@ -174,4 +174,4 @@ const FeaturedProject = () => {
   );
 };
 
-export default FeaturedProject;
+export default React.memo(FeaturedProject);
