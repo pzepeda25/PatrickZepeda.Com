@@ -26,7 +26,8 @@ const FALLBACK_CARDS: CardData[] = [
   }
 ];
 
-export default function MediumFeed() {
+// ⚡ Bolt: Added React.memo to prevent expensive re-renders when App.tsx scroll state changes
+const MediumFeed = React.memo(function MediumFeed() {
   const [cards, setCards] = useState<CardData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -125,4 +126,6 @@ export default function MediumFeed() {
       </div>
     </section>
   );
-}
+});
+
+export default MediumFeed;

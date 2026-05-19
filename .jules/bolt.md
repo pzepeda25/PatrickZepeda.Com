@@ -1,0 +1,3 @@
+## 2024-05-24 - [Memoize heavy components in App.tsx]
+**Learning:** The root `App.tsx` component tracks scroll position (`activeNavSection`) causing frequent re-renders of the entire application on scroll. Heavy child components (such as `MediumFeed` containing Three.js and `YouTubeLatestVideos`) need to be memoized using `React.memo` to prevent expensive app-wide re-renders during scrolling.
+**Action:** When working with scroll tracking at the root level, always use `React.memo` to wrap child components, especially those that instantiate 3D contexts, fetch external data, or run complex layouts, to prevent performance bottlenecks.
