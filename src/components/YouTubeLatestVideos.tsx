@@ -96,7 +96,10 @@ function useCardStackLayout() {
   return layout;
 }
 
-export default function YouTubeLatestVideos() {
+// ⚡ Bolt Optimization: Memoize YouTubeLatestVideos to prevent expensive re-renders
+// Since App.tsx tracks scroll state (activeNavSection), it triggers app-wide re-renders.
+// Memoizing this component prevents the complex CardStack animations from re-rendering on every scroll tick.
+export default React.memo(function YouTubeLatestVideos() {
   const [items, setItems] = useState<CardStackItem[]>([]);
   const [loading, setLoading] = useState(true);
   const { cardWidth, cardHeight, maxVisible, spreadDeg, overlap } =
@@ -220,3 +223,4 @@ export default function YouTubeLatestVideos() {
     </div>
   );
 }
+)

@@ -174,4 +174,7 @@ const FeaturedProject = () => {
   );
 };
 
-export default FeaturedProject;
+// ⚡ Bolt Optimization: Memoize FeaturedProject to prevent expensive re-renders
+// Since App.tsx tracks scroll state (activeNavSection), it triggers app-wide re-renders.
+// Memoizing this component prevents its complex UI/animations from re-rendering on every scroll tick.
+export default React.memo(FeaturedProject);
