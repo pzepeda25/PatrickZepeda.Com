@@ -2,7 +2,7 @@ import React from 'react';
 import { ExternalLink, Sparkles, Code } from 'lucide-react';
 import { motion } from 'motion/react';
 
-const FeaturedProject = () => {
+const FeaturedProject = React.memo(() => {
   return (
     <section
       id="latest-build"
@@ -172,6 +172,6 @@ const FeaturedProject = () => {
       </div>
     </section>
   );
-};
+});
 
 export default FeaturedProject;
