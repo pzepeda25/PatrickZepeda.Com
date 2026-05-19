@@ -1,0 +1,3 @@
+## 2025-05-19 - React.memo() on Heavy Components under Scroll-Tracking Parents
+**Learning:** In applications where a root or top-level component (like `App.tsx`) tracks active scroll state (e.g., `activeNavSection`), the entire component tree below it is subject to re-rendering on every scroll tick unless optimized. This is particularly devastating for heavy child components (such as those managing WebGL/Three.js contexts like `MediumFeed`).
+**Action:** Always wrap heavy, statically-positioned components or those managing complex inner state (like 3D scenes or intricate animations) with `React.memo()` if their parent components handle high-frequency events like scrolling. This prevents expensive cascading re-renders and preserves scrolling performance.
