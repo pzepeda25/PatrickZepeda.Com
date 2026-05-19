@@ -1,0 +1,3 @@
+## 2025-03-01 - Scroll State Triggers App-Wide Re-renders
+**Learning:** The root `App.tsx` component tracks scroll state (`activeNavSection`), which updates frequently during scrolling. Because the state is at the root level, this causes all child components in the application to re-render. Some of these child components are extremely heavy, notably `MediumFeed` which renders a complex `ScannerCardStream` powered by Three.js.
+**Action:** Any heavy child components (especially those rendering WebGL/Three.js or large DOM structures) must be wrapped in `React.memo` to avoid expensive, unnecessary re-renders during app scroll events.
