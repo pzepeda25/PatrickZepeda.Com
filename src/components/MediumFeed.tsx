@@ -26,7 +26,10 @@ const FALLBACK_CARDS: CardData[] = [
   }
 ];
 
-export default function MediumFeed() {
+
+// ⚡ Bolt: Wrapped in React.memo to prevent unnecessary re-renders
+// when the App component's scroll state (activeNavSection) updates.
+const MediumFeed = React.memo(function MediumFeed() {
   const [cards, setCards] = useState<CardData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -125,4 +128,6 @@ export default function MediumFeed() {
       </div>
     </section>
   );
-}
+});
+
+export default MediumFeed;

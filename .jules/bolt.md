@@ -1,0 +1,3 @@
+## 2024-05-20 - Global Scroll Listeners and Component Re-renders
+**Learning:** The React application updates the `activeNavSection` state at the root `App.tsx` level on scroll. This triggers full-app re-renders, causing heavy child components (like `ScannerCardStream` using Three.js, `MediumFeed`, `YouTubeLatestVideos`, etc.) to re-render constantly and heavily degrading scroll performance.
+**Action:** When a global state is frequently updated (like scroll position), child components that do not depend on this state must be memoized using `React.memo` to prevent cascading render trees and stuttering UI.
