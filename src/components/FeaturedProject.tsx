@@ -174,4 +174,5 @@ const FeaturedProject = () => {
   );
 };
 
-export default FeaturedProject;
+// ⚡ Bolt: Wrapped in React.memo to prevent unnecessary re-renders when parent scroll state changes
+export default React.memo(FeaturedProject);
