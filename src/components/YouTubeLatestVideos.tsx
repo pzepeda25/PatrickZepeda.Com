@@ -13,7 +13,8 @@ function decodeHtmlEntities(text: string) {
   const ta = document.createElement('textarea');
   ta.innerHTML = text;
   return ta.value;
-}
+};
+
 
 const FALLBACK_ITEMS: CardStackItem[] = [
   {
@@ -94,9 +95,10 @@ function useCardStackLayout() {
   }, []);
 
   return layout;
-}
+};
 
-export default function YouTubeLatestVideos() {
+
+function YouTubeLatestVideos() {
   const [items, setItems] = useState<CardStackItem[]>([]);
   const [loading, setLoading] = useState(true);
   const { cardWidth, cardHeight, maxVisible, spreadDeg, overlap } =
@@ -219,4 +221,8 @@ export default function YouTubeLatestVideos() {
       </div>
     </div>
   );
-}
+};
+
+
+// ⚡ Bolt: Wrapped in React.memo to prevent unnecessary re-renders when parent scroll state changes
+export default React.memo(YouTubeLatestVideos);

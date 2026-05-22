@@ -1,0 +1,3 @@
+## 2024-05-23 - App Scroll and Three.js
+**Learning:** The application tracks active scroll state (`activeNavSection`) at the root `App.tsx` level using a scroll event listener. Heavy child components containing expensive operations like Three.js render loops (e.g., MediumFeed which uses ScannerCardStream which uses three.js) will constantly re-render as the user scrolls unless memoized, completely defeating their internal performance logic and potentially lagging the whole site on scroll.
+**Action:** Always wrap heavy, non-reactive child components in `React.memo` when the parent component holds active scroll state or rapidly changing state that does not need to affect the child.
