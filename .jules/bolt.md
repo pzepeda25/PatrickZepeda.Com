@@ -1,0 +1,3 @@
+## 2026-05-26 - Avoid App-wide Re-renders on Scroll with Memoization
+**Learning:** The application tracks active scroll state (`activeNavSection`) at the root `App.tsx` level. This causes `App.tsx` and all its child components to re-render continuously as the user scrolls. Heavy child components, particularly those using libraries like Three.js (e.g., `MediumFeed` using `ScannerCardStream` -> `THREE`), can cause significant performance bottlenecks and jank during scrolling.
+**Action:** Always wrap heavy child components (especially those with Three.js canvases or complex animations) in `React.memo` to prevent expensive app-wide re-renders during scrolling state updates.
