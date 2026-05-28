@@ -174,4 +174,5 @@ const FeaturedProject = () => {
   );
 };
 
-export default FeaturedProject;
+ // Performance optimization: Memoize component to prevent re-renders when parent scroll state changes
+export default React.memo(FeaturedProject);

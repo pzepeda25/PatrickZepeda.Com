@@ -26,7 +26,7 @@ const FALLBACK_CARDS: CardData[] = [
   }
 ];
 
-export default function MediumFeed() {
+const MediumFeed = function() {
   const [cards, setCards] = useState<CardData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -126,3 +126,6 @@ export default function MediumFeed() {
     </section>
   );
 }
+
+// Performance optimization: Memoize component to prevent re-renders when parent scroll state changes
+export default React.memo(MediumFeed);
