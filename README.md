@@ -21,6 +21,14 @@ View your app in AI Studio: https://ai.studio/apps/aa3d0a62-9484-49ec-9704-2a97e
 
 ---
 
+## Docs in this repo
+
+| Document | What it’s for |
+|----------|----------------|
+| [`docs/SOP-HyperFrames-From-Zero-To-Render.md`](docs/SOP-HyperFrames-From-Zero-To-Render.md) | **HyperFrames lab SOP** — folder setup under `~/Documents/HyperFrames/`, `preview` / `lint` / `render`, and lint rules. Canonical copy lives here; pair it with on-disk projects like `brand-video-lab`. |
+
+---
+
 ## Chatbot lead capture (Netlify)
 
 Phase 1 adds a floating site assistant that collects qualified leads and stores them in **Netlify Blobs** (store name: `chatbot-leads`) via the function `submit-chatbot-lead`.
