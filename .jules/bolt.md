@@ -1,0 +1,3 @@
+## 2024-05-28 - Preventing heavy re-renders during scroll
+**Learning:** `App.tsx` tracks active scroll state (`activeNavSection`) which triggers re-renders of the entire application tree during scrolling. Heavy child components like those using Three.js (e.g., `ScannerCardStream` in `MediumFeed`) get unnecessarily re-rendered, causing serious scroll lag and performance bottlenecks.
+**Action:** Always wrap heavy child components with `React.memo()` in React applications where parent components maintain high-frequency state updates (like scroll positions or mouse coordinates) that are independent of the child components' props.
