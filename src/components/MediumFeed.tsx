@@ -1,58 +1,70 @@
-import React, { useEffect, useState } from 'react';
-import { ScannerCardStream, CardData } from './ui/scanner-card-stream';
-import { motion } from 'motion/react';
-import { BookOpen, ExternalLink } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import { ScannerCardStream, CardData } from "./ui/scanner-card-stream";
+import { motion } from "motion/react";
+import { BookOpen, ExternalLink } from "lucide-react";
 
-const MEDIUM_PROFILE_URL = 'https://patrickzepeda.medium.com/';
+const MEDIUM_PROFILE_URL = "https://patrickzepeda.medium.com/";
 
 const FALLBACK_CARDS: CardData[] = [
   {
     title: "The Future of AI in Marketing",
     link: "https://patrickzepeda.medium.com/",
-    image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=800&auto=format&fit=crop",
-    date: "Mar 2026"
+    image:
+      "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=800&auto=format&fit=crop",
+    date: "Mar 2026",
   },
   {
     title: "Building Systems That Scale",
     link: "https://patrickzepeda.medium.com/",
-    image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=800&auto=format&fit=crop",
-    date: "Feb 2026"
+    image:
+      "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=800&auto=format&fit=crop",
+    date: "Feb 2026",
   },
   {
     title: "Analog Instincts in a Digital World",
     link: "https://patrickzepeda.medium.com/",
-    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop",
-    date: "Jan 2026"
-  }
+    image:
+      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop",
+    date: "Jan 2026",
+  },
 ];
 
-export default function MediumFeed() {
+const MediumFeed = () => {
   const [cards, setCards] = useState<CardData[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@patrickzepeda');
+        const res = await fetch(
+          "https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@patrickzepeda",
+        );
         const data = await res.json();
-        if (data.status === 'ok' && data.items && data.items.length > 0) {
+        if (data.status === "ok" && data.items && data.items.length > 0) {
           const formattedCards = data.items.map((item: any) => {
             // Extract image from description if thumbnail is empty
             let imageUrl = item.thumbnail;
             if (!imageUrl) {
-              const imgMatch = item.description.match(/<img[^>]+src="([^">]+)"/);
+              const imgMatch = item.description.match(
+                /<img[^>]+src="([^">]+)"/,
+              );
               if (imgMatch) imageUrl = imgMatch[1];
             }
-            
+
             // Format date
             const pubDate = new Date(item.pubDate);
-            const dateStr = pubDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+            const dateStr = pubDate.toLocaleDateString("en-US", {
+              month: "short",
+              year: "numeric",
+            });
 
             return {
               title: item.title,
               link: item.link,
-              image: imageUrl || "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=800&auto=format&fit=crop",
-              date: dateStr
+              image:
+                imageUrl ||
+                "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=800&auto=format&fit=crop",
+              date: dateStr,
             };
           });
           setCards(formattedCards);
@@ -119,10 +131,12 @@ export default function MediumFeed() {
           <ExternalLink className="w-4 h-4" />
         </a>
       </div>
-      
+
       <div className="relative w-full">
         <ScannerCardStream cardsData={cards} direction={1} initialSpeed={80} />
       </div>
     </section>
   );
-}
+};
+// Memoize to prevent unnecessary re-renders when parent scroll state changes
+export default React.memo(MediumFeed);

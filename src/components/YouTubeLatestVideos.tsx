@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { motion } from 'motion/react';
-import { Youtube, ExternalLink, Play } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import { motion } from "motion/react";
+import { Youtube, ExternalLink, Play } from "lucide-react";
 
 /** Maps to https://www.youtube.com/@Patrick_Lee_Zepeda */
-const YOUTUBE_CHANNEL_ID = 'UCifMOkKKdt0Qg-1kuWBaToQ';
-const YOUTUBE_CHANNEL_URL = 'https://www.youtube.com/@Patrick_Lee_Zepeda';
+const YOUTUBE_CHANNEL_ID = "UCifMOkKKdt0Qg-1kuWBaToQ";
+const YOUTUBE_CHANNEL_URL = "https://www.youtube.com/@Patrick_Lee_Zepeda";
 const RSS_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${YOUTUBE_CHANNEL_ID}`;
 const RSS2JSON = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_URL)}`;
 
 function decodeHtmlEntities(text: string) {
-  const ta = document.createElement('textarea');
+  const ta = document.createElement("textarea");
   ta.innerHTML = text;
   return ta.value;
 }
@@ -25,44 +25,52 @@ type VideoItem = {
 
 const FALLBACK_ITEMS: VideoItem[] = [
   {
-    id: 'fallback-1',
-    title: 'Why I Tried to Ghost Claude for Gemini, & Why My Codebase Wouldn\'t Let Me.',
-    description: 'A developer narrative exploring the transition from Claude to Google Gemini for coding automation. Learn how leveraging Gemini APIs and advanced agentic workflows turned compile errors and agent crashes into success.',
+    id: "fallback-1",
+    title:
+      "Why I Tried to Ghost Claude for Gemini, & Why My Codebase Wouldn't Let Me.",
+    description:
+      "A developer narrative exploring the transition from Claude to Google Gemini for coding automation. Learn how leveraging Gemini APIs and advanced agentic workflows turned compile errors and agent crashes into success.",
     imageSrc: `${import.meta.env.BASE_URL}images/ghost-claude-gemini-hero.png`,
-    href: 'https://www.youtube.com/watch?v=DJ206BVadnE',
-    publishedAt: 'May 2026',
+    href: "https://www.youtube.com/watch?v=DJ206BVadnE",
+    publishedAt: "May 2026",
   },
   {
-    id: 'fallback-2',
-    title: 'Turn Obsidian Into an AI Operating System, Using Claude Code, Codex, Gemini Or your Favorite LLM!',
-    description: 'How to turn Obsidian into a lightweight AI Operating System using flat markdown files, progressive disclosure boot sequences, and self-maintaining memory blocks.',
-    imageSrc: 'https://i.ytimg.com/vi/8ohGlu1S-JQ/maxresdefault.jpg',
-    href: 'https://www.youtube.com/watch?v=8ohGlu1S-JQ',
-    publishedAt: 'May 2026',
+    id: "fallback-2",
+    title:
+      "Turn Obsidian Into an AI Operating System, Using Claude Code, Codex, Gemini Or your Favorite LLM!",
+    description:
+      "How to turn Obsidian into a lightweight AI Operating System using flat markdown files, progressive disclosure boot sequences, and self-maintaining memory blocks.",
+    imageSrc: "https://i.ytimg.com/vi/8ohGlu1S-JQ/maxresdefault.jpg",
+    href: "https://www.youtube.com/watch?v=8ohGlu1S-JQ",
+    publishedAt: "May 2026",
   },
   {
-    id: 'fallback-3',
-    title: 'Automating Your Netlify Contact Forms with n8n, Notion & Telegram!',
-    description: 'Set up a custom, headless pipeline that automatically pushes form captures to Notion and alerts your phone in real time.',
-    imageSrc: 'https://i.ytimg.com/vi/dqVeJzIHsGs/maxresdefault.jpg',
-    href: 'https://www.youtube.com/watch?v=dqVeJzIHsGs',
-    publishedAt: 'May 2026',
+    id: "fallback-3",
+    title: "Automating Your Netlify Contact Forms with n8n, Notion & Telegram!",
+    description:
+      "Set up a custom, headless pipeline that automatically pushes form captures to Notion and alerts your phone in real time.",
+    imageSrc: "https://i.ytimg.com/vi/dqVeJzIHsGs/maxresdefault.jpg",
+    href: "https://www.youtube.com/watch?v=dqVeJzIHsGs",
+    publishedAt: "May 2026",
   },
   {
-    id: 'fallback-4',
-    title: 'Level Up Your React Forms with Netlify Blobs & Cursor',
-    description: 'How to persist client-side files, logs, and form states directly inside Netlify Blobs using Cursor\'s AI coding assistant.',
-    imageSrc: 'https://i.ytimg.com/vi/snjBNLDZc2Q/maxresdefault.jpg',
-    href: 'https://www.youtube.com/watch?v=snjBNLDZc2Q',
-    publishedAt: 'May 2026',
+    id: "fallback-4",
+    title: "Level Up Your React Forms with Netlify Blobs & Cursor",
+    description:
+      "How to persist client-side files, logs, and form states directly inside Netlify Blobs using Cursor's AI coding assistant.",
+    imageSrc: "https://i.ytimg.com/vi/snjBNLDZc2Q/maxresdefault.jpg",
+    href: "https://www.youtube.com/watch?v=snjBNLDZc2Q",
+    publishedAt: "May 2026",
   },
   {
-    id: 'fallback-5',
-    title: 'Spatial Control Is The New AI Image Frontier, Using Nano Banana 2, Claude Code & HyperFrames!',
-    description: 'Directing AI image models with spatial grids, markdown rules, and next-generation control mechanisms for structured asset generation.',
-    imageSrc: 'https://i.ytimg.com/vi/wPvUJ5L7nUI/maxresdefault.jpg',
-    href: 'https://www.youtube.com/watch?v=wPvUJ5L7nUI',
-    publishedAt: 'May 2026',
+    id: "fallback-5",
+    title:
+      "Spatial Control Is The New AI Image Frontier, Using Nano Banana 2, Claude Code & HyperFrames!",
+    description:
+      "Directing AI image models with spatial grids, markdown rules, and next-generation control mechanisms for structured asset generation.",
+    imageSrc: "https://i.ytimg.com/vi/wPvUJ5L7nUI/maxresdefault.jpg",
+    href: "https://www.youtube.com/watch?v=wPvUJ5L7nUI",
+    publishedAt: "May 2026",
   },
 ];
 
@@ -70,23 +78,25 @@ const getDailyIndex = (length: number) => {
   if (length <= 0) return 0;
   const now = new Date();
   const dayStamp = Math.floor(
-    (now.getTime() - now.getTimezoneOffset() * 60 * 1000) / (1000 * 60 * 60 * 24)
+    (now.getTime() - now.getTimezoneOffset() * 60 * 1000) /
+      (1000 * 60 * 60 * 24),
   );
   return dayStamp % length;
 };
 
 function getYoutubeEmbedUrl(url: string) {
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const regExp =
+    /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
   const match = url.match(regExp);
-  const videoId = (match && match[2].length === 11) ? match[2] : null;
+  const videoId = match && match[2].length === 11 ? match[2] : null;
   if (videoId) {
     return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
   }
   // Default fallback video ID if url doesn't have a valid ID (e.g. channel page)
-  return 'https://www.youtube.com/embed/DJ206BVadnE?autoplay=1&rel=0';
+  return "https://www.youtube.com/embed/DJ206BVadnE?autoplay=1&rel=0";
 }
 
-export default function YouTubeLatestVideos() {
+const YouTubeLatestVideos = () => {
   const [video, setVideo] = useState<VideoItem>(() => {
     const idx = getDailyIndex(FALLBACK_ITEMS.length);
     return FALLBACK_ITEMS[idx]!;
@@ -102,7 +112,7 @@ export default function YouTubeLatestVideos() {
         const data = await res.json();
         if (
           cancelled ||
-          data.status !== 'ok' ||
+          data.status !== "ok" ||
           !Array.isArray(data.items) ||
           data.items.length === 0
         ) {
@@ -110,17 +120,17 @@ export default function YouTubeLatestVideos() {
         }
 
         const mapped: VideoItem[] = data.items.map((entry: any, i: number) => {
-          const title = decodeHtmlEntities(entry.title ?? 'Upload');
+          const title = decodeHtmlEntities(entry.title ?? "Upload");
           const pub = entry.pubDate
-            ? new Date(entry.pubDate).toLocaleDateString('en-US', {
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric',
+            ? new Date(entry.pubDate).toLocaleDateString("en-US", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
               })
-            : '';
-          const desc = entry.description 
-            ? entry.description.replace(/<[^>]*>/g, '').slice(0, 200) + '...'
-            : 'Watch this video directly on Patrick\'s YouTube channel.';
+            : "";
+          const desc = entry.description
+            ? entry.description.replace(/<[^>]*>/g, "").slice(0, 200) + "..."
+            : "Watch this video directly on Patrick's YouTube channel.";
           return {
             id: entry.link ?? `yt-${i}`,
             title,
@@ -262,4 +272,6 @@ export default function YouTubeLatestVideos() {
       </motion.div>
     </div>
   );
-}
+};
+// Memoize to prevent unnecessary re-renders when parent scroll state changes
+export default React.memo(YouTubeLatestVideos);
