@@ -86,7 +86,8 @@ function getYoutubeEmbedUrl(url: string) {
   return 'https://www.youtube.com/embed/DJ206BVadnE?autoplay=1&rel=0';
 }
 
-export default function YouTubeLatestVideos() {
+// ⚡ Bolt: Memoized to prevent re-rendering when root App scroll state changes
+export default React.memo(function YouTubeLatestVideos() {
   const [video, setVideo] = useState<VideoItem>(() => {
     const idx = getDailyIndex(FALLBACK_ITEMS.length);
     return FALLBACK_ITEMS[idx]!;
@@ -262,4 +263,4 @@ export default function YouTubeLatestVideos() {
       </motion.div>
     </div>
   );
-}
+});
