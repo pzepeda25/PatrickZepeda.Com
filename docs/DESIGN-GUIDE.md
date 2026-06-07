@@ -16,6 +16,23 @@ Patrick Zepeda is a **Creative Technologist and Systems Director** who turns cre
 
 **Retro-modern systems studio:** tactile creative craft, modern automation, and visible technical structure.
 
+### Brand Restraint Rule
+
+The retro-modern language is a **supporting layer, not the subject**. Start with the communication goal, then apply only enough brand styling to make the work recognizable.
+
+- Brand mood must never reduce clarity, legibility, or information hierarchy.
+- Use at most **one hero hardware illustration** per composition.
+- Do not turn every process, concept, or container into a retro computer.
+- Functional diagrams should be approximately **80% information design / 20% brand expression**.
+
+### Quality Calibration
+
+A successful branded technical visual feels clear first and distinctive second.
+
+**Good:** one focal idea, obvious reading order, editable labels, simple diagram shapes, visible coral signal, selective hardware reference.
+
+**Too much:** multiple detailed computers, dense wiring everywhere, monochrome beige treatment, tiny generated labels, equal visual weight across the entire canvas.
+
 ### Audience
 
 - Teams seeking practical AI, automation, web, brand, or content systems
@@ -109,7 +126,7 @@ Canonical implementation tokens live in [`src/index.css`](../src/index.css).
 
 - Approximately **70% dark neutrals**
 - Approximately **20% warm whites and beige hardware tones**
-- No more than **10% Signal Coral**
+- Approximately **5–10% Signal Coral**, including at least one visible focal accent
 
 ### Accessible Combinations
 
@@ -154,6 +171,8 @@ Do not darken Signal Coral for body-sized text. Avoid Coffee Brown for text.
 - Use coral punctuation or labels for emphasis, not whole paragraphs.
 - Keep paragraphs around **45–65 characters per line**.
 - Avoid mixing additional display fonts without a documented brand update.
+- Never ask an image-generation model to render final functional text. Composite all titles, labels, captions, and diagram copy using real typography after image generation.
+- Keep headings to **two lines maximum** and supporting paragraphs to **three lines maximum** in visual assets.
 
 ## 6. Layout & Spacing
 
@@ -163,6 +182,7 @@ Do not darken Signal Coral for body-sized text. Avoid Coffee Brown for text.
 - Make technical structure visible through grids, rules, labels, and borders.
 - Keep content density moderate. Let important work breathe.
 - Use cards only when a container communicates a meaningful unit.
+- Establish one obvious reading path. A viewer should understand the title, main idea, and flow within five seconds.
 
 ### Web Layout Standards
 
@@ -206,9 +226,49 @@ Photography and generated imagery should feel like a well-used creative systems 
 
 ### Image Prompt Starter
 
+Use this only for **marketing/editorial imagery**, not diagrams or information-dense slides:
+
 > Retro-modern creative systems studio, dark charcoal technical grid, warm beige hardware, off-white keyboard and mouse, iced coffee, one coral-red detail, soft tactile studio lighting, restrained editorial product photography, precise composition, subtle grain, no neon, no text, no watermark.
 
-## 8. Iconography
+When copy is needed, generate an image with intentional negative space and add the final text deterministically in Figma, HTML/CSS, or presentation software.
+
+## 8. Diagrams & Information Design
+
+Diagrams explain systems. They are not product-photo collages.
+
+### Diagram Rules
+
+- Start with nodes, relationships, sequence, and hierarchy before styling.
+- Use simple geometric containers, lines, arrows, and Lucide icons.
+- Use retro hardware imagery only as one optional framing metaphor or hero illustration.
+- Keep labels horizontal and readable. Use real text, never generated text.
+- Make primary flow lines stronger than decorative circuit traces.
+- Use Signal Coral to identify the start point, critical path, key decision, or output.
+- Use Warm Aluminum for secondary structure and Hardware White for primary labels.
+- Decorative grid lines and circuit traces must remain below **20% visual prominence**.
+
+### Complexity Budget
+
+- One core message per diagram
+- Three to seven primary nodes
+- Maximum two hierarchy levels visible at once
+- Maximum three type sizes
+- Maximum one paragraph; prefer short labels and a separate caption
+- At least 20% open negative space
+
+### Diagram Don’ts
+
+- Do not represent every node as a detailed computer, terminal, or device.
+- Do not fill all available space with wires, components, or decoration.
+- Do not use tiny paragraphs inside illustrations.
+- Do not make all lines, nodes, and labels the same visual weight.
+- Do not use monochrome beige alone; include an intentional coral focal signal.
+
+### Diagram Brief Starter
+
+> Create a clear architecture diagram first and apply Patrick Zepeda brand styling second. Use simple editable geometric nodes, a single left-to-right reading path, three to seven primary nodes, strong hierarchy, dark charcoal background, warm-white labels, muted warm-gray secondary lines, and Signal Coral only for the critical path and output. Keep at least 20% negative space. Use no detailed computer illustrations, no generated text, no dense decorative wiring, and no more than one subtle retro-hardware reference.
+
+## 9. Iconography
 
 - Use the existing **Lucide** icon family.
 - Keep icons outlined, simple, and technical.
@@ -218,7 +278,7 @@ Photography and generated imagery should feel like a well-used creative systems 
 
 Avoid emoji, filled novelty icons, and mixed icon families.
 
-## 9. UI Components
+## 10. UI Components
 
 ### Buttons
 
@@ -250,7 +310,7 @@ Avoid emoji, filled novelty icons, and mixed icon families.
 - Never remove keyboard navigation states.
 - Preserve contrast and respect reduced-motion preferences.
 
-## 10. Motion
+## 11. Motion
 
 Motion should feel mechanical and purposeful.
 
@@ -261,7 +321,7 @@ Motion should feel mechanical and purposeful.
 
 Avoid floating blobs, excessive parallax, springy novelty motion, and decorative infinite loops.
 
-## 11. Social & Marketing Assets
+## 12. Social, Presentations & Marketing Assets
 
 ### Social Share Card
 
@@ -278,11 +338,29 @@ Use the compact PZ mark on Studio Black or Signal Coral. Keep it simple enough t
 ### Presentations
 
 - Use dark backgrounds with warm-white text.
-- One key statement per slide.
+- One key statement or one clear diagram per slide.
 - Use Signal Coral for key numbers, punctuation, and short labels.
 - Favor diagrams, product imagery, and system flows over decorative illustration.
+- Keep titles under **12 words**.
+- Use no more than **six meaningful objects** on a standard slide.
+- Put detailed explanation in speaker notes or a follow-up slide.
+- Build text and diagrams with editable vectors and typography. AI-generated imagery may be used only as a background or supporting illustration.
 
-## 12. Metadata, SEO & AEO
+### Asset Mode Selection
+
+Choose one mode before creating:
+
+| Mode | Primary Goal | Brand Expression |
+| --- | --- | --- |
+| Marketing image | Create mood and recognition | High |
+| Social card | Communicate one message quickly | Medium-high |
+| Presentation slide | Explain one idea | Medium |
+| Architecture diagram | Explain relationships and flow | Low-medium |
+| Technical documentation | Maximize comprehension | Low |
+
+When in doubt, reduce decoration and increase hierarchy.
+
+## 13. Metadata, SEO & AEO
 
 - Metadata and JSON-LD source: [`index.html`](../index.html)
 - AI discovery source: [`public/llms.txt`](../public/llms.txt)
@@ -295,7 +373,7 @@ Rules:
 - Update social image alt text when the concept changes.
 - Do not add unsupported FAQ or service claims.
 
-## 13. Governance
+## 14. Governance
 
 ### Canonical Assets
 
@@ -312,11 +390,16 @@ When changing a core brand element, update the complete system:
 - Logo change: SVG, favicon PNG, Apple touch icon, and social/profile uses
 - Messaging change: visible site copy, metadata, JSON-LD, and `llms.txt`
 
-## 14. Pre-Ship Checklist
+## 15. Pre-Ship Checklist
 
 - Brand promise and voice remain clear.
+- The correct asset mode was selected before styling.
+- The main message and reading path are obvious within five seconds.
 - Only approved colors and fonts are used.
+- Signal Coral creates a visible focal point without becoming a large background.
 - Accent text remains accessible.
+- All functional copy uses real, editable typography rather than generated image text.
+- Diagrams respect the complexity budget and use hardware imagery sparingly.
 - Desktop and `390px` mobile have no horizontal overflow.
 - Focus states and reduced-motion behavior work.
 - Images, video, favicon, and social card load successfully.
