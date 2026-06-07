@@ -1,7 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <rect width="100" height="100" rx="20" fill="#0a0a0a"/>
-  <!-- Z -->
-  <path d="M35 35 H75 L35 75 H75" fill="none" stroke="#ff00ff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-  <!-- P -->
-  <path d="M25 80 V25 H50 C65 25 65 50 50 50 H25" fill="none" stroke="#00ffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="10" fill="#191816"/>
+  <rect x="5" y="5" width="50" height="50" rx="5" fill="#e75d50" stroke="#f06a5c" stroke-width="2"/>
+  <text x="30" y="39" text-anchor="middle" font-family="Courier New, monospace" font-size="22" font-weight="700" letter-spacing="-2" fill="#f3f2ed">PZ</text>
 </svg>
