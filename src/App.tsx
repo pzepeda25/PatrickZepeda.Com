@@ -160,24 +160,15 @@ export default function App() {
       : 'text-synth-cyan/80 hover:text-synth-cyan hover:opacity-100 transition-colors transition-opacity';
 
   return (
-    <div className="min-h-screen crt relative selection:bg-synth-magenta selection:text-white">
-      <div className="scanline-sweep"></div>
+    <div className="min-h-screen studio-shell relative selection:bg-synth-magenta selection:text-white">
       
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-40 bg-synth-bg/80 backdrop-blur-md border-b border-synth-cyan/30">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-y-3 gap-x-4">
+      <nav className="fixed top-0 w-full z-40 bg-synth-bg/90 backdrop-blur-md border-b border-synth-cyan/30">
+        <div className="max-w-7xl mx-auto px-6 py-3 flex flex-wrap items-center justify-between gap-y-3 gap-x-4">
           <div className="flex items-center gap-4 min-w-0 shrink-0">
-            <img 
-              src={`${import.meta.env.BASE_URL}images/header-logo.png`} 
-              alt="Neon hedgehog logo" 
-              className="h-10 md:h-12 w-auto drop-shadow-[0_0_10px_rgba(255,0,255,0.5)]"
-              onError={(e) => {
-                // Hide the image if the static asset is missing.
-                e.currentTarget.style.display = 'none';
-              }}
-            />
-            <div className="font-mono font-bold text-xl text-white tracking-tighter block">
-              <span className="neon-flicker text-glow-cyan">P</span>_ZEPEDA<span className="text-synth-magenta animate-pulse">_</span>
+            <div className="studio-mark" aria-hidden="true">PZ</div>
+            <div className="font-mono font-bold text-base text-white tracking-tight block">
+              PATRICK ZEPEDA<span className="text-synth-magenta">.</span>
             </div>
           </div>
           <div className="hidden md:flex flex-1 min-w-0 flex-wrap items-center justify-end gap-x-4 gap-y-2 font-mono text-sm transition-colors">
@@ -222,39 +213,77 @@ export default function App() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
-        <div className="synth-grid-container">
-          <div className="synth-grid"></div>
-        </div>
-        
-        {/* Abstract Background Elements */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-synth-purple rounded-full mix-blend-screen filter blur-[100px] opacity-50 animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-synth-magenta rounded-full mix-blend-screen filter blur-[120px] opacity-30"></div>
+      <section className="studio-hero relative min-h-[100dvh] flex items-center pt-20 overflow-hidden">
+        <div className="studio-rule studio-rule-one" aria-hidden="true"></div>
+        <div className="studio-rule studio-rule-two" aria-hidden="true"></div>
 
-        <div className="max-w-7xl mx-auto px-6 relative z-10 w-full animate-hero-glitch">
-          <div className="max-w-4xl">
-            <div className="inline-block px-3 py-1 mb-6 border border-synth-magenta text-synth-magenta font-mono text-sm bg-synth-magenta/10 typewriter">
-              SYS.INIT // CREATIVE_TECHNOLOGIST
-            </div>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-tight mb-6 uppercase tracking-tighter">
-              <span className="text-white text-3d-synth">Analog</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-synth-magenta to-synth-cyan text-glow-magenta">Instinct.</span><br />
-              <span className="text-white text-3d-synth">Digital</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-synth-cyan to-blue-500 text-glow-cyan">Precision.</span>
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-300 mb-10 max-w-2xl font-light leading-relaxed">
-              I don't just build websites. I deploy personalized systems — wired for conversion, built to scale.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 font-mono">
-              <motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setIsContactModalOpen(true)}
-                className="px-8 py-4 bg-synth-cyan text-synth-bg font-bold hover:bg-white transition-all box-glow-cyan flex items-center justify-center gap-2 group hover-3d-glasses"
-              >
-                DESIGN WHAT'S NEXT
-                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </motion.button>
-            </div>
+        <div className="max-w-7xl mx-auto px-6 relative z-10 w-full">
+          <div className="grid lg:grid-cols-[0.82fr_1.18fr] gap-12 lg:gap-10 items-center">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+              className="max-w-xl"
+            >
+              <div className="studio-eyebrow mb-6">
+                Creative technologist / systems director
+              </div>
+              <h1 className="studio-title text-5xl md:text-6xl lg:text-7xl font-black leading-[0.92] mb-7 tracking-[-0.065em]">
+                Build systems<span className="text-synth-magenta">.</span><br />
+                Ship value<span className="text-synth-magenta">.</span>
+              </h1>
+              <p className="text-lg md:text-xl text-gray-300 mb-9 max-w-lg leading-relaxed">
+                I turn creative instinct into practical digital systems that move brands, teams, and ideas forward.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 font-mono">
+                <motion.button
+                  whileHover={{ y: -2 }}
+                  whileTap={{ y: 1 }}
+                  onClick={() => setIsContactModalOpen(true)}
+                  className="studio-primary px-7 py-4 font-bold flex items-center justify-center gap-2 group"
+                >
+                  START A PROJECT
+                  <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </motion.button>
+                <a className="studio-secondary px-7 py-4 font-bold flex items-center justify-center" href="#latest-build">
+                  VIEW THE WORK
+                </a>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 70, rotate: 2 }}
+              animate={{ opacity: 1, x: 0, rotate: -1.5 }}
+              transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+              className="studio-reel-wrap"
+            >
+              <div className="studio-reel-label">
+                <span>WORKING SYSTEM / 001</span>
+                <span>CAMERA STUDY</span>
+              </div>
+              <div className="studio-reel">
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  poster={`${import.meta.env.BASE_URL}design-assets/studio-camera-illustration-poster.png`}
+                  aria-label="Animated studio objects separating as the camera turns"
+                >
+                  <source src={`${import.meta.env.BASE_URL}design-assets/studio-camera-illustration.mp4`} type="video/mp4" />
+                </video>
+                <div className="studio-reel-scrim" aria-hidden="true"></div>
+                <div className="studio-reel-caption">
+                  <span>Simple tools.</span>
+                  <strong>Powerful systems.</strong>
+                </div>
+              </div>
+              <div className="studio-reel-meta">
+                <span>DIRECT / DESIGN / BUILD</span>
+                <span className="studio-status"><i></i> IN MOTION</span>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>

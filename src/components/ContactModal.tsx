@@ -79,6 +79,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
       website,
       phone: (formData.get('phone') as string) || '',
       timeline: (formData.get('date') as string) || `Urgency ${urgency}/5`,
+      faxNumber: (formData.get('faxNumber') as string) || '',
     };
     
     try {

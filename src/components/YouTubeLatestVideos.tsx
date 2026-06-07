@@ -26,11 +26,11 @@ type VideoItem = {
 const FALLBACK_ITEMS: VideoItem[] = [
   {
     id: 'fallback-1',
-    title: 'Why I Tried to Ghost Claude for Gemini, & Why My Codebase Wouldn\'t Let Me.',
-    description: 'A developer narrative exploring the transition from Claude to Google Gemini for coding automation. Learn how leveraging Gemini APIs and advanced agentic workflows turned compile errors and agent crashes into success.',
-    imageSrc: `${import.meta.env.BASE_URL}images/ghost-claude-gemini-hero.png`,
-    href: 'https://www.youtube.com/watch?v=DJ206BVadnE',
-    publishedAt: 'May 2026',
+    title: 'AI That Self-Corrects & Spawns Sub-Agents!',
+    description: 'Watch the latest upload directly on Patrick\'s YouTube channel.',
+    imageSrc: 'https://i2.ytimg.com/vi/m_EGsAdf43g/hqdefault.jpg',
+    href: 'https://www.youtube.com/shorts/m_EGsAdf43g',
+    publishedAt: 'June 3, 2026',
   },
   {
     id: 'fallback-2',
@@ -66,19 +66,10 @@ const FALLBACK_ITEMS: VideoItem[] = [
   },
 ];
 
-const getDailyIndex = (length: number) => {
-  if (length <= 0) return 0;
-  const now = new Date();
-  const dayStamp = Math.floor(
-    (now.getTime() - now.getTimezoneOffset() * 60 * 1000) / (1000 * 60 * 60 * 24)
-  );
-  return dayStamp % length;
-};
-
 function getYoutubeEmbedUrl(url: string) {
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const regExp = /^.*(youtu.be\/|shorts\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
   const match = url.match(regExp);
-  const videoId = (match && match[2].length === 11) ? match[2] : null;
+  const videoId = match && match[2].length === 11 ? match[2] : null;
   if (videoId) {
     return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
   }
@@ -87,10 +78,7 @@ function getYoutubeEmbedUrl(url: string) {
 }
 
 export default function YouTubeLatestVideos() {
-  const [video, setVideo] = useState<VideoItem>(() => {
-    const idx = getDailyIndex(FALLBACK_ITEMS.length);
-    return FALLBACK_ITEMS[idx]!;
-  });
+  const [video, setVideo] = useState<VideoItem>(FALLBACK_ITEMS[0]!);
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
@@ -129,14 +117,17 @@ export default function YouTubeLatestVideos() {
             href: entry.link ?? FALLBACK_ITEMS[0].href,
             publishedAt: pub,
           };
+        }).sort((a: VideoItem, b: VideoItem) => {
+          const aTime = a.publishedAt ? Date.parse(a.publishedAt) : 0;
+          const bTime = b.publishedAt ? Date.parse(b.publishedAt) : 0;
+          return bTime - aTime;
         });
 
         if (!cancelled && mapped.length > 0) {
-          const idx = getDailyIndex(mapped.length);
-          setVideo(mapped[idx]!);
+          setVideo(mapped[0]!);
         }
       } catch {
-        // Stay with fallback daily video
+        // Stay with the known latest fallback video.
       }
     };
 
@@ -168,7 +159,7 @@ export default function YouTubeLatestVideos() {
             transition={{ delay: 0.08 }}
             className="text-synth-magenta text-base md:text-lg font-mono mt-2"
           >
-            &gt; Daily video case study & walkthrough
+            &gt; Latest upload from the channel
           </motion.p>
         </div>
         <a
@@ -251,7 +242,7 @@ export default function YouTubeLatestVideos() {
                 href={video.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-synth-cyan text-synth-bg font-bold hover:bg-white transition-all box-glow-cyan font-mono text-sm tracking-wider w-full sm:w-auto"
+                className="retro-key inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-synth-cyan text-synth-bg font-bold hover:bg-white transition-all box-glow-cyan font-mono text-sm tracking-wider w-full sm:w-auto"
               >
                 WATCH ON YOUTUBE
                 <ExternalLink className="w-4 h-4" />
