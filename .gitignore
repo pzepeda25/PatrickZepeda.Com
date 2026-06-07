@@ -9,3 +9,7 @@ coverage/
 
 # Local Netlify folder
 .netlify
+
+# Generated local agent/tooling output
+.claude/
+graphify-out/
