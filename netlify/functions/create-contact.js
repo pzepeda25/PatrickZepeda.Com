@@ -19,6 +19,11 @@ const CORS_HEADERS = {
 };
 const WELCOME_FLOW = 'welcome-step-1';
 const WELCOME_STEP = 1;
+const MAX_BODY_BYTES = 32 * 1024;
+const RATE_LIMIT = {
+  windowMs: 10 * 60 * 1000,
+  maxSubmissions: 5,
+};
 
 function json(statusCode, body, extraHeaders = {}) {
   return {
@@ -95,6 +100,21 @@ async function findExistingContactByEmail({ supabase, normalizedEmail }) {
 
   if (existing.error) throw existing.error;
   return existing.data || null;
+}
+
+async function isRateLimited({ supabase, ipAddress }) {
+  if (!ipAddress) return false;
+
+  const cutoff = new Date(Date.now() - RATE_LIMIT.windowMs).toISOString();
+  const recent = await supabase
+    .from('lead_submissions')
+    .select('id')
+    .eq('ip_address', ipAddress)
+    .gte('created_at', cutoff)
+    .limit(RATE_LIMIT.maxSubmissions);
+
+  if (recent.error) throw recent.error;
+  return recent.data.length >= RATE_LIMIT.maxSubmissions;
 }
 
 function extractTagCandidates(input) {
@@ -417,6 +437,10 @@ export const handler = async (event) => {
     return json(405, { ok: false, error: 'Method Not Allowed' });
   }
 
+  if (Buffer.byteLength(event.body || '', 'utf8') > MAX_BODY_BYTES) {
+    return json(413, { ok: false, error: 'Request body too large' });
+  }
+
   let body;
   try {
     body = JSON.parse(event.body || '{}');
@@ -460,9 +484,29 @@ export const handler = async (event) => {
     ipAddress,
   };
 
+  if (!isBlank(body.faxNumber)) {
+    console.info('[create-contact] honeypot submission ignored');
+    return json(200, {
+      ok: true,
+      created: false,
+      duplicate: false,
+      message: 'Contact created successfully.',
+      contactId: null,
+      leadSubmissionId: null,
+      welcomeEmailSent: false,
+      welcomeDryRun: null,
+    });
+  }
+
   const validationErrors = [];
   if (!input.email || !isValidEmail(input.email)) {
     validationErrors.push('valid email is required');
+  }
+  if ((input.source || 'site-form') === 'site-form' && !input.name) {
+    validationErrors.push('name is required');
+  }
+  if (input.formName === 'contact-modal' && !input.message) {
+    validationErrors.push('message is required');
   }
 
   if (validationErrors.length > 0) {
@@ -476,6 +520,15 @@ export const handler = async (event) => {
 
   try {
     const supabase = getSupabaseAdmin();
+    if (await isRateLimited({ supabase, ipAddress: input.ipAddress })) {
+      console.warn('[create-contact] rate limit exceeded', { ipAddress: input.ipAddress });
+      return json(
+        429,
+        { ok: false, error: 'Too many submissions. Please try again shortly.' },
+        { 'Retry-After': String(Math.ceil(RATE_LIMIT.windowMs / 1000)) },
+      );
+    }
+
     const existing = await findExistingContactByEmail({ supabase, normalizedEmail: input.email });
     const tagCandidates = extractTagCandidates(input);
     let contactId;

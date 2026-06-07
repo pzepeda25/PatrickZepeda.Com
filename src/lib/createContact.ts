@@ -7,6 +7,7 @@ export type CreateContactPayload = {
   entryPath?: string;
   serviceInterest?: string;
   tags?: string[] | string;
+  faxNumber?: string;
 };
 
 export async function createContact(payload: CreateContactPayload) {
@@ -25,7 +26,7 @@ export async function createContact(payload: CreateContactPayload) {
     ok: boolean;
     created: boolean;
     duplicate: boolean;
-    contactId: string;
+    contactId: string | null;
     leadSubmissionId: string | null;
     message?: string;
   }>;

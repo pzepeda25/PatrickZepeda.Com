@@ -62,6 +62,15 @@ function getFirstName({ name, email }) {
   return 'there';
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
 function resolveServiceLabel({ serviceInterest, tags }) {
   const candidates = [];
 
@@ -87,6 +96,7 @@ function resolveServiceLabel({ serviceInterest, tags }) {
 
 export function buildWelcomeEmail({ name, email, serviceInterest, tags }) {
   const firstName = getFirstName({ name, email });
+  const escapedFirstName = escapeHtml(firstName);
   const serviceLabel = resolveServiceLabel({ serviceInterest, tags });
 
   const text = [
@@ -135,7 +145,7 @@ export function buildWelcomeEmail({ name, email, serviceInterest, tags }) {
             <td class="email-body" style="padding:48px;">
               <div style="height:4px;width:64px;background-color:#00ffff;margin-bottom:32px;"></div>
               <h1 class="email-title" style="margin:0 0 32px 0;font-size:28px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#ffffff;line-height:1.2;">
-                Hi <span style="color:#ff00ff;">${firstName}</span>,
+                Hi <span style="color:#ff00ff;">${escapedFirstName}</span>,
               </h1>
               <p style="margin:0 0 24px 0;font-size:16px;line-height:1.6;color:#e0e0ff;">
                 Thanks for the message!
@@ -186,4 +196,3 @@ export function buildWelcomeEmail({ name, email, serviceInterest, tags }) {
     serviceLabel,
   };
 }
-
