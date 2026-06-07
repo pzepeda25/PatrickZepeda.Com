@@ -46,13 +46,13 @@ The redesigned site builds successfully and its Supabase CRM plus Resend email f
 - Netlify function syntax checks passed.
 - Welcome-email HTML injection check passed.
 - Contact endpoint invalid JSON/data, honeypot, oversized-body, and OPTIONS early-return paths passed locally.
+- Updated Netlify deploy preview homepage returned `200`.
+- Updated deploy-preview endpoint returned `400` for invalid data, silently ignored the honeypot, and returned `413` for an oversized body.
+- GitHub reported PR #53 as clean and mergeable.
 - Supabase security advisor errors were resolved.
 
-## Remaining Checks
+## Remaining Production Test
 
-- Confirm GitHub PR #53 checks and the updated Netlify deploy preview after commit `d5d8f13`.
-- Run non-destructive invalid/honeypot checks against the updated deploy preview.
-- Keep PR #53 as draft until those post-push checks pass.
 - A fully valid production form submission should only be tested intentionally because it creates a real CRM lead and sends a real Resend welcome email.
 
 ## Non-Blocking Follow-Up
