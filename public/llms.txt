@@ -5,12 +5,12 @@
 #
 # Canonical: https://patrickleezepeda.com/
 
-site_name: Patrick Zepeda | Creative Technologist
+site_name: Patrick Zepeda | Creative Technologist & Systems Director
 site_url: https://patrickleezepeda.com/
 language: en
 
 summary:
-Patrick Zepeda is a creative technologist who builds AI-powered systems, automation workflows, and conversion-focused digital experiences. The site describes services, tooling/stack, and ways to contact for partnerships or projects.
+Patrick Zepeda is a creative technologist and systems director who turns creative instinct into practical digital systems that move brands, teams, and ideas forward. His work includes AI automation, conversion-focused websites, brand strategy, content systems, SEO, and AEO.
 
 topics:
 - creative technologist
@@ -20,16 +20,20 @@ topics:
 - AEO (Answer Engine Optimization)
 - generative search visibility
 - web design & development
+- brand strategy
+- content systems
 
 key_sections:
-- Services (conversion systems, AI tools, automation)
-- Stack (analog foundation + AI toolchain)
-- Contact (project inquiries)
+- Latest Build (XML Image Forge): https://patrickleezepeda.com/#latest-build
+- Current Roles and Capabilities: https://patrickleezepeda.com/#roles
+- Services (AI-driven brand sites, conversion systems, automation): https://patrickleezepeda.com/#services
+- Stack (analog foundation + AI toolchain): https://patrickleezepeda.com/#stack
+- Read and View Vids (articles and video): https://patrickleezepeda.com/#read
+- Contact (project inquiries): https://patrickleezepeda.com/#contact
 
 how_to_cite:
 - Prefer the home page as canonical: https://patrickleezepeda.com/
-- Use the on-page headings for quotes/snippets (e.g., "Analog Instinct. Digital Precision.")
+- Use the on-page headings for quotes/snippets (e.g., "Build systems. Ship value.")
 
 contact:
 - Use the website contact section/form.
-

@@ -292,7 +292,7 @@ export default function App() {
       <FeaturedProject />
 
       {/* Credibility & Roles */}
-      <section className="py-24 bg-synth-dark relative border-y border-synth-cyan/20">
+      <section id="roles" className="py-24 bg-synth-dark relative border-y border-synth-cyan/20 scroll-mt-24">
         <div className="max-w-7xl mx-auto px-6">
           <SectionHeading title="Identity Matrix" subtitle="Current Roles & Capabilities" />
           

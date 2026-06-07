@@ -3,7 +3,7 @@
 @theme {
   --color-synth-bg: #191816;
   --color-synth-purple: #6e4730;
-  --color-synth-magenta: #c83c2f;
+  --color-synth-magenta: #f06a5c;
   --color-synth-cyan: #d8d3cb;
   --color-synth-dark: #24221f;
   --color-synth-grid: rgba(216, 211, 203, 0.16);
@@ -41,8 +41,8 @@ body {
   width: 2.35rem;
   height: 2.35rem;
   place-items: center;
-  border: 1px solid #c83c2f;
-  background: #c83c2f;
+  border: 1px solid #f06a5c;
+  background: #f06a5c;
   color: #f3f2ed;
   font-family: var(--font-mono);
   font-size: 0.7rem;
@@ -78,7 +78,7 @@ body {
   position: absolute;
   z-index: -1;
   height: 1px;
-  background: rgba(200, 60, 47, 0.65);
+  background: rgba(240, 106, 92, 0.72);
   transform-origin: left center;
 }
 
@@ -112,12 +112,12 @@ body {
   content: "";
   width: 2.4rem;
   height: 3px;
-  background: #c83c2f;
+  background: #f06a5c;
 }
 
 .studio-eyebrow::after {
   content: "_";
-  color: #c83c2f;
+  color: #f06a5c;
   animation: terminal-cursor 1.1s steps(1, end) infinite;
 }
 
@@ -135,14 +135,14 @@ body {
 }
 
 .studio-primary {
-  border-color: #c83c2f;
-  background: #c83c2f;
+  border-color: #f06a5c;
+  background: #e75d50;
   color: #f3f2ed;
   box-shadow: 5px 5px 0 rgba(243, 242, 237, 0.14);
 }
 
 .studio-primary:hover {
-  background: #dd4b3d;
+  background: #ff7b6d;
   box-shadow: 8px 8px 0 rgba(243, 242, 237, 0.14);
 }
 
@@ -166,19 +166,19 @@ body {
 }
 
 .retro-key {
-  box-shadow: 4px 4px 0 rgba(200, 60, 47, 0.4);
+  box-shadow: 4px 4px 0 rgba(240, 106, 92, 0.4);
   transition: transform 120ms steps(2, end), box-shadow 120ms steps(2, end), filter 120ms linear;
 }
 
 .retro-key:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 7px 7px 0 rgba(200, 60, 47, 0.42);
+  box-shadow: 7px 7px 0 rgba(240, 106, 92, 0.42);
   filter: brightness(1.06);
 }
 
 .retro-key:active {
   transform: translate(3px, 3px);
-  box-shadow: 1px 1px 0 rgba(200, 60, 47, 0.42);
+  box-shadow: 1px 1px 0 rgba(240, 106, 92, 0.42);
 }
 
 .retro-key:focus-visible,
@@ -282,13 +282,13 @@ body {
 
 .xml-workflow-icon:hover {
   color: #f3f2ed;
-  background: rgba(200, 60, 47, 0.24);
+  background: rgba(240, 106, 92, 0.24);
   transform: translateY(-2px);
 }
 
 .xml-workflow-icon:active {
   transform: translateY(1px);
-  background: rgba(200, 60, 47, 0.4);
+  background: rgba(240, 106, 92, 0.4);
 }
 
 .xml-workflow-icon:last-child {
@@ -342,8 +342,8 @@ body {
 .studio-status i {
   width: 0.45rem;
   height: 0.45rem;
-  background: #c83c2f;
-  box-shadow: 0 0 0 3px rgba(200, 60, 47, 0.15);
+  background: #f06a5c;
+  box-shadow: 0 0 0 3px rgba(240, 106, 92, 0.18);
   animation: status-pulse 1.8s steps(2, end) infinite;
 }
 
@@ -358,7 +358,7 @@ nav a::after {
   bottom: -0.3rem;
   left: 0;
   height: 1px;
-  background: #c83c2f;
+  background: #f06a5c;
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 180ms steps(4, end);
