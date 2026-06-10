@@ -1,0 +1,3 @@
+## 2024-06-10 - Prevent Scroll-Induced Re-renders
+**Learning:** The application tracks active scroll state (`activeNavSection`) at the root `App.tsx` level, causing the entire component tree to re-render frequently on scroll. Components with heavy WebGL/Three.js operations (like `ScannerCardStream`) or expensive DOM elements suffer significant performance degradation if they re-render on every scroll event.
+**Action:** Always wrap heavy child components (especially those containing canvas/3D elements) in `React.memo()` to break the re-render chain from frequent state updates at the root level.
