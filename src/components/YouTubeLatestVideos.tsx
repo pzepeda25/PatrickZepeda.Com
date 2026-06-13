@@ -77,7 +77,8 @@ function getYoutubeEmbedUrl(url: string) {
   return 'https://www.youtube.com/embed/DJ206BVadnE?autoplay=1&rel=0';
 }
 
-export default function YouTubeLatestVideos() {
+// Memoized to prevent unnecessary re-renders when parent scroll state updates
+const YouTubeLatestVideos = () => {
   const [video, setVideo] = useState<VideoItem>(FALLBACK_ITEMS[0]!);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -253,4 +254,6 @@ export default function YouTubeLatestVideos() {
       </motion.div>
     </div>
   );
-}
+};
+
+export default React.memo(YouTubeLatestVideos);
