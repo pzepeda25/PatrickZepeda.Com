@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { ExternalLink, Sparkles, Code } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -164,4 +164,8 @@ const FeaturedProject = () => {
   );
 };
 
-export default FeaturedProject;
+// ⚡ Bolt Performance Optimization
+// What: Wrapped FeaturedProject in React.memo
+// Why: Prevents expensive App-wide re-renders caused by scroll state tracking.
+// Impact: Reduces unnecessary component rendering during scroll transitions.
+export default memo(FeaturedProject);
