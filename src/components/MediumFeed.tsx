@@ -26,7 +26,8 @@ const FALLBACK_CARDS: CardData[] = [
   }
 ];
 
-export default function MediumFeed() {
+// Memoized to prevent unnecessary re-renders when parent scroll state updates
+const MediumFeed = () => {
   const [cards, setCards] = useState<CardData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -125,4 +126,6 @@ export default function MediumFeed() {
       </div>
     </section>
   );
-}
+};
+
+export default React.memo(MediumFeed);

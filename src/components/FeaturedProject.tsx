@@ -2,6 +2,7 @@ import React from 'react';
 import { ExternalLink, Sparkles, Code } from 'lucide-react';
 import { motion } from 'motion/react';
 
+// Memoized to prevent unnecessary re-renders when parent scroll state updates
 const FeaturedProject = () => {
   return (
     <section
@@ -164,4 +165,4 @@ const FeaturedProject = () => {
   );
 };
 
-export default FeaturedProject;
+export default React.memo(FeaturedProject);
