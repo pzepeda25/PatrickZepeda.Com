@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import { motion } from 'motion/react';
 import { Youtube, ExternalLink, Play } from 'lucide-react';
 
@@ -77,7 +77,7 @@ function getYoutubeEmbedUrl(url: string) {
   return 'https://www.youtube.com/embed/DJ206BVadnE?autoplay=1&rel=0';
 }
 
-export default function YouTubeLatestVideos() {
+const YouTubeLatestVideos = function() {
   const [video, setVideo] = useState<VideoItem>(FALLBACK_ITEMS[0]!);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -254,3 +254,9 @@ export default function YouTubeLatestVideos() {
     </div>
   );
 }
+
+// ⚡ Bolt Performance Optimization
+// What: Wrapped YouTubeLatestVideos in React.memo
+// Why: Prevents expensive App-wide re-renders caused by scroll state tracking.
+// Impact: Reduces unnecessary component rendering during scroll transitions.
+export default memo(YouTubeLatestVideos);

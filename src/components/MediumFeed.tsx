@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import { ScannerCardStream, CardData } from './ui/scanner-card-stream';
 import { motion } from 'motion/react';
 import { BookOpen, ExternalLink } from 'lucide-react';
@@ -26,7 +26,7 @@ const FALLBACK_CARDS: CardData[] = [
   }
 ];
 
-export default function MediumFeed() {
+const MediumFeed = function() {
   const [cards, setCards] = useState<CardData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -126,3 +126,9 @@ export default function MediumFeed() {
     </section>
   );
 }
+
+// ⚡ Bolt Performance Optimization
+// What: Wrapped MediumFeed in React.memo
+// Why: Prevents expensive App-wide re-renders (including heavy Three.js canvas) caused by scroll state tracking.
+// Impact: Eliminates stuttering during scroll transitions.
+export default memo(MediumFeed);
