@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, memo, useCallback } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import {
   Bot,
@@ -324,7 +324,7 @@ function TerminalCard({ role, index }: { key?: React.Key; role: Role; index: num
   );
 }
 
-function Nav({
+const Nav = memo(function Nav({
   activeSection,
   onContact,
 }: {
@@ -395,9 +395,9 @@ function Nav({
       ) : null}
     </>
   );
-}
+});
 
-function Hero({ onContact }: { onContact: () => void }) {
+const Hero = memo(function Hero({ onContact }: { onContact: () => void }) {
   const reduceMotion = useReducedMotion();
   const [typed, setTyped] = useState('');
   const [cursor, setCursor] = useState(true);
@@ -495,9 +495,9 @@ function Hero({ onContact }: { onContact: () => void }) {
       <GridFloor />
     </section>
   );
-}
+});
 
-function FeaturedBuild() {
+const FeaturedBuild = memo(function FeaturedBuild() {
   return (
     <section id="build" className="pz-feature-section">
       <div className="pz-feature-grid">
@@ -576,9 +576,9 @@ function FeaturedBuild() {
       </div>
     </section>
   );
-}
+});
 
-function IdentityMatrix() {
+const IdentityMatrix = memo(function IdentityMatrix() {
   return (
     <section id="about" className="pz-section pz-section-violet">
       <div className="pz-container">
@@ -591,9 +591,9 @@ function IdentityMatrix() {
       </div>
     </section>
   );
-}
+});
 
-function YoutubeSection() {
+const YoutubeSection = memo(function YoutubeSection() {
   const [playingVideoId, setPlayingVideoId] = useState<string | null>(null);
   const videos = useMemo(() => getRandomItems(VIDEO_CARDS), []);
 
@@ -653,9 +653,9 @@ function YoutubeSection() {
       </div>
     </section>
   );
-}
+});
 
-function CoreServices() {
+const CoreServices = memo(function CoreServices() {
   return (
     <section id="services" className="pz-section pz-section-base">
       <div className="pz-container">
@@ -687,9 +687,9 @@ function CoreServices() {
       </div>
     </section>
   );
-}
+});
 
-function Transmissions() {
+const Transmissions = memo(function Transmissions() {
   const [posts, setPosts] = useState<readonly BlogPost[]>(() => getRandomItems(BLOG_POSTS, 6));
 
   useEffect(() => {
@@ -771,9 +771,9 @@ function Transmissions() {
       </div>
     </section>
   );
-}
+});
 
-function GoogleFormModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+const GoogleFormModal = memo(function GoogleFormModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   useEffect(() => {
     if (!isOpen) return undefined;
     const onKeyDown = (event: KeyboardEvent) => {
@@ -816,9 +816,9 @@ function GoogleFormModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
       </motion.div>
     </div>
   );
-}
+});
 
-function CTA({ onContact }: { onContact: () => void }) {
+const CTA = memo(function CTA({ onContact }: { onContact: () => void }) {
   return (
     <section id="contact" className="pz-cta">
       <div className="pz-cta-glow" aria-hidden="true" />
@@ -839,9 +839,9 @@ function CTA({ onContact }: { onContact: () => void }) {
       </motion.div>
     </section>
   );
-}
+});
 
-function Footer() {
+const Footer = memo(function Footer() {
   return (
     <footer className="pz-footer">
       <div>
@@ -857,7 +857,7 @@ function Footer() {
       <p>© {new Date().getFullYear()} PATRICK ZEPEDA. ALL RIGHTS RESERVED.</p>
     </footer>
   );
-}
+});
 
 export default function App() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
@@ -901,7 +901,7 @@ export default function App() {
     return () => observer.disconnect();
   }, [sectionIds]);
 
-  const openContact = () => setIsContactModalOpen(true);
+  const openContact = useCallback(() => setIsContactModalOpen(true), []);
 
   return (
     <div className="pz-site selection:bg-pz-magenta selection:text-pz-white">
