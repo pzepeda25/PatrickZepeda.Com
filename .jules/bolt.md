@@ -1,0 +1,3 @@
+## 2026-06-23 - Memoizing scroll-dependent child components
+**Learning:** The application tracks active scroll state (`activeSection`) at the root `App.tsx` level, causing the entire app tree to re-render constantly during scrolling. Because modern React setups may cause ReferenceErrors with `React.memo()`, it is critical to explicitly `import { memo }` and wrap heavy static components with it.
+**Action:** Always check the root component for scroll or mouse event state. If present, aggressively memoize all static child components (e.g., headers, footers, large lists) using named imports (`memo` instead of `React.memo`) to prevent expensive application-wide renders during continuous user events.
