@@ -50,9 +50,8 @@ export const ScannerCardStream = ({
   scanEffect = 'scramble',
 }: ScannerCardStreamProps) => {
 
-  const [speed, setSpeed] = useState(initialSpeed);
-  const [isPaused, setIsPaused] = useState(false);
-  const [isScanning, setIsScanning] = useState(false);
+  const isPausedRef = useRef(false);
+  const scannerLineRef = useRef<HTMLDivElement>(null);
   const [cardWidth, setCardWidth] = useState(400);
 
   useEffect(() => {
@@ -228,7 +227,17 @@ export const ScannerCardStream = ({
           }
         }
       });
-      setIsScanning(anyCardIsScanning);
+
+      if (scannerLineRef.current) {
+        if (anyCardIsScanning) {
+          scannerLineRef.current.classList.remove('opacity-0');
+          scannerLineRef.current.classList.add('opacity-100');
+        } else {
+          scannerLineRef.current.classList.remove('opacity-100');
+          scannerLineRef.current.classList.add('opacity-0');
+        }
+      }
+
       scannerState.current.isScanning = anyCardIsScanning;
     };
     
@@ -272,12 +281,11 @@ export const ScannerCardStream = ({
       
       const targetVelocity = initialSpeed * direction;
 
-      if (!isPaused && !cardStreamState.current.isDragging) {
+      if (!isPausedRef.current && !cardStreamState.current.isDragging) {
         // Smoothly interpolate currentVelocity towards targetVelocity
         cardStreamState.current.currentVelocity += (targetVelocity - cardStreamState.current.currentVelocity) * (1 - friction);
         
         cardStreamState.current.position += cardStreamState.current.currentVelocity * deltaTime;
-        setSpeed(Math.abs(Math.round(cardStreamState.current.currentVelocity)));
       }
       
       const { position, cardLineWidth } = cardStreamState.current;
@@ -338,12 +346,12 @@ export const ScannerCardStream = ({
       material.dispose();
       texture.dispose();
     };
-  }, [isPaused, cards, cardGap, friction, scanEffect]);
+  }, [cards, cardGap, friction, scanEffect, initialSpeed, direction]);
 
   return (
     <div className="relative w-full h-[400px] flex items-center justify-center overflow-hidden"
-         onMouseEnter={() => setIsPaused(true)}
-         onMouseLeave={() => setIsPaused(false)}>
+         onMouseEnter={() => isPausedRef.current = true}
+         onMouseLeave={() => isPausedRef.current = false}>
       <style>{`
         @keyframes glitch { 0%, 16%, 50%, 100% { opacity: 1; } 15%, 99% { opacity: 0.9; } 49% { opacity: 0.8; } }
         .animate-glitch { animation: glitch 0.1s infinite linear alternate-reverse; }
@@ -361,11 +369,12 @@ export const ScannerCardStream = ({
       <canvas ref={scannerCanvasRef} className="absolute inset-0 w-full h-full z-[5] pointer-events-none" />
       
       <div
+        ref={scannerLineRef}
         className={`
           scanner-line absolute top-1/2 h-[288px] w-px 
           bg-gradient-to-b from-transparent via-synth-cyan/85 to-transparent rounded-full
           transition-opacity duration-300 z-20 pointer-events-none animate-scan-pulse
-          ${isScanning ? 'opacity-100' : 'opacity-0'}
+          opacity-0
         `}
         style={{
           left: `${SCANNER_X_RATIO * 100}%`,
