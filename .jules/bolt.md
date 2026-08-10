@@ -1,0 +1,3 @@
+## 2024-04-09 - React state updates in requestAnimationFrame cause render thrashing
+**Learning:** Calling `setState` (e.g. `setSpeed`) inside a `requestAnimationFrame` loop that runs at 60fps causes the component and all its children to completely re-render 60 times a second. In `ScannerCardStream`, this was happening to track a `speed` value that wasn't even rendered or used.
+**Action:** When tracking continuous animation values (like speed, position, or velocity) that are only used for canvas rendering or imperative DOM updates, always use `useRef` to store the value instead of `useState`. Never call `setState` in a high-frequency loop unless the value specifically needs to trigger a DOM/VDOM re-render.
