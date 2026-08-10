@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, memo } from 'react';
 import * as THREE from 'three';
 
 // --- Helper function to generate ASCII-like code ---
@@ -40,7 +40,7 @@ type ScannerCardStreamProps = {
   scanEffect?: 'clip' | 'scramble';
 };
 
-export const ScannerCardStream = ({
+const ScannerCardStreamComponent = ({
   initialSpeed = 100,
   direction = -1,
   cardsData,
@@ -416,3 +416,6 @@ export const ScannerCardStream = ({
     </div>
   );
 };
+
+// Memoize heavy Three.js component to prevent expensive re-renders
+export const ScannerCardStream = memo(ScannerCardStreamComponent);
