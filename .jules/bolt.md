@@ -1,0 +1,3 @@
+## 2026-04-10 - Animation Loop Layout Thrashing
+**Learning:** Found a critical layout thrashing bottleneck inside `scanner-card-stream.tsx`. Using `querySelectorAll`, `getBoundingClientRect()`, and writing styles all within the same loop forced synchronous layout recalculations every frame.
+**Action:** Always cache DOM elements outside of the `requestAnimationFrame` loop if the elements are static. Implement a strict separation of phases: first read all DOM properties (reads), then update all styles (writes). Ensure `transform` updates happen after layout checks to avoid forcing immediate reflows.
